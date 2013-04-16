@@ -1,4 +1,8 @@
-package godip
+package order
+
+import (
+  "github.com/zond/godip/common"
+)
 
 type OrderType int
 
