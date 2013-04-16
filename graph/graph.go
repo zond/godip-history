@@ -107,11 +107,15 @@ func (self *SubNode) Con(n string) *SubNode {
   return self
 }
 
-func (self *SubNode) Done() *Graph {
-  return self.node.graph
-}
-
 func (self *SubNode) Flag(flags int) *SubNode {
   self.flags |= flags
   return self
+}
+
+func (self *SubNode) Node(n string) *Node {
+  return self.node.graph.Node(n)
+}
+
+func (self *SubNode) Done() *Graph {
+  return self.node.graph
 }
