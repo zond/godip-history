@@ -95,4 +95,44 @@ var Classical = New().
   Node("pru").Con("ber").Con("bal").Con("lvn").Con("war").Con("sil").
   // sil
   Node("sil").Con("mun").Con("ber").Con("pru").Con("war").Con("gal").Con("boh").
+  // gal
+  Node("gal").Con("boh").Con("sil").Con("war").Con("ukr").Con("rum").Con("bud").Con("vie").
+  // rum
+  Node("rum").Con("bud").Con("gal").Con("ukr").Con("sev").Conn("bul", "ec").Con("bul").Con("ser").
+  // bul/ec
+  Node("bul").Sub("ec").Con("rum").Con("bla").Con("con").
+  // bul
+  Node("bul").Con("ser").Con("rum").Con("con").Con("gre").
+  // con
+  Node("con").Conn("bul", "sc").Con("bul").Conn("bul", "ec").Con("bla").Con("ank").Con("smy").Con("aeg").
+  // bul/sc
+  Node("bul").Sub("sc").Con("gre").Con("con").Con("aeg").
+  // ser
+  Node("ser").Con("tri").Con("bud").Con("rum").Con("bul").Con("gre").Con("alb").
+  // alb
+  Node("alb").Con("adr").Con("tri").Con("ser").Con("gre").Con("ion").
+  // adr
+  Node("adr").Con("ven").Con("tri").Con("alb").Con("ion").Con("apu").
+  // apu
+  Node("apu").Con("rom").Con("ven").Con("adr").Con("ion").Con("nap").
+  // rom
+  Node("rom").Con("tys").Con("tus").Con("ven").Con("apu").Con("nap").
+  // tus
+  Node("tus").Con("gol").Con("pie").Con("ven").Con("rom").Con("tys").
+  // gol
+  Node("gol").Conn("spa", "sc").Con("mar").Con("pie").Con("tus").Con("tys").Con("wes").
+  // mar
+  Node("mar").Con("spa").Con("gas").Con("bur").Con("pie").Con("gol").Conn("spa", "sc").
+  // bur
+  Node("bur").Con("par").Con("pic").Con("bel").Con("ruh").Con("mun").Con("mar").Con("gas").
+  // par
+  Node("par").Con("bre").Con("pic").Con("bur").Con("gas").
+  // pic
+  Node("pic").Con("bre").Con("eng").Con("bel").Con("bur").Con("par").
+  // lon
+  Node("lon").Con("wal").Con("yor").Con("nth").Con("eng").
+  // bel
+  Node("bel").Con("pic").Con("eng").Con("nth").Con("hol").Con("ruh").Con("bur").
+  // hol
+  Node("hol").Con("nth").Con("hel").Con("kie").Con("ruh").Con("bel").
   Done()
