@@ -5,6 +5,16 @@ import (
   "fmt"
 )
 
+const (
+  Sea = 1 << iota
+  Land
+)
+
+const (
+  Coast = Sea | Land
+  SC    = "SC"
+)
+
 func New() *Graph {
   return &Graph{
     nodes: make(map[string]*Node),
@@ -26,23 +36,29 @@ func (self *Graph) String() string {
 func (self *Graph) Node(n string) *Node {
   if self.nodes[n] == nil {
     self.nodes[n] = &Node{
-      name:  n,
-      subs:  make(map[string]*SubNode),
-      graph: self,
+      name:       n,
+      subs:       make(map[string]*SubNode),
+      attributes: make(map[string]string),
+      graph:      self,
     }
   }
   return self.nodes[n]
 }
 
 type Node struct {
-  name  string
-  subs  map[string]*SubNode
-  graph *Graph
+  name       string
+  subs       map[string]*SubNode
+  attributes map[string]string
+  graph      *Graph
 }
 
 func (self *Node) String() string {
   buf := new(bytes.Buffer)
-  fmt.Fprintf(buf, "%v\n", self.name)
+  fmt.Fprintf(buf, "%v", self.name)
+  if len(self.attributes) > 0 {
+    fmt.Fprintf(buf, " %v", self.attributes)
+  }
+  fmt.Fprint(buf, "\n")
   for _, s := range self.subs {
     fmt.Fprintf(buf, "  %v\n", s)
   }
@@ -70,6 +86,11 @@ func (self *Node) Con(n string) *SubNode {
   return sub.Con(n)
 }
 
+func (self *Node) Attr(key, val string) *Node {
+  self.attributes[key] = val
+  return self
+}
+
 type SubNode struct {
   name  string
   edges map[string]*SubNode
@@ -79,7 +100,7 @@ type SubNode struct {
 
 func (self *SubNode) String() string {
   buf := new(bytes.Buffer)
-  fmt.Fprintf(buf, "%v => ", self.name)
+  fmt.Fprintf(buf, "%v (%v) => ", self.name, self.flags)
   dests := make([]string, 0, len(self.edges))
   for n, _ := range self.edges {
     dests = append(dests, n)
@@ -107,8 +128,15 @@ func (self *SubNode) Con(n string) *SubNode {
   return self
 }
 
-func (self *SubNode) Flag(flags int) *SubNode {
-  self.flags |= flags
+func (self *SubNode) Attr(key, val string) *SubNode {
+  self.node.Attr(key, val)
+  return self
+}
+
+func (self *SubNode) Flag(flags ...int) *SubNode {
+  for _, flag := range flags {
+    self.flags |= flag
+  }
   return self
 }
 
