@@ -6,5 +6,5 @@ import (
 )
 
 func TestGraphBuilding(t *testing.T) {
-  fmt.Println(Graph())
+  fmt.Println(Start())
 }
