@@ -1,4 +1,4 @@
-package graph
+package classical
 
 import (
   "fmt"
@@ -6,5 +6,5 @@ import (
 )
 
 func TestGraphBuilding(t *testing.T) {
-  fmt.Println(Classical)
+  fmt.Println(New())
 }
