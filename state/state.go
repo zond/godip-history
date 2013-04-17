@@ -15,5 +15,7 @@ func (self State) Phase() common.Phase {
 }
 
 func (self State) Resolve() (State, error) {
+  // check orders valid for phase, node
+  // check orders valid for unit
   return self, nil
 }
