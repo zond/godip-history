@@ -5,16 +5,6 @@ import (
   "fmt"
 )
 
-const (
-  Sea = 1 << iota
-  Land
-)
-
-const (
-  Coast = Sea | Land
-  SC    = "SC"
-)
-
 func New() *Graph {
   return &Graph{
     nodes: make(map[string]*Node),

@@ -5,17 +5,13 @@ import (
 )
 
 type State struct {
-  orders []common.Order
-  graph  common.Graph
-  phase  common.Phase
+  units     map[string]common.Unit
+  ownership map[string]string
+  graph     common.Graph
 }
 
-func (self State) Phase() common.Phase {
-  return self.phase
-}
-
-func (self State) Resolve() (State, error) {
-  // check orders valid for phase, node
+func (self State) Resolve(orders []common.Order) (result State) {
+  // check orders valid for node
   // check orders valid for unit
-  return self, nil
+  return self
 }
