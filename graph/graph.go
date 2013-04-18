@@ -58,11 +58,11 @@ func (self *node) String() string {
     fmt.Fprintf(buf, " %v", *self.sc)
   }
   if sub, ok := self.subs[""]; ok {
-    fmt.Fprintf(buf, " => %v\n", sub)
+    fmt.Fprintf(buf, " %v\n", sub)
   }
   for _, s := range self.subs {
     if s.name != "" {
-      fmt.Fprintf(buf, "  => %v\n", s)
+      fmt.Fprintf(buf, "  %v\n", s)
     }
   }
   return string(buf.Bytes())
@@ -103,7 +103,7 @@ func (self *subNode) String() string {
   for n, _ := range self.edges {
     dests = append(dests, string(n))
   }
-  fmt.Fprintf(buf, "%v", dests)
+  fmt.Fprintf(buf, "=> %v", dests)
   return string(buf.Bytes())
 }
 
