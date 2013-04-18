@@ -3,27 +3,25 @@ package graph
 import (
   "bytes"
   "fmt"
-  . "github.com/zond/godip/common"
+  "github.com/zond/godip/common"
 )
 
-type Flag string
-
 type Connectable interface {
-  Prov(Province) Connectable
-  Conn(Province) Connectable
-  Flag([]Flag) Connectable
-  SC(Nationality) Connectable
+  Prov(common.Province) Connectable
+  Conn(common.Province) Connectable
+  Flag([]common.Flag) Connectable
+  SC(common.Nationality) Connectable
   Done() *Graph
 }
 
 func New() *Graph {
   return &Graph{
-    nodes: make(map[Province]*node),
+    nodes: make(map[common.Province]*node),
   }
 }
 
 type Graph struct {
-  nodes map[Province]*node
+  nodes map[common.Province]*node
 }
 
 func (self *Graph) String() string {
@@ -34,12 +32,24 @@ func (self *Graph) String() string {
   return string(buf.Bytes())
 }
 
-func (self *Graph) Prov(n Province) *subNode {
+func (self *Graph) Find(n common.Province) (flags map[common.Flag]bool, sc *common.Nationality, found bool) {
+  p, c := n.Split()
+  if node, ok := self.nodes[p]; ok {
+    if sub, ok := node.subs[c]; ok {
+      flags = sub.flags
+      sc = node.sc
+      found = true
+    }
+  }
+  return
+}
+
+func (self *Graph) Prov(n common.Province) *subNode {
   p, c := n.Split()
   if self.nodes[p] == nil {
     self.nodes[p] = &node{
       name:  p,
-      subs:  make(map[Province]*subNode),
+      subs:  make(map[common.Province]*subNode),
       graph: self,
     }
   }
@@ -47,9 +57,9 @@ func (self *Graph) Prov(n Province) *subNode {
 }
 
 type node struct {
-  name  Province
-  subs  map[Province]*subNode
-  sc    *Nationality
+  name  common.Province
+  subs  map[common.Province]*subNode
+  sc    *common.Nationality
   graph *Graph
 }
 
@@ -70,23 +80,23 @@ func (self *node) String() string {
   return string(buf.Bytes())
 }
 
-func (self *node) sub(n Province) *subNode {
+func (self *node) sub(n common.Province) *subNode {
   if self.subs[n] == nil {
     self.subs[n] = &subNode{
       name:  n,
-      edges: make(map[Province]*subNode),
+      edges: make(map[common.Province]*subNode),
       node:  self,
-      flags: make(map[Flag]bool),
+      flags: make(map[common.Flag]bool),
     }
   }
   return self.subs[n]
 }
 
 type subNode struct {
-  name  Province
-  edges map[Province]*subNode
+  name  common.Province
+  edges map[common.Province]*subNode
   node  *node
-  flags map[Flag]bool
+  flags map[common.Flag]bool
 }
 
 func (self *subNode) String() string {
@@ -94,7 +104,7 @@ func (self *subNode) String() string {
   if self.name != "" {
     fmt.Fprintf(buf, "%v ", self.name)
   }
-  flags := make([]Flag, 0, len(self.flags))
+  flags := make([]common.Flag, 0, len(self.flags))
   for flag, _ := range self.flags {
     flags = append(flags, flag)
   }
@@ -109,29 +119,29 @@ func (self *subNode) String() string {
   return string(buf.Bytes())
 }
 
-func (self *subNode) getName() Province {
+func (self *subNode) getName() common.Province {
   return self.node.name.Join(self.name)
 }
 
-func (self *subNode) Conn(n Province) *subNode {
+func (self *subNode) Conn(n common.Province) *subNode {
   target := self.node.graph.Prov(n)
   self.edges[target.getName()] = target
   return self
 }
 
-func (self *subNode) SC(n Nationality) *subNode {
+func (self *subNode) SC(n common.Nationality) *subNode {
   self.node.sc = &n
   return self
 }
 
-func (self *subNode) Flag(flags ...Flag) *subNode {
+func (self *subNode) Flag(flags ...common.Flag) *subNode {
   for _, flag := range flags {
     self.flags[flag] = true
   }
   return self
 }
 
-func (self *subNode) Prov(n Province) *subNode {
+func (self *subNode) Prov(n common.Province) *subNode {
   return self.node.graph.Prov(n)
 }
 

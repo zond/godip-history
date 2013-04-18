@@ -115,12 +115,10 @@ func Start() (result *judge.State) {
   }
 }
 
-func BackupRule(state *judge.State, deps []common.Province) (result []bool) {
-  result = make([]bool, len(deps))
-
+func BackupRule(state *judge.State, prov common.Province, deps map[common.Province]bool) (result bool) {
   only_moves := true
   convoys := false
-  for _, prov := range deps {
+  for prov, _ := range deps {
     if state.Orders[prov].Type() != Move {
       only_moves = false
     }
@@ -130,16 +128,10 @@ func BackupRule(state *judge.State, deps []common.Province) (result []bool) {
   }
 
   if only_moves {
-    for index, _ := range deps {
-      result[index] = true
-    }
-    return
+    return true
   }
   if convoys {
-    for index, _ := range deps {
-      result[index] = false
-    }
-    return
+    return false
   }
   panic(fmt.Errorf("Unknown circular dependency between %v", deps))
 }

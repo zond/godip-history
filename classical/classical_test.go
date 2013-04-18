@@ -6,5 +6,9 @@ import (
 )
 
 func TestGraphBuilding(t *testing.T) {
-  fmt.Println(Start())
+  Start()
+}
+
+func TestOrderValidation(t *testing.T) {
+  state := Start()
 }

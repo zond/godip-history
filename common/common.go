@@ -47,3 +47,9 @@ type Phase interface {
   Next() (Phase, error)
   Prev() (Phase, error)
 }
+
+type Flag string
+
+type Graph interface {
+  Find(Province) (flags map[Flag]bool, sc *Nationality, found bool)
+}
