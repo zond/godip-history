@@ -5,14 +5,16 @@ A dippy judge in Go.
 
 ### Policy
 
+This is, currently, my thoughts on what must be true in all variants this judge shall support.
+
+* There is a map with Provinces.
+ * Each Province has one or more SubProvinces.
+ * Each Province can contain at most one Unit.
+ * Each Province can contain at most one SupplyCenter.
+ * Each SubProvince has connections to other SubProvinces.
+ * Each SubProvince has attributes, such as Sea, Land, Coast.
 * There are Units with UnitType and Nationality.
+ * Each unit is in one SubProvince.
 * There are SupplyCenters with Nationality.
+ * Each SupplyCenter is in one Province.
 * There are Phases with Year, Season and Type.
-* There is a map, a Graph, with Provinces.
- * Each Province can have several sub provinces, ie coasts.
- * Each Province can hold one unit.
- * Each coast (including the "empty coast") has connections to other coasts.
-* There are variants, and they differ in regards to
- * Available Orders.
- * Available UnitTypes.
- * Phase progression.
