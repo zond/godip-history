@@ -6,6 +6,8 @@ import (
   . "github.com/zond/godip/common"
 )
 
+type Flag string
+
 type Connectable interface {
   Prov(Province) Connectable
   Conn(Province) Connectable

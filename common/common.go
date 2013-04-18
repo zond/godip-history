@@ -35,15 +35,6 @@ func (self Province) Join(n Province) (result Province) {
   return
 }
 
-type Flag string
-
-type Resolution int
-
-const (
-  Success Resolution = iota
-  Failure
-)
-
 type Unit struct {
   Type        UnitType
   Nationality Nationality

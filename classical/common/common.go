@@ -1,10 +1,10 @@
 package common
 
 import (
-  . "github.com/zond/godip/common"
+  graph "github.com/zond/godip/graph"
 )
 
-var Coast = []Flag{Sea, Land}
+var Coast = []graph.Flag{Sea, Land}
 
 const (
   Sea  = "S"

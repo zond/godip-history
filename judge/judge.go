@@ -7,6 +7,13 @@ import (
   "github.com/zond/godip/graph"
 )
 
+type Resolution int
+
+const (
+  Success Resolution = iota
+  Failure
+)
+
 type Order interface {
   Type() OrderType
   Targets() []Province
