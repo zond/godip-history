@@ -6,14 +6,10 @@ const (
 )
 
 const (
-  Army = iota
-  Fleet
-)
-
-const (
   Coast = Sea | Land
 
-  SC = "SC"
+  Army  = "A"
+  Fleet = "F"
 
   England = "E"
   France  = "F"
