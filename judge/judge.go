@@ -1,5 +1,9 @@
 package judge
 
+/*
+The entire algorithm is based on http://www.diplom.org/Zine/S2009M/Kruijswijk/DipMath_Chp1.htm by Lucas Kruijswijk.
+*/
+
 import (
   "bytes"
   "fmt"
