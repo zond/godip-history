@@ -51,5 +51,8 @@ type Phase interface {
 type Flag string
 
 type Graph interface {
-  Find(Province) (flags map[Flag]bool, sc *Nationality, found bool)
+  Has(Province) bool
+  Flags(Province) map[Flag]bool
+  SC(Province) *Nationality
+  Edges(Province) map[Province]bool
 }

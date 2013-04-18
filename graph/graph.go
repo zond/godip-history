@@ -32,13 +32,42 @@ func (self *Graph) String() string {
   return string(buf.Bytes())
 }
 
-func (self *Graph) Find(n common.Province) (flags map[common.Flag]bool, sc *common.Nationality, found bool) {
+func (self *Graph) Has(n common.Province) (result bool) {
+  p, c := n.Split()
+  if node, ok := self.nodes[p]; ok {
+    if _, ok := node.subs[c]; ok {
+      result = true
+    }
+  }
+  return
+}
+
+func (self *Graph) Flags(n common.Province) (result map[common.Flag]bool) {
   p, c := n.Split()
   if node, ok := self.nodes[p]; ok {
     if sub, ok := node.subs[c]; ok {
-      flags = sub.flags
-      sc = node.sc
-      found = true
+      result = sub.flags
+    }
+  }
+  return
+}
+
+func (self *Graph) SC(n common.Province) (result *common.Nationality) {
+  p, _ := n.Split()
+  if node, ok := self.nodes[p]; ok {
+    result = node.sc
+  }
+  return
+}
+
+func (self *Graph) Edges(n common.Province) (result map[common.Province]bool) {
+  p, c := n.Split()
+  if node, ok := self.nodes[p]; ok {
+    if sub, ok := node.subs[c]; ok {
+      result = make(map[common.Province]bool)
+      for prov, _ := range sub.edges {
+        result[prov] = true
+      }
     }
   }
   return

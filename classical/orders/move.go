@@ -1,49 +1,72 @@
 package orders
 
 import (
+  "fmt"
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
   "github.com/zond/godip/judge"
 )
 
-type Move struct {
+func Move(source, dest dip.Province) *move {
+  return &move{
+    targets: []dip.Province{source, dest},
+  }
+}
+
+type move struct {
   targets []dip.Province
 }
 
-func (self *Move) Type() dip.OrderType {
+func (self *move) Type() dip.OrderType {
   return cla.Move
 }
 
-func (self *Move) Targets() []dip.Province {
+func (self *move) Targets() []dip.Province {
   return self.targets
 }
 
-func (self *Move) Adjudicate(state *judge.State) bool {
+func (self *move) Adjudicate(state *judge.State) bool {
   // if head to head: defend strength of h2h < attack strength
   // else: hold strength of target < attack strength
   return false
 }
 
-func (self *Move) Validate(state *judge.State) (bool, judge.ErrorCode) {
+func (self *move) Validate(state *judge.State) error {
   if state.Phase.Type() != cla.Movement {
-    return false, judge.ErrInvalidPhase
+    return cla.ErrInvalidPhase
   }
   if len(self.targets) != 2 {
-    return false, judge.ErrTargetLength
+    return cla.ErrTargetLength
   }
-  for _, target := range self.targets {
-    if _, _, found := state.Graph.Find(target); !found {
-      return false, judge.ErrInvalidTarget
+  if !state.Graph.Has(self.targets[0]) {
+    return cla.ErrInvalidSource
+  }
+  if !state.Graph.Has(self.targets[1]) {
+    return cla.ErrInvalidDestination
+  }
+  if unit, ok := state.Units[self.targets[0]]; !ok {
+    return cla.ErrMissingUnit
+  } else {
+    if unit.Type == cla.Army {
+      if !state.Graph.Flags(self.targets[1])[cla.Land] {
+        return cla.ErrIllegalDestination
+      }
+    } else if unit.Type == cla.Fleet {
+      if !state.Graph.Flags(self.targets[1])[cla.Sea] {
+        return cla.ErrIllegalDestination
+      }
+    } else {
+      panic(fmt.Errorf("Unknown unit type %v", unit.Type))
     }
   }
-  if _, ok := state.Units[self.targets[0]]; !ok {
-    return false, judge.ErrMissingUnit
+  if !state.Graph.Edges(self.targets[0])[self.targets[1]] {
+    return cla.ErrIllegalDistance
   }
-  // validate that the found unit can move the asked for distance over the found terrain
-  return true, 0
+  // support convoys
+  return nil
 }
 
-func (self *Move) Execute(state *judge.State) {
+func (self *move) Execute(state *judge.State) {
   unit := state.Units[self.targets[0]]
   delete(state.Units, self.targets[0])
   if dislodged, ok := state.Units[self.targets[1]]; ok {

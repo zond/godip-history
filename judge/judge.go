@@ -6,16 +6,6 @@ import (
   . "github.com/zond/godip/common"
 )
 
-type ErrorCode int
-
-const (
-  NoError ErrorCode = iota
-  ErrTargetLength
-  ErrInvalidTarget
-  ErrInvalidPhase
-  ErrMissingUnit
-)
-
 /* The resolution of an order can be in three states. */
 type orderState int
 
@@ -32,7 +22,7 @@ type Order interface {
   Type() OrderType
   Targets() []Province
   Adjudicate(*State) bool
-  Validate(*State) (bool, ErrorCode)
+  Validate(*State) error
   Execute(*State)
 }
 
