@@ -9,7 +9,7 @@ import (
 type Connectable interface {
   Prov(Province) Connectable
   Conn(Province) Connectable
-  Flag(ProvinceFlag) Connectable
+  Flag([]Flag) Connectable
   SC(Nationality) Connectable
   Done() *Graph
 }
@@ -57,9 +57,13 @@ func (self *node) String() string {
   if self.sc != nil {
     fmt.Fprintf(buf, " %v", *self.sc)
   }
-  fmt.Fprint(buf, "\n")
+  if sub, ok := self.subs[""]; ok {
+    fmt.Fprintf(buf, " => %v\n", sub)
+  }
   for _, s := range self.subs {
-    fmt.Fprintf(buf, "  %v\n", s)
+    if s.name != "" {
+      fmt.Fprintf(buf, "  => %v\n", s)
+    }
   }
   return string(buf.Bytes())
 }
@@ -70,6 +74,7 @@ func (self *node) sub(n Province) *subNode {
       name:  n,
       edges: make(map[Province]*subNode),
       node:  self,
+      flags: make(map[Flag]bool),
     }
   }
   return self.subs[n]
@@ -79,12 +84,21 @@ type subNode struct {
   name  Province
   edges map[Province]*subNode
   node  *node
-  flags int
+  flags map[Flag]bool
 }
 
 func (self *subNode) String() string {
   buf := new(bytes.Buffer)
-  fmt.Fprintf(buf, "%v (%v) => ", self.name, self.flags)
+  if self.name != "" {
+    fmt.Fprintf(buf, "%v ", self.name)
+  }
+  flags := make([]Flag, 0, len(self.flags))
+  for flag, _ := range self.flags {
+    flags = append(flags, flag)
+  }
+  if len(flags) > 0 {
+    fmt.Fprintf(buf, "%v ", flags)
+  }
   dests := make([]string, 0, len(self.edges))
   for n, _ := range self.edges {
     dests = append(dests, string(n))
@@ -108,8 +122,10 @@ func (self *subNode) SC(n Nationality) *subNode {
   return self
 }
 
-func (self *subNode) Flag(flags int) *subNode {
-  self.flags |= flags
+func (self *subNode) Flag(flags ...Flag) *subNode {
+  for _, flag := range flags {
+    self.flags[flag] = true
+  }
   return self
 }
 

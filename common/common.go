@@ -33,7 +33,7 @@ func (self Province) Join(n Province) (result Province) {
   return
 }
 
-type ProvinceFlag int
+type Flag string
 
 type Resolution int
 

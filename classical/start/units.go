@@ -5,8 +5,8 @@ import (
   "github.com/zond/godip/common"
 )
 
-func Units() map[string]common.Unit {
-  return map[string]common.Unit{
+func Units() map[common.Province]common.Unit {
+  return map[common.Province]common.Unit{
     "edi":    common.Unit{Fleet, England},
     "lvp":    common.Unit{Army, England},
     "lon":    common.Unit{Fleet, England},

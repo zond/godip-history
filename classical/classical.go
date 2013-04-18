@@ -10,8 +10,8 @@ import (
 
 type State struct {
   graph         *graph.Graph
-  supplyCenters map[string]string
-  units         map[string]common.Unit
+  supplyCenters map[common.Province]common.Nationality
+  units         map[common.Province]common.Unit
 }
 
 func (self *State) String() string {
@@ -25,8 +25,8 @@ func (self *State) String() string {
 func Blank() *State {
   return &State{
     graph:         start.Graph(),
-    supplyCenters: make(map[string]string),
-    units:         make(map[string]common.Unit),
+    supplyCenters: make(map[common.Province]common.Nationality),
+    units:         make(map[common.Province]common.Unit),
   }
 }
 

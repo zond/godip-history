@@ -1,12 +1,14 @@
 package common
 
-const (
-  Sea = 1 << iota
-  Land
+import (
+  . "github.com/zond/godip/common"
 )
 
+var Coast = []Flag{Sea, Land}
+
 const (
-  Coast = Sea | Land
+  Sea  = "S"
+  Land = "L"
 
   Army  = "A"
   Fleet = "F"
