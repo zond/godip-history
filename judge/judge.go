@@ -30,6 +30,7 @@ type Order interface {
   Targets() []Province
   Adjudicate(*State) bool
   Validate(*State) (bool, ErrorCode)
+  Execute(*State)
 }
 
 /*
