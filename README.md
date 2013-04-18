@@ -3,6 +3,8 @@ godip
 
 A dippy judge in Go.
 
+Far from finished, but so far based on [The Math of Adjudication](http://www.diplom.org/Zine/S2009M/Kruijswijk/DipMath_Chp1.htm) by Lucas Kruijswijk.
+
 ### Policy
 
 This is, currently, my thoughts on what must be true in all variants this judge shall support.
