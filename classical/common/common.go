@@ -22,4 +22,12 @@ const (
   Turkey  = "T"
 
   Neutral = "N"
+
+  Spring = "S"
+  Winter = "W"
+  Autumn = "A"
+
+  Movement = "M"
+  Build    = "B"
+  Retreat  = "R"
 )

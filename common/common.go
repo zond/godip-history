@@ -11,6 +11,8 @@ type Nationality string
 
 type OrderType string
 
+type PhaseType string
+
 type Province string
 
 func (self Province) Split() (sup Province, sub Province) {
@@ -47,15 +49,10 @@ type Unit struct {
   Nationality Nationality
 }
 
-type Order interface {
-  Type() OrderType
-  Targets() []Province
-  Adjudicate(State) Resolution
-}
-
-type State interface {
-  Resolve(orders []Order) State
-  Orders() map[Province]Order
-  Units() map[Province]Unit
-  SupplyCenters() map[Province]Nationality
+type Phase interface {
+  Year() int
+  Season() string
+  Type() PhaseType
+  Next() (Phase, error)
+  Prev() (Phase, error)
 }
