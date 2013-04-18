@@ -9,7 +9,7 @@ import (
 
 type ErrorCode int
 
-/* The resolution of an order, can be in three states. */
+/* The resolution of an order can be in three states. */
 type orderState int
 
 const (
@@ -42,7 +42,7 @@ type State struct {
 
   BackupRule BackupRule
 
-  /* The resolution of an order, can be in three states. */
+  /* The resolution of an order can be in three states. */
   states map[Province]orderState
   /* For each order we maintain the resolution. */
   resolutions map[Province]bool
