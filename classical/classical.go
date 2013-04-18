@@ -97,6 +97,7 @@ func Blank() *judge.State {
     Graph:         start.Graph(),
     SupplyCenters: make(map[common.Province]common.Nationality),
     Units:         make(map[common.Province]common.Unit),
+    BackupRule:    BackupRule,
   }
 }
 
@@ -105,10 +106,40 @@ func Start() (result *judge.State) {
     Graph:         start.Graph(),
     SupplyCenters: start.SupplyCenters(),
     Units:         start.Units(),
+    BackupRule:    BackupRule,
     Phase: phase{
       1901,
       Spring,
       Movement,
     },
   }
+}
+
+func BackupRule(state *judge.State, deps []common.Province) (result []bool) {
+  result = make([]bool, len(deps))
+
+  only_moves := true
+  convoys := false
+  for _, prov := range deps {
+    if state.Orders[prov].Type() != Move {
+      only_moves = false
+    }
+    if state.Orders[prov].Type() == Convoy {
+      convoys = true
+    }
+  }
+
+  if only_moves {
+    for index, _ := range deps {
+      result[index] = true
+    }
+    return
+  }
+  if convoys {
+    for index, _ := range deps {
+      result[index] = false
+    }
+    return
+  }
+  panic(fmt.Errorf("Unknown circular dependency between %v", deps))
 }

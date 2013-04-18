@@ -30,4 +30,7 @@ const (
   Movement = "M"
   Build    = "B"
   Retreat  = "R"
+
+  Move   = "M"
+  Convoy = "C"
 )
