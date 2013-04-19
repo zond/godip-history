@@ -110,6 +110,17 @@ func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) (ok 
   return self.pathHelper(dst, queue, filter, make(map[common.Province]bool))
 }
 
+func (self *Graph) Coasts(prov common.Province) (result map[common.Province]bool) {
+  result = make(map[common.Province]bool)
+  p, _ := prov.Split()
+  if node, ok := self.nodes[p]; ok {
+    for name, _ := range node.subs {
+      result[name] = true
+    }
+  }
+  return
+}
+
 func (self *Graph) Prov(n common.Province) *subNode {
   p, c := n.Split()
   if self.nodes[p] == nil {

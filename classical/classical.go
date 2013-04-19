@@ -92,41 +92,29 @@ func (self phase) Next() (result common.Phase, err error) {
   return
 }
 
-func Blank() *judge.State {
-  return &judge.State{
-    Graph:         start.Graph(),
-    SupplyCenters: make(map[common.Province]common.Nationality),
-    Units:         make(map[common.Province]common.Unit),
-    BackupRule:    BackupRule,
-  }
+func Blank(phase common.Phase) *judge.Judge {
+  return judge.New(start.Graph(), phase, BackupRule)
 }
 
-func Start() *judge.State {
-  return &judge.State{
-    Graph:         start.Graph(),
-    SupplyCenters: start.SupplyCenters(),
-    Units:         start.Units(),
-    BackupRule:    BackupRule,
-    Phase: phase{
-      1901,
-      Spring,
-      Movement,
-    },
-  }
+func Start() *judge.Judge {
+  return judge.New(start.Graph(), phase{1901, Spring, Movement}, BackupRule).
+    SetUnits(start.Units()).
+    SetSupplyCenters(start.SupplyCenters())
 }
 
 /*
 BackupRule will make sets of only Move orders succeed, while orders with at least one Convoy all fail.
 Any other alternative will cause a panic.
 */
-func BackupRule(state *judge.State, prov common.Province, deps map[common.Province]bool) (result bool, err error) {
+func BackupRule(resolver common.Resolver, prov common.Province, deps map[common.Province]bool) (result bool, err error) {
   only_moves := true
   convoys := false
   for prov, _ := range deps {
-    if state.Orders[prov].Type() != Move {
+    order, ok := resolver.Order(prov)
+    if ok && order.Type() != Move {
       only_moves = false
     }
-    if state.Orders[prov].Type() == Convoy {
+    if ok && order.Type() == Convoy {
       convoys = true
     }
   }

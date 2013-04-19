@@ -6,76 +6,114 @@ import (
   . "github.com/zond/godip/common"
 )
 
-type Order interface {
-  Type() OrderType
-  Targets() []Province
-  Adjudicate(*State) (bool, error)
-  Validate(*State) error
-  Execute(*State)
+func New(graph Graph, phase Phase, backupRule BackupRule) *Judge {
+  return &Judge{
+    graph:         graph,
+    phase:         phase,
+    backupRule:    backupRule,
+    orders:        make(map[Province]Order),
+    units:         make(map[Province]Unit),
+    dislodged:     make(map[Province]Unit),
+    supplyCenters: make(map[Province]Nationality),
+  }
 }
 
-/*
-The BackupRule takes a state, a Province causing an inconsistency and set of all Provinces visited while finding the inconsistency, 
-and returns whether the Order provided Province ought to succeed.
-*/
-type BackupRule func(state *State, prov Province, deps map[Province]bool) (result bool, err error)
-
-type State struct {
-  Orders        map[Province]Order
-  Units         map[Province]Unit
-  Dislodged     map[Province]Unit
-  SupplyCenters map[Province]Nationality
-  Graph         Graph
-  Phase         Phase
-
-  BackupRule BackupRule
-
-  visited map[Province]bool
-  guesses map[Province]bool
+type Judge struct {
+  orders        map[Province]Order
+  units         map[Province]Unit
+  dislodged     map[Province]Unit
+  supplyCenters map[Province]Nationality
+  graph         Graph
+  phase         Phase
+  backupRule    BackupRule
 }
 
-func (self *State) String() string {
-  buf := new(bytes.Buffer)
-  fmt.Fprintln(buf, self.Graph)
-  fmt.Fprintln(buf, self.SupplyCenters)
-  fmt.Fprintln(buf, self.Units)
-  fmt.Fprintln(buf, self.Phase)
-  fmt.Fprintln(buf, self.Orders)
-  return string(buf.Bytes())
-}
-
-func (self *State) Next() *State {
+func (self *Judge) SetOrders(orders map[Province]Order) *Judge {
+  self.orders = orders
   return self
 }
 
-/*
-Will recursively visit the Order dependency graph by calling adjudicate for its Order.
+func (self *Judge) SetUnits(units map[Province]Unit) *Judge {
+  self.units = units
+  return self
+}
 
-If the recursion hits the same Order again, the result will be guessed twice, once for each outcome.
-If only one of the guesses was consistent with the Order#Adjudicate result, that result will be returned, 
-otherwise a BackupRule will be invoced.
+func (self *Judge) SetDislodged(dislodged map[Province]Unit) *Judge {
+  self.dislodged = dislodged
+  return self
+}
 
-Make sure never to call Order#Adjudicate from another Order! Only call State#Resolve from Orders.
+func (self *Judge) SetSupplyCenters(supplyCenters map[Province]Nationality) *Judge {
+  self.supplyCenters = supplyCenters
+  return self
+}
 
-Remember to clean up self.visited after calling this for a top level order!
-*/
-func (self *State) Resolve(prov Province) (result bool, err error) {
-  if result, ok := self.guesses[prov]; !ok { // Already guessed
-    if self.visited[prov] { // Not yet guessed, but visited before, introduce a guess (the default false result) and return it.
-      self.guesses[prov] = result
-    } else { // Not yet visited, do a proper adjudication.
-      self.visited[prov] = true
+func (self *Judge) String() string {
+  buf := new(bytes.Buffer)
+  fmt.Fprintln(buf, self.graph)
+  fmt.Fprintln(buf, self.supplyCenters)
+  fmt.Fprintln(buf, self.units)
+  fmt.Fprintln(buf, self.phase)
+  fmt.Fprintln(buf, self.orders)
+  return string(buf.Bytes())
+}
 
-      result, err = self.Orders[prov].Adjudicate(self) // Ask order to adjudicate itself.
-      if _, ok := self.guesses[prov]; ok {             // We were visited again, and depend on our guess.
-        self.guesses[prov] = true // Switch the guess to true.
-        var second_result bool
-        second_result, err = self.Orders[prov].Adjudicate(self) // Ask order to adjudicate itself with the new guess.
-        if result != second_result {                            // If the results are the same, it means that exactly one of them were consistent (and any one of them could be returned). If not, none or both are consistent.
-          result, err = self.BackupRule(self, prov, self.visited) // So, run the BackupRule on the orders we visited and let it decide.
-        }
-      }
+func (self *Judge) Resolver() *resolver {
+  return &resolver{
+    Judge:   self,
+    visited: make(map[Province]bool),
+    guesses: make(map[Province]bool),
+  }
+}
+
+func (self *Judge) SetUnit(prov Province, unit Unit) {
+  if found, ok := self.Unit(prov); ok {
+    panic(fmt.Errorf("%v is already at %v", found, prov))
+  }
+  self.units[prov] = unit
+}
+
+func (self *Judge) Unit(prov Province) (unit Unit, ok bool) {
+  if unit, ok = self.units[prov]; ok {
+    return
+  }
+  sup, _ := prov.Split()
+  if unit, ok = self.units[sup]; ok {
+    return
+  }
+  for name, _ := range self.graph.Coasts(prov) {
+    if unit, ok = self.units[name]; ok {
+      return
     }
   }
   return
+}
+
+func (self *Judge) Order(prov Province) (order Order, ok bool) {
+  if order, ok = self.orders[prov]; ok {
+    return
+  }
+  sup, _ := prov.Split()
+  if order, ok = self.orders[sup]; ok {
+    return
+  }
+  for name, _ := range self.graph.Coasts(prov) {
+    if order, ok = self.orders[name]; ok {
+      return
+    }
+  }
+  return
+}
+
+func (self *Judge) Graph() Graph {
+  return self.graph
+}
+
+func (self *Judge) Next() (err error) {
+  self.phase, err = self.phase.Next()
+  return
+}
+
+func (self *Judge) Phase() Phase {
+  return self.phase
 }

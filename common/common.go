@@ -57,4 +57,35 @@ type Graph interface {
   Flags(Province) map[Flag]bool
   SC(Province) *Nationality
   Path(src, dst Province, filter PathFilter) (found bool, path []Province)
+  Coasts(Province) map[Province]bool
+}
+
+type Order interface {
+  Type() OrderType
+  Targets() []Province
+  Adjudicate(Resolver) (bool, error)
+  Validate(Validator) error
+  Execute(State)
+}
+
+/*
+The BackupRule takes a state, a Province causing an inconsistency and set of all Provinces visited while finding the inconsistency, 
+and returns whether the Order provided Province ought to succeed.
+*/
+type BackupRule func(Resolver, Province, map[Province]bool) (bool, error)
+
+type Validator interface {
+  Order(Province) (Order, bool)
+  Unit(Province) (Unit, bool)
+  Graph() Graph
+  Phase() Phase
+}
+
+type Resolver interface {
+  Validator
+  Resolve(Province) (bool, error)
+}
+
+type State interface {
+  Move(Province, Province)
 }
