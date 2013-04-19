@@ -27,10 +27,11 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Algorithm
 
-```
 Resolve is called from the [https://github.com/zond/godip/blob/master/judge/judge.go](judge).
+
 Adjudicate is defined in each order type.
 
+```
 A depends on B: A = B
 B depends on C: B = C
 C = t
