@@ -75,10 +75,6 @@ type pathStep struct {
   pos  common.Province
 }
 
-func (self pathStep) String() string {
-  return fmt.Sprintf("%v => %v", self.path, self.pos)
-}
-
 func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter common.PathFilter, seen map[common.Province]bool) (bool, []common.Province) {
   var newQueue []pathStep
   for _, step := range queue {
