@@ -15,7 +15,8 @@ type Order interface {
 }
 
 /*
-The BackupRule takes a state and a slice of Provinces, and returns the resolutions for the orders for the given provinces.
+The BackupRule takes a state, a Province causing an inconsistency and set of all Provinces visited while finding the inconsistency, 
+and returns whether the Order provided Province ought to succeed.
 */
 type BackupRule func(state *State, prov Province, deps map[Province]bool) (result bool, err error)
 
