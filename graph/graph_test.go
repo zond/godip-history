@@ -24,7 +24,7 @@ func TestPath(t *testing.T) {
     Prov("h").Conn("a").Conn("c").Conn("d").Conn("g").
     Prov("i").Conn("c").
     Done()
-  assertPath(t, g, "a", "e", true, []common.Province{"a", "f", "e"})
-  assertPath(t, g, "a", "d", true, []common.Province{"a", "h", "d"})
-  assertPath(t, g, "a", "i", true, []common.Province{"a", "h", "c", "i"})
+  assertPath(t, g, "a", "e", true, []common.Province{"f", "e"})
+  assertPath(t, g, "a", "d", true, []common.Province{"h", "d"})
+  assertPath(t, g, "a", "i", true, []common.Province{"h", "c", "i"})
 }

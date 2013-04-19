@@ -87,31 +87,29 @@ func (self pathStep) String() string {
   return fmt.Sprintf("%v => %v", self.path, self.pos)
 }
 
-func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter common.PathFilter, best *[]common.Province, seen map[common.Province]bool) bool {
+func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter common.PathFilter, seen map[common.Province]bool) (bool, []common.Province) {
   var newQueue []pathStep
   for _, step := range queue {
     seen[step.pos] = true
-    thisPath := append(append([]common.Province{}, step.path...), step.pos)
     for name, sub := range self.edges(step.pos) {
       if !seen[name] {
         if filter == nil || filter(name, sub.flags, sub.node.sc) {
+          thisPath := append(append([]common.Province{}, step.path...), name)
           if name == dst {
-            *best = append(thisPath, name)
-            return true
-          } else if *best == nil || len(*best) > len(thisPath) {
-            newQueue = append(newQueue, pathStep{
-              path: thisPath,
-              pos:  name,
-            })
+            return true, thisPath
           }
+          newQueue = append(newQueue, pathStep{
+            path: thisPath,
+            pos:  name,
+          })
         }
       }
     }
   }
   if len(newQueue) > 0 {
-    return self.pathHelper(dst, newQueue, filter, best, seen)
+    return self.pathHelper(dst, newQueue, filter, seen)
   }
-  return false
+  return false, nil
 }
 
 func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) (ok bool, result []common.Province) {
@@ -121,8 +119,7 @@ func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) (ok 
       pos:  src,
     },
   }
-  ok = self.pathHelper(dst, queue, filter, &result, make(map[common.Province]bool))
-  return
+  return self.pathHelper(dst, queue, filter, make(map[common.Province]bool))
 }
 
 func (self *Graph) Prov(n common.Province) *subNode {
