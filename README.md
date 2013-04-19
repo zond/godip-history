@@ -36,6 +36,8 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Algorithm
 
+Heavily inspired by [The Math of Adjudication](http://www.diplom.org/Zine/S2009M/Kruijswijk/DipMath_Chp1.htm) by Lucas Kruijswijk.
+
 Resolve is [judge.State#Resolve](https://github.com/zond/godip/blob/master/judge/judge.go).
 
 Adjudicate is defined in each order type.
