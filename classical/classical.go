@@ -115,7 +115,7 @@ func Start() (result *judge.State) {
   }
 }
 
-func BackupRule(state *judge.State, prov common.Province, deps map[common.Province]bool) (result bool) {
+func BackupRule(state *judge.State, prov common.Province, deps map[common.Province]bool) (result bool, err error) {
   only_moves := true
   convoys := false
   for prov, _ := range deps {
@@ -128,10 +128,10 @@ func BackupRule(state *judge.State, prov common.Province, deps map[common.Provin
   }
 
   if only_moves {
-    return true
+    return true, nil
   }
   if convoys {
-    return false
+    return false, nil
   }
   panic(fmt.Errorf("Unknown circular dependency between %v", deps))
 }

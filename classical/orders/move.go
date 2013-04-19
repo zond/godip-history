@@ -25,10 +25,10 @@ func (self *move) Targets() []dip.Province {
   return self.targets
 }
 
-func (self *move) Adjudicate(state *judge.State) bool {
+func (self *move) Adjudicate(state *judge.State) (result bool, err error) {
   // if head to head: defend strength of h2h < attack strength
   // else: hold strength of target < attack strength
-  return false
+  return true, nil
 }
 
 func (self *move) Validate(state *judge.State) error {

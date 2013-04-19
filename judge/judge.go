@@ -17,7 +17,7 @@ type Order interface {
 /*
 The BackupRule takes a state and a slice of Provinces, and returns the resolutions for the orders for the given provinces.
 */
-type BackupRule func(state *State, prov Province, deps map[Province]bool) bool
+type BackupRule func(state *State, prov Province, deps map[Province]bool) (result bool, err error)
 
 type State struct {
   Orders        map[Province]Order
