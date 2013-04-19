@@ -70,14 +70,6 @@ func (self *Graph) edges(n common.Province) (result map[common.Province]*subNode
   return
 }
 
-func (self *Graph) Edges(n common.Province) (result map[common.Province]bool) {
-  result = make(map[common.Province]bool)
-  for prov, _ := range self.edges(n) {
-    result[prov] = true
-  }
-  return
-}
-
 type pathStep struct {
   path []common.Province
   pos  common.Province
