@@ -25,6 +25,15 @@ This is, currently, my thoughts on what must be true in all variants this judge 
  * They can be valid only when certain other Orders are valid.
  * They can be valid only when certain Units are present.
 
+### Todo
+
+* Implement Move#Adjudicate
+* Build simple test cases for adjudicating only Move orders.
+* Implement Convoy, Support and Hold.
+* Build a DATC parser.
+* Introduce the DATC test cases from http://mtn-host.prjek.net/viewmtn/droidippy/branch/changes/cx.ath.troja.jdip.droidippy
+* Make the DATC cases pass...
+
 ### Algorithm
 
 Resolve is [judge.State#Resolve](https://github.com/zond/godip/blob/master/judge/judge.go).
