@@ -115,6 +115,10 @@ func Start() *judge.State {
   }
 }
 
+/*
+BackupRule will make sets of only Move orders succeed, while orders with at least one Convoy all fail.
+Any other alternative will cause a panic.
+*/
 func BackupRule(state *judge.State, prov common.Province, deps map[common.Province]bool) (result bool, err error) {
   only_moves := true
   convoys := false
@@ -131,7 +135,7 @@ func BackupRule(state *judge.State, prov common.Province, deps map[common.Provin
     return true, nil
   }
   if convoys {
-    return false, nil
+    return false, ErrConvoyParadox
   }
   panic(fmt.Errorf("Unknown circular dependency between %v", deps))
 }
