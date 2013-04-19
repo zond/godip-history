@@ -114,8 +114,8 @@ func (self *Graph) Coasts(prov common.Province) (result map[common.Province]bool
   result = make(map[common.Province]bool)
   p, _ := prov.Split()
   if node, ok := self.nodes[p]; ok {
-    for name, _ := range node.subs {
-      result[name] = true
+    for _, sub := range node.subs {
+      result[sub.getName()] = true
     }
   }
   return
