@@ -27,7 +27,7 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Algorithm
 
-Resolve is called from the [https://github.com/zond/godip/blob/master/judge/judge.go](judge).
+Resolve is called from the [judge](https://github.com/zond/godip/blob/master/judge/judge.go).
 
 Adjudicate is defined in each order type.
 
