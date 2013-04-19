@@ -60,16 +60,68 @@ func (self *Graph) SC(n common.Province) (result *common.Nationality) {
   return
 }
 
-func (self *Graph) Edges(n common.Province) (result map[common.Province]bool) {
+func (self *Graph) edges(n common.Province) (result map[common.Province]*subNode) {
   p, c := n.Split()
   if node, ok := self.nodes[p]; ok {
     if sub, ok := node.subs[c]; ok {
-      result = make(map[common.Province]bool)
-      for prov, _ := range sub.edges {
-        result[prov] = true
+      result = sub.edges
+    }
+  }
+  return
+}
+
+func (self *Graph) Edges(n common.Province) (result map[common.Province]bool) {
+  result = make(map[common.Province]bool)
+  for prov, _ := range self.edges(n) {
+    result[prov] = true
+  }
+  return
+}
+
+type pathStep struct {
+  path []common.Province
+  pos  common.Province
+}
+
+func (self pathStep) String() string {
+  return fmt.Sprintf("%v => %v", self.path, self.pos)
+}
+
+func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter common.PathFilter, best *[]common.Province, seen map[common.Province]bool) bool {
+  var newQueue []pathStep
+  for _, step := range queue {
+    seen[step.pos] = true
+    thisPath := append(append([]common.Province{}, step.path...), step.pos)
+    for name, sub := range self.edges(step.pos) {
+      if !seen[name] {
+        if filter == nil || filter(name, sub.flags, sub.node.sc) {
+          if name == dst {
+            *best = append(thisPath, name)
+            return true
+          } else if *best == nil || len(*best) > len(thisPath) {
+            newQueue = append(newQueue, pathStep{
+              path: thisPath,
+              pos:  name,
+            })
+          }
+        }
       }
     }
   }
+  if len(newQueue) > 0 {
+    return self.pathHelper(dst, newQueue, filter, best, seen)
+  }
+  return false
+}
+
+func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) (ok bool, result []common.Province) {
+  queue := []pathStep{
+    pathStep{
+      path: nil,
+      pos:  src,
+    },
+  }
+  ok = self.pathHelper(dst, queue, filter, &result, make(map[common.Province]bool))
   return
 }
 
