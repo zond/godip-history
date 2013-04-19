@@ -6,18 +6,6 @@ import (
   . "github.com/zond/godip/common"
 )
 
-/* The resolution of an order can be in three states. */
-type orderState int
-
-const (
-  /* Order is not yet resolved, the resolution has no meaningful value. */
-  unresolved orderState = iota
-  /* The resolution contains a value, but it is only a guess. */
-  guessing
-  /* The resolution contains a value, and is final. */
-  resolved
-)
-
 type Order interface {
   Type() OrderType
   Targets() []Province
