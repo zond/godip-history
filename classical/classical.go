@@ -101,7 +101,7 @@ func Blank() *judge.State {
   }
 }
 
-func Start() (result *judge.State) {
+func Start() *judge.State {
   return &judge.State{
     Graph:         start.Graph(),
     SupplyCenters: start.SupplyCenters(),
