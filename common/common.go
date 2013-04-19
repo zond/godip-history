@@ -48,11 +48,13 @@ type Phase interface {
   Prev() (Phase, error)
 }
 
+type PathFilter func(n Province, flags map[Flag]bool, sc *Nationality) bool
+
 type Flag string
 
 type Graph interface {
   Has(Province) bool
   Flags(Province) map[Flag]bool
   SC(Province) *Nationality
-  Edges(Province) map[Province]bool
+  Path(src, dst Province, filter PathFilter) (found bool, path []Province)
 }

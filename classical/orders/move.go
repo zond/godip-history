@@ -59,10 +59,26 @@ func (self *move) Validate(state *judge.State) error {
       panic(fmt.Errorf("Unknown unit type %v", unit.Type))
     }
   }
-  if !state.Graph.Edges(self.targets[0])[self.targets[1]] {
-    return cla.ErrIllegalDistance
+  found, path := state.Graph.Path(self.targets[0], self.targets[1], nil)
+  if !found {
+    return cla.ErrMissingPath
   }
-  // support convoys
+  if len(path) > 2 {
+    if state.Units[self.targets[0]].Type == cla.Army {
+      if found, _ = state.Graph.Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
+        return name == self.targets[0] || name == self.targets[1] || !flags[cla.Land]
+      }); !found {
+        return cla.ErrMissingSeaPath
+      }
+      if found, _ = state.Graph.Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
+        return state.Units[name].Type == cla.Fleet && (name == self.targets[0] || name == self.targets[1] || flags[cla.Sea])
+      }); !found {
+        return cla.ErrMissingConvoyPath
+      }
+    } else {
+      return cla.ErrIllegalDistance
+    }
+  }
   return nil
 }
 
