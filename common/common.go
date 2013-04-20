@@ -63,9 +63,13 @@ type Graph interface {
 type Order interface {
   Type() OrderType
   Targets() []Province
-  Adjudicate(Resolver) (bool, error)
   Validate(Validator) error
   Execute(State)
+}
+
+type Adjudicator interface {
+  Order
+  Adjudicate(Resolver) (bool, error)
 }
 
 /*
@@ -74,18 +78,23 @@ and returns whether the Order provided Province ought to succeed.
 */
 type BackupRule func(Resolver, Province, map[Province]bool) (bool, error)
 
+type StateFilter func(n Province, o Order, u Unit) bool
+
 type Validator interface {
-  Order(Province) (Order, bool)
-  Unit(Province) (Unit, bool)
+  Order(Province) (order Order, found bool)
+  Unit(Province) (unit Unit, found bool)
   Graph() Graph
   Phase() Phase
 }
 
 type Resolver interface {
   Validator
-  Resolve(Province) (bool, error)
+  Resolve(Province) (result bool, reason error)
+  Find(StateFilter) (provinces []Province, orders []Order, units []Unit)
 }
 
 type State interface {
   Move(Province, Province)
 }
+
+type OrderGenerator func(prov Province) Order

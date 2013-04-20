@@ -24,9 +24,20 @@ func (self *move) Targets() []dip.Province {
   return self.targets
 }
 
-func (self *move) Adjudicate(resolver dip.Resolver) (result bool, err error) {
-  // if head to head: defend strength of h2h < attack strength
-  // else: hold strength of target < attack strength
+func (self *move) Adjudicate(r dip.Resolver) (result bool, err error) {
+  _, movingToDest, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+    return o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
+  })
+  if len(movingToDest) > 0 { // bounce
+    return false, cla.ErrBounce{movingToDest[0].Targets()[0]}
+  }
+  if atDest, ok := r.Order(self.targets[1]); ok {
+    if atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
+      return false, cla.ErrBounce{self.targets[1]}
+    } else if ok, _ = r.Resolve(self.targets[1]); !ok { // moving away
+      return false, cla.ErrBounce{self.targets[1]}
+    }
+  }
   return true, nil
 }
 

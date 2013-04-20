@@ -39,3 +39,18 @@ func (self *resolver) Resolve(prov Province) (result bool, err error) {
   }
   return
 }
+
+func (self *resolver) Find(filter StateFilter) (provinces []Province, orders []Order, units []Unit) {
+  for prov, unit := range self.Judge.units {
+    order := self.Judge.defaultOrderGenerator(prov)
+    if ord, ok := self.Judge.Order(prov); ok {
+      order = ord
+    }
+    if filter(prov, order, unit) {
+      provinces = append(provinces, prov)
+      orders = append(orders, order)
+      units = append(units, unit)
+    }
+  }
+  return
+}

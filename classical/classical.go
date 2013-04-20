@@ -3,6 +3,7 @@ package classical
 import (
   "fmt"
   . "github.com/zond/godip/classical/common"
+  "github.com/zond/godip/classical/orders"
   "github.com/zond/godip/classical/start"
   "github.com/zond/godip/common"
   "github.com/zond/godip/judge"
@@ -93,13 +94,17 @@ func (self phase) Next() (result common.Phase, err error) {
 }
 
 func Blank(phase common.Phase) *judge.Judge {
-  return judge.New(start.Graph(), phase, BackupRule)
+  return judge.New(start.Graph(), phase, BackupRule, DefaultOrderGenerator)
 }
 
 func Start() *judge.Judge {
-  return judge.New(start.Graph(), phase{1901, Spring, Movement}, BackupRule).
+  return judge.New(start.Graph(), phase{1901, Spring, Movement}, BackupRule, DefaultOrderGenerator).
     SetUnits(start.Units()).
     SetSupplyCenters(start.SupplyCenters())
+}
+
+func DefaultOrderGenerator(prov common.Province) common.Order {
+  return orders.Hold(prov)
 }
 
 /*

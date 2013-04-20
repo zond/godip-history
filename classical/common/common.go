@@ -31,6 +31,7 @@ const (
   Retreat  = "R"
 
   Move   = "M"
+  Hold   = "H"
   Convoy = "C"
 )
 
@@ -47,3 +48,11 @@ var ErrMissingSeaPath = fmt.Errorf("ErrMissingSeaPath")
 var ErrMissingConvoyPath = fmt.Errorf("ErrMissignConvoyPath")
 var ErrIllegalDistance = fmt.Errorf("ErrIllegalDistance")
 var ErrConvoyParadox = fmt.Errorf("ErrConvoyParadox")
+
+type ErrBounce struct {
+  Province Province
+}
+
+func (self ErrBounce) Error() string {
+  return fmt.Sprintf("ErrBounce:%v", self.Province)
+}

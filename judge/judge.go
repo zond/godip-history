@@ -6,29 +6,31 @@ import (
   . "github.com/zond/godip/common"
 )
 
-func New(graph Graph, phase Phase, backupRule BackupRule) *Judge {
+func New(graph Graph, phase Phase, backupRule BackupRule, defaultOrderGenerator OrderGenerator) *Judge {
   return &Judge{
-    graph:         graph,
-    phase:         phase,
-    backupRule:    backupRule,
-    orders:        make(map[Province]Order),
-    units:         make(map[Province]Unit),
-    dislodged:     make(map[Province]Unit),
-    supplyCenters: make(map[Province]Nationality),
+    graph:                 graph,
+    phase:                 phase,
+    backupRule:            backupRule,
+    defaultOrderGenerator: defaultOrderGenerator,
+    orders:                make(map[Province]Adjudicator),
+    units:                 make(map[Province]Unit),
+    dislodged:             make(map[Province]Unit),
+    supplyCenters:         make(map[Province]Nationality),
   }
 }
 
 type Judge struct {
-  orders        map[Province]Order
-  units         map[Province]Unit
-  dislodged     map[Province]Unit
-  supplyCenters map[Province]Nationality
-  graph         Graph
-  phase         Phase
-  backupRule    BackupRule
+  orders                map[Province]Adjudicator
+  units                 map[Province]Unit
+  dislodged             map[Province]Unit
+  supplyCenters         map[Province]Nationality
+  graph                 Graph
+  phase                 Phase
+  backupRule            BackupRule
+  defaultOrderGenerator OrderGenerator
 }
 
-func (self *Judge) SetOrders(orders map[Province]Order) *Judge {
+func (self *Judge) SetOrders(orders map[Province]Adjudicator) *Judge {
   self.orders = orders
   return self
 }
@@ -100,6 +102,11 @@ func (self *Judge) Order(prov Province) (order Order, ok bool) {
   for name, _ := range self.graph.Coasts(prov) {
     if order, ok = self.orders[name]; ok {
       return
+    }
+  }
+  if !ok {
+    if _, ok := self.Unit(prov); ok {
+      order = self.defaultOrderGenerator(prov)
     }
   }
   return
