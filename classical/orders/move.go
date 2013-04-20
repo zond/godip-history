@@ -26,7 +26,7 @@ func (self *move) Targets() []dip.Province {
 
 func (self *move) Adjudicate(r dip.Resolver) (result bool, err error) {
   _, movingToDest, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
-    return o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
+    return p != self.targets[0] && o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
   })
   if len(movingToDest) > 0 { // bounce
     return false, cla.ErrBounce{movingToDest[0].Targets()[0]}

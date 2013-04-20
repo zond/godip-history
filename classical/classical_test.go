@@ -13,7 +13,7 @@ func assertOrderValidity(t *testing.T, validator dip.Validator, order dip.Order,
   }
 }
 
-func TestMoveOrderValidation(t *testing.T) {
+func TestMoveValidation(t *testing.T) {
   judge := Start()
   // Happy path fleet
   assertOrderValidity(t, judge, orders.Move("bre", "mid"), nil)
@@ -42,4 +42,11 @@ func TestMoveOrderValidation(t *testing.T) {
   // Bad phase
   judge.Next()
   assertOrderValidity(t, judge, orders.Move("bre", "mid"), cla.ErrInvalidPhase)
+}
+
+func TestMoveAdjudication(t *testing.T) {
+  judge := Start()
+  judge.SetOrder("bre", orders.Move("bre", "mid"))
+  judge.Next()
+  t.Error(judge)
 }

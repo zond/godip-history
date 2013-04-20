@@ -20,7 +20,8 @@ otherwise a BackupRule will be invoced.
 Make sure never to call Order#Adjudicate from another Order! Only call Resolver#Resolve from Orders.
 */
 func (self *resolver) Resolve(prov Province) (result bool, err error) {
-  if result, ok := self.guesses[prov]; !ok { // Already guessed
+  var ok bool
+  if result, ok = self.guesses[prov]; !ok { // Already guessed
     if self.visited[prov] { // Not yet guessed, but visited before, introduce a guess (the default false result) and return it.
       self.guesses[prov] = result
     } else { // Not yet visited, do a proper adjudication.
