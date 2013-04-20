@@ -32,9 +32,13 @@ func (self *move) Adjudicate(r dip.Resolver) (result bool, err error) {
     return false, cla.ErrBounce{movingToDest[0].Targets()[0]}
   }
   if atDest, ok := r.Order(self.targets[1]); ok {
-    if atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
-      return false, cla.ErrBounce{self.targets[1]}
-    } else if ok, _ = r.Resolve(self.targets[1]); !ok { // moving away
+    if atDest.Type() == cla.Move {
+      if atDest.Targets()[1] == self.targets[0] { // head to head
+        return false, cla.ErrBounce{self.targets[1]}
+      } else if ok, _ = r.Resolve(self.targets[1]); !ok { // moving away
+        return false, cla.ErrBounce{self.targets[1]}
+      }
+    } else if atDest.Type() == cla.Hold {
       return false, cla.ErrBounce{self.targets[1]}
     }
   }

@@ -88,6 +88,10 @@ func (self *Judge) SetDislodge(prov Province, unit Unit) {
   self.dislodged[prov] = unit
 }
 
+func (self *Judge) Errors() map[Province]error {
+  return self.errors
+}
+
 func (self *Judge) SetUnit(prov Province, unit Unit) {
   if found, ok := self.Unit(prov); ok {
     panic(fmt.Errorf("%v is already at %v", found, prov))
@@ -96,7 +100,7 @@ func (self *Judge) SetUnit(prov Province, unit Unit) {
 }
 
 func (self *Judge) SetOrder(prov Province, order Adjudicator) {
-  if found, ok := self.Order(prov); ok {
+  if found, ok := self.findOrder(prov); ok {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.orders[prov] = order
@@ -118,7 +122,7 @@ func (self *Judge) Unit(prov Province) (unit Unit, ok bool) {
   return
 }
 
-func (self *Judge) Order(prov Province) (order Order, ok bool) {
+func (self *Judge) findOrder(prov Province) (order Order, ok bool) {
   if order, ok = self.orders[prov]; ok {
     return
   }
@@ -131,8 +135,13 @@ func (self *Judge) Order(prov Province) (order Order, ok bool) {
       return
     }
   }
+  return
+}
+
+func (self *Judge) Order(prov Province) (order Order, ok bool) {
+  order, ok = self.findOrder(prov)
   if !ok {
-    if _, ok := self.Unit(prov); ok {
+    if _, ok = self.Unit(prov); ok {
       order = self.defaultOrderGenerator(prov)
     }
   }
