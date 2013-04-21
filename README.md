@@ -35,6 +35,7 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 * Build a DATC parser.
 * Introduce the DATC test cases from http://mtn-host.prjek.net/viewmtn/droidippy/branch/changes/cx.ath.troja.jdip.droidippy
 * Make the DATC cases pass...
+* Create DATC compatible test cases from the (at least later) part of the Droidippy database.
 
 ### Algorithm
 
