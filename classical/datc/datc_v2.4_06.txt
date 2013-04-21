@@ -1,0 +1,4000 @@
+#############################################################
+#
+#	DATC (Diplomacy Adjudicator Test Cases)
+#	DATC Version 2.4
+#	SECTION 6
+#	TEST CASES
+#
+# 	The DATC is copyright Lucas B. Kruijswijk
+#	http://web.inter.nl.net/users/L.B.Kruijswijk/
+#
+#############################################################
+
+#############################################################
+#	
+# Set the Variant for all cases.
+#
+#############################################################
+VARIANT_ALL Standard
+
+
+#############################################################
+#	
+# Section 6.A: BASIC CHECKS
+#
+#############################################################
+
+# illegal move (no convoy) : should fail
+CASE 6.A.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+ORDERS
+	England: F nth-pic
+POSTSTATE_SAME
+END
+
+
+# army cannot move to sea
+CASE 6.A.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lvp
+ORDERS
+	England: A lvp-iri
+POSTSTATE_SAME
+END
+
+
+# fleet cannot move to land
+CASE 6.A.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F Kiel
+ORDERS
+	Germany: F Kiel-Munich
+POSTSTATE_SAME
+END
+
+# fleet cannot support inland
+CASE 6.A.3.fleet.support.inland
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F Trieste
+	Austria: A Budapest
+	Russia: A Galacia
+	Russia: A Rumania
+ORDERS
+	Austria: F Trieste S A Budapest
+	Austria: A Budapest H
+	Russia: A Galacia-Budapest
+	Russia: A Rumania S A Galacia-Budapest
+POSTSTATE
+	Austria: F Trieste
+	Russia: A Budapest	# succeeds unless illegal support actually worked
+	Russia: A Rumania
+POSTSTATE_DISLODGED
+	Austria: A Budapest
+END
+
+
+# move to same sector is illegal
+CASE 6.A.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F Kiel
+ORDERS
+	Germany: F Kiel-Kiel
+POSTSTATE_SAME
+END
+
+
+# move to same sector is illegal, even with convoy
+CASE 6.A.5 (Move to own sector with convoy)
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A liverpool
+	England: A Yorkshire
+	England: F nth
+	Germany: F lon
+	Germany: A wales
+ORDERS
+	England: F nth convoys A Yorkshire - yorkshire
+	England: A Yorkshire-Yorkshire
+	England: A liverpool supports A Yorkshire-Yorkshire
+	Germany: F london-Yorkshire
+	Germnay: A Wales SUPPORTS F london-yorkshire
+POSTSTATE
+	England: A liverpool
+	England: F nth
+	Germany: F Yorkshire
+	Germany: A wales
+POSTSTATE_DISLODGED
+	England: A Yorkshire
+END
+
+# move to same sector is illegal, even with convoy
+CASE 6.A.5.old (Nov-24-2001 DATC)
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F london
+	England: F nth
+	England: A Yorkshire
+	England: A liverpool
+ORDERS
+	England: F london-Yorkshire
+	England: F nth convoys A Yorkshire - yorkshire
+	England: A Yorkshire-Yorkshire
+	England: A liverpool supports A Yorkshire-Yorkshire
+POSTSTATE_SAME
+END
+
+# ordering units of another power is illegal
+CASE 6.A.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F london
+ORDERS
+	Germany: F london-nth
+POSTSTATE_SAME
+END
+
+
+# only armies can convoy
+CASE 6.A.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F london
+	England: F nth
+ORDERS
+	England: F london-belgium
+	England: F nth Convoys A london-Belgium
+POSTSTATE_SAME
+END
+
+
+# only armies can convoy; this is similar, but
+# with the correct specifier in the convoy order
+CASE 6.A.7.modified
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F london
+	England: F nth
+ORDERS
+	England: F london-belgium
+	England: F nth Convoys F london-Belgium
+POSTSTATE_SAME
+END
+
+# army cannot get an additional hold power by supporting itself
+# fleet Trieste should be dislodged
+CASE 6.A.8
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Italy: A Venice
+	Italy: A Tyrolia
+	Austria: F Trieste
+ORDERS
+	Italy: A venice-trieste
+	Italy: A tyrolia supports A venice-trieste
+	Austria: F trieste supports F trieste
+POSTSTATE
+	Italy: A trieste
+	Italy: A Tyrolia
+POSTSTATE_DISLODGED
+	Austria: F trieste
+END
+
+
+# fleets must follow coasts if not on sea
+CASE 6.A.9
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Italy: F Rome
+ORDERS
+	Italy: F Rome-Venice
+POSTSTATE_SAME
+END
+
+
+# support on unreachable destination is not possible
+CASE 6.A.10
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A Venice
+	Italy: F Rome
+	Italy: A Apulia
+ORDERS
+	Austria: A Venice HOLD
+	Italy: F Rome Supports A Apulia-Venice
+	Italy: A Apulia-Venice
+POSTSTATE_SAME
+END
+
+
+# support on unreachable destination is not possible
+CASE 6.A.10.old (Nov-24-2001 DATC)
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A Budapest
+	Austria: F Trieste
+	Italy: A Venice
+ORDERS
+	Austria: A budapest SUPPORTS F trieste-venice
+	Austria: F trieste-venice
+	Italy: A venice HOLD
+POSTSTATE_SAME
+END
+
+
+# simple bounce
+CASE 6.A.11
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A vie
+	Italy: A ven
+ORDERS
+	Austria: A vie-tyr
+	Italy: A ven-tyr
+POSTSTATE_SAME
+END
+
+
+# 3-unit bounce
+CASE 6.A.12
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A vie
+	Italy: A ven
+	Germany: A mun
+ORDERS
+	Austria: A vie-tyr
+	Italy: A ven-tyr
+	Germany: A mun-tyr
+POSTSTATE_SAME
+END
+
+
+
+
+
+#############################################################
+#	
+# Section 6.B: COASTAL ISSUES
+#
+#############################################################
+
+# moving with unspec. coast when a coast is necessary
+# move fails; coast is significant
+CASE 6.B.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F portugal
+ORDERS
+	France: F portugal-spain
+POSTSTATE_SAME
+END
+
+
+# moving with unspecified coast when coast is not specified
+CASE 6.B.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F gascony
+ORDERS
+	France: F gascony-spain
+POSTSTATE
+	France: F spain/nc
+END
+
+
+# moving w/wrong coast, when coast is not necessary
+# this should fail, since coast should be NC; cannot move to SC
+CASE 6.B.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F gascony
+ORDERS
+	France: F gascony-spain(sc)
+POSTSTATE_SAME
+END
+
+
+# support to unreachable coast allowed
+# although fleet in marseille cannot go to the n.c., it can target it.
+CASE 6.B.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F gascony
+	France: F marseilles
+	Italy: F wes	
+ORDERS
+	France: F gascony-spain(nc)
+	France: F marseilles supports F gascony-spain(nc)
+	Italy: F wes-spain(sc)
+POSTSTATE
+	France: F spain/nc
+	France: F marseilles
+	Italy: F wes
+END
+
+
+# support from unreachable coast not allowed
+# coast of the fleet. gol cannot be reached from spain/nc
+# thus spanish support is invalid, and gol is not dislodged 
+CASE 6.B.5
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F spain/nc
+	France: F marseilles
+	Italy: F gol	
+ORDERS
+	France: F spain(nc) supports F marseilles-gol
+	France: F marseilles-gol
+	Italy: F gol hold
+POSTSTATE_SAME
+END
+
+
+# support can be cut with other coast
+# italian fleet should cut support in spain, so
+# french fleet is dislodged by the english
+CASE 6.B.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F iri
+	England: F nao
+	France: F spain/nc
+	France: F mao
+	Italy: F gol
+ORDERS
+	England: F iri supports F nao-mao
+	England: F nao-mao
+	France: F spain/nc supports F mao
+	France: F mao hold
+	Italy: F gol-spain/sc
+POSTSTATE
+	Italy F gol
+	France: F spain/nc
+	England: F iri
+	England: F mao
+POSTSTATE_DISLODGED
+	France f mao
+END
+
+
+# supporting with an unspecified coast
+# preferred: support of portugal is successful
+# result is stalemate
+CASE 6.B.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F portugal
+	France: F mao
+	Italy: F gol
+	Italy: F wes	
+ORDERS
+	France: F portugal supports f mao - spain
+	France: F mao - spain(nc)
+	Italy: F gol supports f wes-spain(sc)
+	Italy: F wes-spain(sc)
+POSTSTATE_SAME
+END
+
+
+# supporting with unspecified coast when only 1 coast is possible
+# stalemate should again occur
+CASE 6.B.8
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F portugal
+	France: F gascony
+	Italy: F gol
+	Italy: F wes	
+ORDERS
+	France: F portugal supports f gascony-spain
+	France: F gascony-spain(nc)
+	Italy: F gol supports f wes-spain(sc)
+	Italy: F wes-spain(sc)
+POSTSTATE_SAME
+END
+
+
+# supporting with wrong coast
+# preferred: if support doesn't match move (even with coasts), does not apply
+CASE 6.B.9
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F portugal
+	France: F mao
+	Italy: F gol
+	Italy: F wes	
+ORDERS
+	France: F portugal supports f mao - spain(nc)
+	France: F mao - spain(sc)
+	Italy: F gol supports f wes-spain(sc)
+	Italy: F wes-spain(sc)
+POSTSTATE
+	France: F portugal
+	France: F mao
+	Italy: F gol
+	Italy: F spain/sc
+END
+
+# unit ordered with wrong coast, but
+# coast is insignificant
+CASE 6.B.10
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F spa/sc
+ORDERS
+	France: F spa/nc-gol
+POSTSTATE
+	France: F gol
+END
+
+
+# coast cannot be ordered to change
+CASE 6.B.11
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F spa/nc
+ORDERS
+	France: F spa/sc-gol
+POSTSTATE_SAME
+END
+
+
+# armies may not move to coasts
+# (in other words: coasts are irrelevent to armies)
+CASE 6.B.12
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: A gascony
+ORDERS
+	France: A gascony-spain(nc)
+POSTSTATE
+	France: A spain
+END
+
+
+# "Coastal Crawl" cases
+# Circular Movement w/use of a coast NOT possible
+# this counts as a head-to-head battle
+CASE 6.B.13
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Turkey: F bulgaria(sc)
+	Turkey: F constantinople
+ORDERS
+	Turkey: F bulgaria(sc)-constantinople
+	Turkey: F constantinople-bulgaria(ec)
+POSTSTATE_SAME
+END
+
+# building with an unspecified coast
+# 
+CASE 6.B.14
+PRESTATE_SETPHASE Fall 1901, Adjustment		# note ADJUSTMENT phase
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A stp
+	Russia: A mos
+PRESTATE
+	Russia: A mos
+ORDERS
+	Russia: Build F stp		# no coast specified in a multi-coastal area
+POSTSTATE
+	Russia: A mos
+END
+
+
+##############################################################
+#	
+# Section 6.C: COASTAL ISSUES
+#
+#############################################################
+
+
+# 3-army circular movement
+CASE 6.C.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Turkey: F ank
+	Turkey: A con
+	Turkey: A smy
+ORDERS
+	Turkey: F ank-con
+	Turkey: A con-smy
+	Turkey: A smy-ank
+POSTSTATE
+	Turkey: A ank
+	Turkey: F con
+	Turkey: A smy
+END
+
+
+# 3-army circular movement w/support
+CASE 6.C.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Turkey: F ank
+	Turkey: A con
+	Turkey: A smy
+	Turkey: A bul
+ORDERS
+	Turkey: F ank-con
+	Turkey: A con-smy
+	Turkey: A smy-ank
+	Turkey: A bul S F ank-con
+POSTSTATE
+	Turkey: A ank
+	Turkey: F con
+	Turkey: A smy
+	Turkey: A bul
+END
+
+
+# disrupted 3-army circular movement
+CASE 6.C.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Turkey: F ank
+	Turkey: A con
+	Turkey: A smy
+	Turkey: A bul
+ORDERS
+	Turkey: F ank-con
+	Turkey: A con-smy
+	Turkey: A smy-ank
+	Turkey: A bul-con
+POSTSTATE
+	Turkey: F ank
+	Turkey: A con
+	Turkey: A smy
+	Turkey: A bul
+END
+
+
+# circular movement w/attacked convoy
+CASE 6.C.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A tri
+	Austria: A ser
+	Turkey: A bul
+	Turkey: F aeg
+	Turkey: F ion
+	Turkey: F adr
+	Italy: F nap
+ORDERS
+	Austria: A tri-ser
+	Austria: A ser-bul
+	Turkey: A bul-tri
+	Turkey: F aeg C A bul-tri
+	Turkey: F ion C A bul-tri
+	Turkey: F adr C A bul-tri
+	Italy: F nap-ion
+POSTSTATE
+	Austria: A ser
+	Austria: A bul
+	Turkey: A tri
+	Turkey: F aeg
+	Turkey: F ion
+	Turkey: F adr
+	Italy: F nap
+END
+
+
+# disrupted circular movement due to a dislodged convoy
+CASE 6.C.5
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A tri
+	Austria: A ser
+	Turkey: A bul
+	Turkey: F aeg
+	Turkey: F ion
+	Turkey: F adr
+	Italy: F nap
+	Italy: F tun
+ORDERS
+	Austria: A tri-ser
+	Austria: A ser-bul
+	Turkey: A bul-tri
+	Turkey: F aeg C A bul-tri
+	Turkey: F ion C A bul-tri
+	Turkey: F adr C A bul-tri
+	Italy: F nap-ion
+	Italy: F tun S F nap-ion
+POSTSTATE
+	Austria: A tri
+	Austria: A ser
+	Turkey: A bul
+	Turkey: F aeg
+	Turkey: F adr
+	Italy: F ion
+	Italy: F tun
+POSTSTATE_DISLODGED
+	Turkey: F ion
+END
+
+# two armies with two convoys
+CASE 6.C.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	France: F eng
+	France: A bel
+ORDERS
+	England: F nth C A lon-bel
+	England: A lon-bel
+	France: F eng C A bel-lon
+	France: A bel-lon
+POSTSTATE
+	England: F nth
+	England: A bel
+	France: F eng
+	France: A lon
+END
+
+
+# disrupted unit swap (lon-bel bounces off bur-bel)
+CASE 6.C.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	France: F eng
+	France: A bel
+	France: A bur
+ORDERS
+	England: F nth C A lon-bel
+	England: A lon-bel
+	France: F eng C A bel-lon
+	France: A bel-lon
+	France: A bur-bel
+POSTSTATE_SAME
+END
+
+
+
+#############################################################
+#	
+# Section D: SUPPORTS AND DISLODGES
+#
+#############################################################
+
+# supported hold can prevent dislodgement
+CASE 6.D.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F adr
+	Austria: A tri
+	Italy: A ven
+	Italy: A tyr
+ORDERS
+	Austria: F adr S A tri-ven
+	Austria: A tri-ven
+	Italy: A ven H
+	Italy: A tyr S A ven
+POSTSTATE_SAME
+END
+
+# move cuts support on hold
+CASE 6.D.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F adr
+	Austria: A tri
+	Austria: A vie
+	Italy: A ven
+	Italy: A tyr
+ORDERS
+	Austria: F adr S A tri-ven
+	Austria: A tri-ven
+	Austria: A vie-tyr
+	Italy: A ven H
+	Italy: A tyr S A ven
+POSTSTATE
+	Austria: F adr
+	Austria: A ven
+	Austria: A vie
+	Italy: A tyr
+POSTSTATE_DISLODGED
+	Italy: A ven
+END
+
+
+# move cuts support on move
+CASE 6.D.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F adr
+	Austria: A tri
+	Italy: A ven
+	Italy: F ion
+ORDERS
+	Austria: F adr S A tri-ven
+	Austria: A tri-ven
+	Italy: A ven H
+	Italy: F ion-adr
+POSTSTATE_SAME
+END
+
+
+# support to hold on unit supporting a hold is allowed
+CASE 6.D.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kiel
+	Russia: F bal
+	Russia: A pru
+ORDERS
+	Germany: A ber S F kiel
+	Germany: F kiel S A ber
+	Russia: F bal S A pru-ber
+	Russia: A pru-ber
+POSTSTATE
+	Germany: A ber
+	Germany: F kiel
+	Russia: F bal
+	Russia: A pru
+END
+
+
+# support to hold on unit supporting a move is allowed
+CASE 6.D.5
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A mun
+	Russia: F bal
+	Russia: A pru
+ORDERS
+	Germany: A ber S A mun-sil
+	Germany: F kiel S A ber
+	Germany: A mun-sil
+	Russia: F bal S A pru-ber
+	Russia: A pru-ber
+POSTSTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A sil
+	Russia: F bal
+	Russia: A pru
+END
+
+# support to hold on convoying unit is allowed
+CASE 6.D.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F bal
+	Germany: F pru
+	Russia: F lvn
+	Russia: F gob
+ORDERS
+	Germany: A ber-swe
+	Germany: F bal C A ber-swe
+	Germany: F pru S F bal
+	Russia: F lvn-bal
+	Russia: F gob S F lvn-bal
+POSTSTATE
+	Germany: A swe
+	Germany: F bal
+	Germany: F pru
+	Russia: F lvn
+	Russia: F gob
+END
+
+
+# support to hold on moving unit NOT allowed
+CASE 6.D.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F bal
+	Germany: F pru
+	Russia: F lvn
+	Russia: F gob
+	Russia: A fin
+ORDERS
+	Germany: F bal-swe
+	Germany: F pru S F bal
+	Russia: F lvn-bal
+	Russia: F gob S F lvn-bal
+	Russia: A fin-swe
+POSTSTATE
+	Germany: F pru
+	Russia: F bal
+	Russia: F gob
+	Russia: A fin
+POSTSTATE_DISLODGED
+	Germany: F bal
+END
+
+
+# failed convoy cannot receive hold support
+CASE 6.D.8
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F ion
+	Austria: A ser
+	Austria: A alb
+	Turkey: A gre
+	Turkey: A bul
+ORDERS
+	Austria: F ion H
+	Austria: A ser S A alb-gre
+	Austria: A alb-gre
+	Turkey: A gre-nap
+	Turkey: A bul S A gre
+POSTSTATE
+	Austria: F ion
+	Austria: A ser
+	Austria: A gre
+	Turkey: A bul
+POSTSTATE_DISLODGED
+	### Turkey: A gre		# NO RETREATS: destroyed
+END
+
+
+# support to move on holding unit is not allowed
+CASE 6.D.9
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Italy: A ven
+	Italy: A tyr
+	Austria: F alb
+	Austria: F tri
+ORDERS
+	Italy: A ven-tri
+	Italy: A tyr S A ven-tri
+	Austria: F alb S A tri-ser
+	Austria: F tri H
+POSTSTATE
+	Italy: A tri
+	Italy: A tyr
+	Austria: F alb
+POSTSTATE_DISLODGED
+	Austria: F tri
+END
+
+
+# self-dislodgement prohibited
+CASE 6.D.10
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A mun
+ORDERS
+	Germany: A ber H
+	Germany: F kiel-ber
+	Germany: A mun S F kiel-ber
+POSTSTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A mun
+END
+
+
+# no self-dislodgement of returning unit
+CASE 6.D.11
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A mun
+	Russia: A war
+ORDERS
+	Germany: A ber-pru
+	Germany: F kiel-ber
+	Germany: A mun S F kiel-ber
+	Russia: A war-pru
+POSTSTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A mun
+	Russia: A war
+END
+
+
+# supporting a foreign unit to dislodge own unit is prohibited
+CASE 6.D.12
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F tri
+	Austria: A vie
+	Italy: A ven
+ORDERS
+	Austria: F tri H
+	Austria: A vie S A ven-tri
+	Italy: A ven-tri
+POSTSTATE
+	Austria: F tri
+	Austria: A vie
+	Italy: A ven
+END
+
+
+# supporting a foreign unit to dislodge a returning own unit is prohibited
+CASE 6.D.13
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F tri
+	Austria: A vie
+	Italy: A ven
+	Italy: F apu
+ORDERS
+	Austria: F tri-adr
+	Austria: A vie S A ven-tri
+	Italy: A ven-tri
+	Italy: F apu-adr
+POSTSTATE
+	Austria: F tri
+	Austria: A vie
+	Italy: A ven
+	Italy: F apu
+END
+
+
+# supporting a foreign unit is not enough to prevent dislodgement
+CASE 6.D.14
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F tri
+	Austria: A vie
+	Italy: A ven
+	Italy: A tyr
+	Italy: F adr	
+ORDERS
+	Austria: F tri H
+	Austria: A vie S A ven-tri
+	Italy: A ven-tri
+	Italy: A tyr S A ven-tri
+	Italy: F adr S A ven-tri
+POSTSTATE
+	Austria: A vie
+	Italy: A tri
+	Italy: A tyr
+	Italy: F adr	
+POSTSTATE_DISLODGED
+	Austria: F tri
+END
+
+
+# defender cannot cut support for attack on itself
+CASE 6.D.15
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Russia: F con
+	Russia: F bla
+	Turkey: F ank
+ORDERS
+	Russia: F con S F bla-ank
+	Russia: F bla-ank
+	Turkey: F ank-con
+POSTSTATE
+	Russia: F con
+	Russia: F ank
+POSTSTATE_DISLODGED
+	Turkey: F ank
+END
+
+# convoying a dislodging unit of 
+# same power is allowed
+CASE 6.D.16
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lon
+	England: F nth
+	France: F ech
+	France: A bel
+ORDERS
+	England: A lon H
+	England: F nth C A bel-lon
+	France: F ech S A bel-lon
+	France: A bel-lon
+POSTSTATE
+	England: F nth
+	France: F ech
+	France: A lon
+POSTSTATE_DISLODGED
+	England: A lon
+END
+
+
+# dislodgement cuts support
+CASE 6.D.17
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Russia: F con
+	Russia: F bla
+	Turkey: F ank
+	Turkey: A smy
+	Turkey: A arm
+ORDERS
+	Russia: F con S F bla-ank
+	Russia: F bla-ank
+	Turkey: F ank-con
+	Turkey: A smy S F ank-con
+	Turkey: A arm-ank
+POSTSTATE
+	Russia: F bla
+	Turkey: F con
+	Turkey: A smy
+	Turkey: A arm
+POSTSTATE_DISLODGED
+	Russia: F con
+END
+
+
+# surviving unit will sustain support
+CASE 6.D.18
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Russia: F con
+	Russia: F bla
+	Russia: A bul
+	Turkey: F ank
+	Turkey: A smy
+	Turkey: A arm
+ORDERS
+	Russia: F con S F bla-ank
+	Russia: F bla-ank
+	Russia: A bul S F con
+	Turkey: F ank-con
+	Turkey: A smy S F ank-con
+	Turkey: A arm-ank
+POSTSTATE
+	Russia: F con
+	Russia: F ank
+	Russia: A bul
+	Turkey: A smy
+	Turkey: A arm
+POSTSTATE_DISLODGED
+	### Turkey: F ank		# NO RETREATS: destroyed
+END
+
+
+# even when surviving is in an alternative way
+CASE 6.D.19
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Russia: F con
+	Russia: F bla
+	Russia: A smy
+	Turkey: F ank
+ORDERS
+	Russia: F con S F bla-ank
+	Russia: F bla-ank
+	Russia: A smy S F ank-con
+	Turkey: F ank-con
+POSTSTATE
+	Russia: F con
+	Russia: F ank
+	Russia: A smy
+POSTSTATE_DISLODGED
+	Turkey: F ank
+END
+
+
+# unit cannot cut support of its own country
+CASE 6.D.20
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F lon
+	England: F nth
+	England: A yor
+	France: F eng
+ORDERS
+	England: F lon S F nth-eng
+	England: F nth-eng
+	England: A yor-lon
+	France: F eng H
+POSTSTATE
+	England: F lon
+	England: F eng
+	England: A yor
+POSTSTATE_DISLODGED
+	France: F eng
+END
+
+
+# dislodging does not cancel a support cut
+CASE 6.D.21
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F tri
+	Italy: A ven
+	Italy: A tyr
+	Germany: A mun
+	Russia: A sil
+	Russia: A ber
+ORDERS
+	Austria: F tri H
+	Italy: A ven-tri
+	Italy: A tyr S A ven-tri
+	Germany: A mun-tyr
+	Russia: A sil-mun
+	Russia: A ber S A sil-mun
+POSTSTATE
+	Austria: F tri
+	Italy: A ven
+	Italy: A tyr
+	Russia: A mun
+	Russia: A ber
+POSTSTATE_DISLODGED
+	Germany: A mun
+END
+
+
+# impossible fleet move cannot be supported
+CASE 6.D.22
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F kie
+	Germany: A bur
+	Russia: A mun
+	Russia: A ber
+ORDERS
+	Germany: F kie-mun
+	Germany: A bur S A mun-kie
+	Russia: A mun-kie
+	Russia: A ber S A mun-kie
+POSTSTATE
+	Germany: A bur
+	Russia: A kie
+	Russia: A ber
+POSTSTATE_DISLODGED
+	Germany: F kie
+END
+
+
+# impossible coast move cannot be supported
+CASE 6.D.23
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Italy: F gol
+	Italy: F wes
+	France: F spa/nc
+	France: F mar
+ORDERS
+	Italy: F gol-spa/sc
+	Italy: F wes S F gol-spa/sc
+	France: F spa/nc-gol
+	France: F mar S F spa/nc-gol
+POSTSTATE
+	Italy: F spa/sc
+	Italy: F wes
+	France: F mar
+POSTSTATE_DISLODGED
+	France: F spa/nc
+END
+
+
+# impossible army move cannot be supported
+CASE 6.D.24
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: A mar
+	France: F spa/sc
+	Italy: F gol
+	Turkey: F tys
+	Turkey: F wes
+ORDERS
+	France: A mar-gol
+	France: F spa/sc S A mar-gol
+	Italy: F gol H
+	Turkey: F tys S F wes-gol
+	Turkey: F wes-gol
+POSTSTATE
+	France: A mar
+	France: F spa/sc
+	Turkey: F tys
+	Turkey: F gol
+POSTSTATE_DISLODGED
+	Italy: F gol
+END
+
+
+# failing hold support can be supported
+CASE 6.D.25
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kie
+	Russia: F bal
+	Russia: A pru
+ORDERS
+	Germany: A ber S A pru
+	Germany: F kie S A ber
+	Russia: F bal S A pru-ber
+	Russia: A pru-ber
+POSTSTATE_SAME
+END
+
+
+# failing move support can be supported
+CASE 6.D.26
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kie
+	Russia: F bal
+	Russia: A pru
+ORDERS
+	Germany: A ber S A sil
+	Germany: F kie S A ber
+	Russia: F bal S A pru-ber
+	Russia: A pru-ber
+POSTSTATE_SAME
+END
+
+
+# failing convoy support can be supported
+CASE 6.D.27
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F swe
+	England: F den
+	Germany: A ber
+	Russia: F bal
+	Russia: F pru
+ORDERS
+	England: F swe-bal
+	England: F den S F swe-bal
+	Germany: A ber H
+	Russia: F bal C A ber-lvn
+	Russia: F pru S F bal
+POSTSTATE_SAME
+END
+
+# Impossible Move and Support
+CASE 6.D.28
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A bud
+	Russia: F rum
+	Turkey: F bla
+	Turkey: A bul
+ORDERS
+	Austria: A bud S F rum
+	Russia: F rum-hol			# impossible move
+	Turkey: F bla-rum
+	Turkey: A bul S F bla-rum
+POSTSTATE_SAME
+END
+
+# Move to Impossible Coast and Support
+CASE 6.D.29
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A bud
+	Russia: F rum
+	Turkey: F bla
+	Turkey: A bul
+ORDERS
+	Austria: A bud S F rum
+	Russia: F rum-bul(sc)		# impossible move
+	Turkey: F bla-rum
+	Turkey: A bul S F bla-rum
+POSTSTATE_SAME
+END
+
+# Move without Coast and Support
+CASE 6.D.30
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Italy: F aeg
+	Russia: F con
+	Turkey: F bla
+	Turkey: A bul
+ORDERS
+	Italy: F aeg S F con
+	Russia: F con-bul
+	Turkey: F bla-con
+	Turkey: A bul S F bla-con
+POSTSTATE_SAME
+END
+
+# A Tricky Impossible Support
+CASE 6.D.31
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A rum
+	Turkey: F bla
+ORDERS
+	Austria: A rum-arm
+	Turkey: F bla S A rum-arm
+POSTSTATE_SAME
+END
+
+# A missing fleet
+CASE 6.D.32
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F edi
+	England: A lvp
+	France: F lon
+	Germany: A yor
+ORDERS
+	England: F edi S A lvp-yor
+	England: A lvp-yor
+	France: F lon S A yor
+	Germany: A yor-hol
+POSTSTATE_SAME
+END
+
+# Unwanted Support allowed
+# Self-Standoff can be broken by an unwanted support.
+CASE 6.D.33
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A ser
+	Austria: A vie
+	Russia: A gal
+	Turkey: A bul
+ORDERS
+	Austria: A ser-bud
+	Austria: A vie-bud
+	Russia: A gal S A ser-bud
+	Turkey: A bul-ser
+POSTSTATE
+	Austria: A bud
+	Austria: A vie
+	Russia: A gal
+	Turkey: A ser
+END
+
+# Support targeting own area not allowed
+CASE 6.D.34
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: A sil
+	Germany: F bal
+	Italy:   A pru
+	Russia:  A war
+	Russia:  A lvn
+ORDERS
+	Germany: A ber-pru
+	Germany: A sil S A ber-pru
+	Germany: F bal S A ber-pru
+	Italy:   A pru S A lvn-pru		# not a legal order. Dislodged/Destroyed
+	Russia:  A war S A lvn-pru
+	Russia:  A lvn-pru
+POSTSTATE
+	Germany: A pru					# German move succeeds
+	Germany: A sil
+	Germany: F bal
+	Russia:  A war
+	Russia:  A lvn
+	# Italy: the Dislodged prussian unit has no retreats, and is destroyed
+END
+
+
+#############################################################
+#	
+# Section E: HEAD-TO-HEAD BATTLES & BELEAGURED GARRISON
+#
+#############################################################
+
+# dislodged unit has no effect on attacker's area
+CASE 6.E.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: A kie
+	Germany: A sil
+	Russia: A pru
+ORDERS
+	Germany: A ber-pru
+	Germany: A kie-ber
+	Germany: A sil S A ber-pru
+	Russia: A pru-ber
+POSTSTATE
+	Germany: A pru
+	Germany: A ber
+	Germany: A sil
+POSTSTATE_DISLODGED
+	Russia: A pru
+END
+
+
+# no self-dislodgement in head-to-head battle
+CASE 6.E.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: F kiel
+	Germany: A mun
+ORDERS
+	Germany: A ber-kiel
+	Germany: F kiel-ber
+	Germany: A mun S A ber-kiel
+POSTSTATE_SAME
+END
+
+
+# no help in dislodging own unit
+CASE 6.E.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: A ber
+	Germany: A mun
+	England: F kiel
+ORDERS
+	Germany: A ber-kiel
+	Germany: A mun S F kiel-ber
+	England: F kiel-ber
+POSTSTATE_SAME
+END
+
+
+# non-dislodged loser still has effect
+CASE 6.E.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F hol
+	Germany: F hel
+	Germany: F ska
+	France: F nth
+	France: F bel
+	England: F edi
+	England: F yor
+	England: F nrg
+	Austria: A kie
+	Austria: A ruh
+ORDERS
+	Germany: F hol-nth
+	Germany: F hel S F hol-nth
+	Germany: F ska S F hol-nth
+	France: F nth-hol
+	France: F bel S F nth-hol
+	England: F edi S F nrg-nth
+	England: F yor S F nrg-nth
+	England: F nrg-nth
+	Austria: A kie S A ruh-hol
+	Austria: A ruh-hol
+POSTSTATE
+	Germany: F hol
+	Germany: F hel
+	Germany: F ska
+	France: F nth
+	France: F bel
+	England: F edi
+	England: F yor
+	England: F nrg
+	Austria: A kie
+	Austria: A ruh
+END
+
+
+# loser dislodged by another army still has effect
+CASE 6.E.5
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F hol
+	Germany: F hel
+	Germany: F ska
+	France: F nth
+	France: F bel
+	England: F edi
+	England: F yor
+	England: F nrg
+	England: F lon
+	Austria: A kie
+	Austria: A ruh
+ORDERS
+	Germany: F hol-nth
+	Germany: F hel S F hol-nth
+	Germany: F ska S F hol-nth
+	France: F nth-hol
+	France: F bel S F nth-hol
+	England: F edi S F nrg-nth
+	England: F yor S F nrg-nth
+	England: F nrg-nth
+	England: F lon S F nrg-nth
+	Austria: A kie S A ruh-hol
+	Austria: A ruh-hol
+POSTSTATE
+	Germany: F hol
+	Germany: F hel
+	Germany: F ska
+	France: F bel
+	England: F edi
+	England: F yor
+	England: F nth
+	England: F lon
+	Austria: A kie
+	Austria: A ruh
+POSTSTATE_DISLODGED
+	France: F nth
+END
+
+
+# not dislodged because of own support still has effect
+CASE 6.E.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Germany: F hol
+	Germany: F hel
+	France: F nth
+	France: F bel
+	France: F eng
+	Austria: A kie
+	Austria: A ruh
+ORDERS
+	Germany: F hol-nth
+	Germany: F hel S F hol-nth
+	France: F nth-hol
+	France: F bel S F nth-hol
+	France: F eng S F hol-nth
+	Austria: A kie S A ruh-hol
+	Austria: A ruh-hol
+POSTSTATE
+	Germany: F hol
+	Germany: F hel
+	France: F nth
+	France: F bel
+	France: F eng
+	Austria: A kie
+	Austria: A ruh
+END
+
+
+# no self dislodgement with beleagured garrison
+CASE 6.E.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: F yor
+	Germany: F hol
+	Germany: F hel
+	Russia: F ska
+	Russia: F norway
+ORDERS
+	England: F nth H
+	England: F yor S F norway-nth
+	Germany: F hol S F hel-nth
+	Germany: F hel-nth
+	Russia: F ska S F norway-nth
+	Russia: F norway-nth
+POSTSTATE_SAME
+END
+
+
+# no self dislodgement with beleagured garrison
+# and head-to-head battle
+CASE 6.E.8
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: F yor
+	Germany: F hol
+	Germany: F hel
+	Russia: F ska
+	Russia: F norway
+ORDERS
+	England: F nth-norway
+	England: F yor S F norway-nth
+	Germany: F hol S F hel-nth
+	Germany: F hel-nth
+	Russia: F ska S F norway-nth
+	Russia: F norway-nth
+POSTSTATE_SAME
+END
+
+
+# Almost self dislodgement with beleagured garrison
+# like 6.e.9, but fleet is moving away.
+CASE 6.E.9
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: F yor
+	Germany: F hol
+	Germany: F hel
+	Russia: F ska
+	Russia: F norway
+ORDERS
+	England: F nth-nwg
+	England: F yor S F norway-nth
+	Germany: F hol S F hel-nth
+	Germany: F hel-nth
+	Russia: F ska S F norway-nth
+	Russia: F norway-nth
+POSTSTATE
+	England: F nwg		# nth-nwg successful
+	England: F yor
+	Germany: F hol
+	Germany: F hel
+	Russia: F ska
+	Russia: F nth		# norway-nth successful
+END
+
+
+# Almost circular movement with no self-dislodgement,
+# with beleaguered garrison. Beleagured fleet in previous
+# case is in circular movement with the weaker attacker;
+# the circular movement fails
+CASE 6.E.10
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: F yor
+	Germany: F hol
+	Germany: F hel
+	Germany: F den
+	Russia: F ska
+	Russia: F norway
+ORDERS
+	England: F nth-den
+	England: F yor S F norway-nth
+	Germany: F hol S F hel-nth
+	Germany: F hel-nth
+	Germany: F den-hel
+	Russia: F ska S F norway-nth
+	Russia: F norway-nth
+POSTSTATE_SAME
+END
+
+
+# No self dislodgement with beleaguered garrison; 
+# unit swap with adjacent convoying & 2 coasts.
+# This is a fairly complex test case.
+#
+CASE 6.E.11
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: A spa
+	France: F mao
+	France: F gol
+	Germany: A mar
+	Germany: A gas
+	Italy: F por
+	Italy: F wes
+ORDERS
+	France: A spa - por via convoy
+	France: F mao C A spain-por
+	France: F gol S F por-spa/nc
+	Germany: A mar S A gas-spa
+	Germany: A gas-spa
+	Italy: F por-spa/nc
+	Italy: F wes S F por-spa/nc
+POSTSTATE
+	France: A por		# swap
+	France: F mao
+	France: F gol
+	Germany: A mar
+	Germany: A gas
+	Italy: F spa/nc		# swap
+	Italy: F wes
+END
+
+
+
+# support on attack of own unit can be used for other means
+CASE 6.E.12
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: A bud
+	Austria: A ser
+	Italy: A vie
+	Russia: A gal
+	Russia: A rum
+ORDERS
+	Austria: A bud-rum
+	Austria: A ser S A vie-bud
+	Italy: A vie-bud
+	Russia: A gal-bud
+	Russia: A rum S A gal-bud
+POSTSTATE_SAME
+END
+
+
+# 3-way beleagured garrison
+CASE 6.E.13
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F edi
+	England: F yor
+	France: F bel
+	France: F eng
+	Germany: F nth
+	Russia: F nrg
+	Russia: F nor
+ORDERS
+	England: F edi S F yor-nth
+	England: F yor-nth
+	France: F bel-nth
+	France: F eng S F bel-nth
+	Germany: F nth H
+	Russia: F nrg-nth
+	Russia: F nor S F nrg-nth
+POSTSTATE_SAME
+END
+
+
+# Illegal head to head battle can still defend
+# If one of the units makes an illegal move, that unit
+# still has the possibility to defend against attacks
+# with a strength of 1
+CASE 6.E.14
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lvp
+	Russia: F edi
+ORDERS
+	England: A lvp-edi
+	Russia: F edi-lvp	# illegal
+POSTSTATE_SAME
+END
+
+
+CASE 6.E.15. TEST CASE, THE FRIENDLY HEAD TO HEAD BATTLE
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F Holland
+	England: A Ruhr
+	France:  A Kiel
+	France:  A Munich 
+	France:  A Silesia
+	Germany: A Berlin 
+	Germany: F Denmark
+	Germany: F Helgoland Bight
+	Russia:  F Baltic 
+	Russia:  A Prussia
+ORDERS
+	England: F Holland Supports A Ruhr - Kiel
+	England: A Ruhr - Kiel
+	France:  A Kiel - Berlin
+	France:  A Munich Supports A Kiel - Berlin
+	France:  A Silesia Supports A Kiel - Berlin
+	Germany: A Berlin - Kiel
+	Germany: F Denmark Supports A Berlin - Kiel
+	Germany: F Helgoland Bight Supports A Berlin - Kiel
+	Russia:  F Baltic Sea Supports A Prussia - Berlin
+	Russia:  A Prussia - Berlin
+POSTSTATE_SAME
+END
+
+
+
+#############################################################
+#	
+# Section F: CONVOYS
+#
+#############################################################
+
+# no convoy in coastal areas
+CASE 6.F.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Turkey: A gre
+	Turkey: F aeg
+	Turkey: F con
+	Turkey: F bla
+ORDERS
+	Turkey: A gre-sev
+	Turkey: F aeg C A gre-sev
+	Turkey: F con C A gre-sev
+	Turkey: F bla C A gre-sev
+POSTSTATE_SAME
+END
+
+
+# an army being convoyed can bounce as normal
+CASE 6.F.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F eng
+	England: A lon
+	France: A par
+ORDERS
+	England: F eng C A lon-bre
+	England: A lon-bre
+	France: A par-bre
+POSTSTATE_SAME
+END
+
+
+# an army being convoyed can receive support
+CASE 6.F.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F eng
+	England: A lon
+	England: F mao
+	France: A par
+ORDERS
+	England: F eng C A lon-bre
+	England: A lon-bre
+	England: F mao S A lon-bre
+	France: A par-bre
+POSTSTATE
+	England: F eng
+	England: A bre
+	England: F mao
+	France: A par
+END
+
+
+# an attacked convoy is not disrupted
+CASE 6.F.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	Germany: F ska
+ORDERS
+	England: F nth C A lon-hol
+	England: A lon-hol
+	Germany: F ska-nth
+POSTSTATE
+	England: F nth
+	England: A hol
+	Germany: F ska
+END
+
+# A beleagured convoy is not disrupted
+CASE 6.F.E
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	France: F ech
+	France: F bel
+	Germany: F ska
+	Germany: F den
+ORDERS
+	England: F nth C A lon-hol
+	England: A lon-hol
+	France: F ech-nth
+	France: F bel S F ech-nth
+	Germany: F ska-nth
+	Germany: F den S F ska-nth
+POSTSTATE
+	England: F nth
+	England: A hol
+	France: F ech
+	France: F bel
+	Germany: F ska
+	Germany: F den
+END
+
+
+# dislodged convoy does not cut support
+CASE 6.F.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	Germany: A hol
+	Germany: A bel
+	Germany: F hel
+	Germany: F ska
+	France: A pic
+	France: A bur
+ORDERS
+	England: F nth C A lon-hol
+	England: A lon-hol
+	Germany: A hol S A bel
+	Germany: A bel S A hol
+	Germany: F hel S F ska-nth
+	Germany: F ska-nth
+	France: A pic-bel
+	France: A bur S A pic-bel
+POSTSTATE
+	England: A lon
+	Germany: A hol
+	Germany: A bel
+	Germany: F hel
+	Germany: F nth
+	France: A pic
+	France: A bur
+POSTSTATE_DISLODGED
+	England: F nth
+END
+
+
+
+# dislodged convoy does not cause contested area
+CASE 6.F.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	Germany: F hel
+	Germany: F ska
+ORDERS
+	England: F nth C A lon-hol
+	England: A lon-hol
+	Germany: F hel S F ska-nth
+	Germany: F ska-nth
+POSTSTATE
+	England: A lon
+	Germany: F hel
+	Germany: F nth
+POSTSTATE_DISLODGED
+	England: F nth
+END
+
+
+# dislodged convoy does not cause a bounce
+CASE 6.F.8
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	Germany: F hel
+	Germany: F ska
+	Germany: A bel
+ORDERS
+	England: F nth C A lon-hol
+	England: A lon-hol
+	Germany: F hel S F ska-nth
+	Germany: F ska-nth
+	Germany: A bel-hol
+POSTSTATE
+	England: A lon
+	Germany: F hel
+	Germany: F nth
+	Germany: A hol
+POSTSTATE_DISLODGED
+	England: F nth
+END
+
+
+# dislodge of multi-route convoy
+# poststate: per 2000 rules
+CASE 6.F.9
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F eng
+	England: F nth
+	England: A lon
+	France: F bre
+	France: F mao
+ORDERS
+	England: F eng C A lon-bel
+	England: F nth C A lon-bel
+	England: A lon-bel
+	France: F bre S F mao-eng
+	France: F mao-eng
+POSTSTATE
+	England: F nth
+	England: A bel
+	France: F bre
+	France: F eng
+POSTSTATE_DISLODGED
+	England: F eng
+END
+
+
+# dislodge of multi-route convoy with foreign fleet
+CASE 6.F.10
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	Germany: F eng
+	France: F bre
+	France: F mao
+ORDERS
+	England: F nth C A lon-bel
+	England: A lon-bel
+	Germany: F eng C A lon-bel
+	France: F bre S F mao-eng
+	France: F mao-eng
+POSTSTATE
+	England: F nth
+	England: A bel
+	France: F bre
+	France: F eng
+POSTSTATE_DISLODGED
+	Germany: F eng
+END
+
+
+# dislodge of multi-route convoy with only foreign fleets
+# 2000 rules resolution
+CASE 6.F.11
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lon
+	Germany: F eng
+	Russia: F nth
+	France: F bre
+	France: F mao
+ORDERS
+	England: A lon-bel
+	Germany: F eng C A lon-bel
+	Russia: F nth C A lon-bel
+	France: F bre S F mao-eng
+	France: F mao-eng
+POSTSTATE
+	England: A bel
+	Russia: F nth
+	France: F bre
+	France: F eng
+POSTSTATE_DISLODGED	
+	Germany: F eng
+END
+
+
+# dislodged convoying fleet not on route
+CASE 6.F.12
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F eng
+	England: A lon
+	England: F iri
+	France: F nao
+	France: F mao
+ORDERS
+	England: F eng C A lon-bel
+	England: A lon-bel
+	England: F iri C A lon-bel
+	France: F nao S F mao-iri
+	France: F mao-iri
+POSTSTATE
+	England: F eng
+	England: A bel
+	France: F nao
+	France: F iri
+POSTSTATE_DISLODGED
+	England: F iri
+END
+
+
+# The Unwanted Alternative
+CASE 6.F.13
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lon
+	England: F nth
+	France:  F ech
+	Germany: F hol
+	Germany: F den
+ORDERS
+	England: A lon-bel
+	England: F nth C A lon-bel
+	France:  F ech C A lon-bel
+	Germany: F hol S F den-nth
+	Germany: F den-nth
+POSTSTATE
+	England: A bel	# convoy succeeds
+	France:  F ech
+	Germany: F hol
+	Germany: F nth	# dislodges F nth
+POSTSTATE_DISLODGED
+	England: F nth	
+END
+
+
+# simple convoy paradox; preferred results (2000/szykman)
+CASE 6.F.14
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F lon
+	England: F wal
+	France: A bre
+	France: F eng
+ORDERS
+	England: F lon S F wal-eng
+	England: F wal-eng
+	France: A bre-lon
+	France: F eng C A bre-lon
+POSTSTATE
+	England: F lon
+	England: F eng
+	France: A bre
+POSTSTATE_DISLODGED
+	France: F eng	
+END
+
+# simple convoy paradox with additional convoy
+# (paradox rules only apply to paradox core)
+# SYZKMAN resolution
+CASE 6.F.14
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F lon
+	England: F wal
+	France: A bre
+	France: F ech
+	Italy: F iri
+	Italy: F mao
+	Italy: F naf
+ORDERS
+	England: F lon S F wal-ech
+	England: F wal-ech
+	France: A bre-lon
+	France: F ech C A bre-lon
+	Italy: F iri C A naf-wal
+	Italy: F mao C A naf-wal
+	Italy: F naf-wal
+POSTSTATE
+	England: F lon
+	England: F ech	# wal-ech OK
+	France: A bre
+	Italy: F iri
+	Italy: F mao
+	Italy: F naf	# naf-wal OK
+POSTSTATE_DISLODGED
+	France: F ech	
+END
+
+
+
+# Pandin's paradox
+CASE 6.F.16
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F lon
+	England: F wal
+	France: A bre
+	France: F eng
+	Germany: F nth
+	Germany: F bel
+ORDERS
+	England: F lon S F wal-eng
+	England: F wal-eng
+	France: A bre-lon
+	France: F eng C A bre-lon
+	Germany: F nth S F bel-eng
+	Germany: F bel-eng
+POSTSTATE_SAME
+END
+
+
+
+# Pandin's extended paradox
+# 2000 rules used, because, syzkman only is used by jdip
+# when 2000 rules break down.
+#
+CASE 6.F.17 (Pandin's extended paradox)
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F lon
+	England: F wal
+	France: A bre
+	France: F eng
+	France: F yor
+	Germany: F nth
+	Germany: F bel
+ORDERS
+	England: F lon S F wal-eng
+	England: F wal-eng
+	France: A bre-lon
+	France: F eng C A bre-lon
+	France: F yor S A bre-lon
+	Germany: F nth S F bel-eng
+	Germany: F bel-eng
+POSTSTATE
+	# 2000 rules used
+	# support of london not cut, fleet in eng is NOT dislodged
+	England: F wal
+	France: A lon
+	France: F eng
+	France: F yor
+	Germany: F nth
+	Germany: F bel
+	#
+	#
+	# syzkman used (preferred)
+	# NOTE: these have not been checked! check these!!
+	#England: F lon
+	#England: F wal
+	#France: A bre
+	#France: F eng
+	#France: F yor
+	#Germany: F nth
+	#Germany: F bel
+END
+
+
+# betrayal paradox--via Syzkman
+CASE 6.F.18
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nth
+	England: A lon
+	England: F eng
+	France: F bel
+	Germany: F hel
+	Germany: F ska
+ORDERS
+	England: F nth C A lon-bel
+	England: A lon-bel
+	England: F eng S A lon-bel
+	France: F bel S F nth
+	Germany: F hel S F ska-nth
+	Germany: F ska-nth
+POSTSTATE
+	England: F nth
+	England: A lon
+	England: F eng
+	France: F bel
+	Germany: F hel
+	Germany: F ska
+END
+
+
+# multi-route convoy disruption paradox
+# (no paradox, really, if 2000 rule is used as-is)
+CASE 6.F.19
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: A tun
+	France: F tyn
+	France: F ion
+	Italy: F nap
+	Italy: F rom
+ORDERS
+	France: A tun-nap
+	France: F tyn C A tun-nap
+	France: F ion C A tun-nap
+	Italy: F nap S F rom-tyn
+	Italy: F rom-tyn
+POSTSTATE
+	France: A tun
+	France: F tyn
+	France: F ion
+	Italy: F nap
+	Italy: F rom
+END
+
+
+# unwanted multi-route convoy paradox
+# 2000 rule / Syzkman rule / All Hold rule give same results
+#
+CASE 6.F.20
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: A tun
+	France: F tyn
+	Italy: F nap
+	Italy: F ion
+	Turkey: F aeg
+	Turkey: F eme
+ORDERS
+	France: A tun-nap
+	France: F tyn C A tun-nap
+	Italy: F nap S F ion
+	Italy: F ion C A tun-nap
+	Turkey: F aeg S F eme-ion
+	Turkey: F eme-ion
+POSTSTATE
+	France: A tun
+	France: F tyn
+	Italy: F nap
+	Turkey: F aeg
+	Turkey: F ion
+POSTSTATE_DISLODGED
+	Italy: F ion
+END
+
+
+# dad's army convoy
+CASE 6.F.21
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Russia: A edi
+	Russia: F nrg
+	Russia: A nor
+	France: F iri
+	France: F mao
+	England: A lvp
+	England: F nao
+	England: F cly
+ORDERS
+	Russia: A edi S A nor-cly
+	Russia: F nrg C A nor-cly
+	Russia: A nor-cly
+	France: F iri S F mao-nao
+	France: F mao-nao
+	England: A lvp-cly by convoy
+	England: F nao C A lvp-cly
+	England: F cly S F nao
+POSTSTATE
+	Russia: A edi
+	Russia: F nrg
+	Russia: A cly
+	France: F iri
+	France: F nao
+	England: A lvp
+POSTSTATE_DISLODGED
+	# England: F nao	# DESTROYED
+	# England: F cly	# DESTROYED
+END
+
+
+# second-order paradox w/2 resolutions; syzkman preferred
+CASE 6.F.22
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F edi
+	England: F lon
+	France: A bre
+	France: F eng
+	Germany: F bel
+	Germany: F pic
+	Russia: A nor
+	Russia: F nth
+ORDERS
+	England: F edi-nth
+	England: F lon S F edi-nth
+	France: A bre-lon
+	France: F eng C A bre-lon
+	Germany: F bel S F pic-eng
+	Germany: F pic-eng
+	Russia: A nor-bel
+	Russia: F nth C A nor-bel
+POSTSTATE
+	England: F nth
+	England: F lon
+	France: A bre
+	Germany: F bel
+	Germany: F eng
+	Russia: A nor
+POSTSTATE_DISLODGED
+	France: F eng
+	Russia: F nth
+END
+
+
+# Second-order paradox extended
+#
+# The Russian move from St Petersbug to Edinburgh is not part
+# of the paradox (and the paradox breaker should not be applied
+# on this order). When the paradox is resolved and Edinburgh
+# is empty, the Russian convoy in St Petersburg can succeed.
+#
+#
+CASE 6.F.22.extended
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F edi
+	England: F lon
+	France: A bre
+	France: F eng
+	Germany: F bel
+	Germany: F pic
+	Russia: A nor
+	Russia: F nth
+	Russia: F nwg
+	Russia: F bar
+	Russia: A stp
+ORDERS
+	England: F edi-nth
+	England: F lon S F edi-nth
+	France: A bre-lon			# part of paradox
+	France: F eng C A bre-lon		# part of paradox
+	Germany: F bel S F pic-eng
+	Germany: F pic-eng
+	Russia: A nor-bel			# part of paradox
+	Russia: F nth C A nor-bel		# part of paradox
+	Russia: F nwg C A stp-edi
+	Russia: F bar C A stp-edi
+	Russia: A stp-edi			# not part of paradox
+POSTSTATE
+	England: F nth
+	England: F lon
+	France: A bre
+	Germany: F bel
+	Germany: F eng
+	Russia: A nor
+	Russia: F nwg
+	Russia: F bar
+	Russia: A edi
+POSTSTATE_DISLODGED
+	France: F eng
+	Russia: F nth
+END
+
+# Second-order paradox with two exclusive convoys
+# Syzkman results; no units should move.
+CASE 6.F.23
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F edi
+	England: F yor
+	France: A bre
+	France: F ech
+	Germany: F bel
+	Germany: F lon
+	Italy: F mao
+	Italy: F iri
+	Russia: A nor
+	Russia: F nth
+ORDERS
+	England: F edi-nth
+	England: F yor S F edi-nth
+	France: A bre-lon
+	France: F ech C A bre-lon
+	Germany: F bel S F ech
+	Germany: F lon S F nth
+	Italy: F mao-ech
+	Italy: F iri S F mao-ech
+	Russia: A nor-bel
+	Russia: F nth C A nor-bel
+POSTSTATE
+	England: F edi
+	England: F yor
+	France: A bre
+	France: F ech
+	Germany: F bel
+	Germany: F lon
+	Italy: F mao
+	Italy: F iri
+	Russia: A nor
+	Russia: F nth
+END
+
+# 2nd-order paradox with NO resolution; szykman used
+CASE 6.F.24
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F edi
+	England: F lon
+	England: F iri
+	England: F mao
+	France: A bre
+	France: F eng
+	France: F bel
+	Russia: A nor
+	Russia: F nth
+ORDERS
+	England: F edi-nth
+	England: F lon S F edi-nth
+	England: F iri-eng
+	England: F mao S F iri-eng
+	France: A bre-lon
+	France: F eng C A bre-lon
+	France: F bel S F eng
+	Russia: A nor-bel
+	Russia: F nth C A nor-bel
+POSTSTATE
+	England: F nth
+	England: F lon
+	England: F iri
+	England: F mao
+	France: A bre
+	France: F eng
+	France: F bel
+	Russia: A nor
+POSTSTATE_DISLODGED
+	Russia: F nth	
+END
+
+
+
+
+#############################################################
+#	
+# Section G: CONVOYING TO ADJACENT PLACES
+#
+#############################################################
+
+
+# Two units can swap places via convoy
+#
+# By the 2000 rules, units are swapped, because "intent" of england
+# is to swap.
+# 
+CASE 6.G.1
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A nor
+	England: F ska
+	Russia: A swe 
+ORDERS
+	England: A nor-swe
+	England: F ska C A nor-swe
+	Russia: A swe-nor
+POSTSTATE
+	England: A swe
+	England: F ska
+	Russia: A nor 
+END
+
+
+# kidnapping an army
+# no swap should occur
+CASE 6.G.2
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A nor
+	Russia: F swe
+	Germany: F ska
+ORDERS
+	England: A nor-swe
+	Russia: F swe-nor
+	Germany: F ska C A nor-swe
+POSTSTATE
+	England: A nor
+	Russia: F swe
+	Germany: F ska
+END
+
+
+# kidnapping with a disrupted convoy
+# here, there is no intent to convoy. So no convoy occurs.
+CASE 6.G.3
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F bre
+	France: A pic
+	France: A bur
+	France: F mao
+	England: F eng
+ORDERS
+	France: F bre-eng
+	France: A pic-bel	# this will occur, over land.
+	France: A bur S A pic-bel
+	France: F mao S F bre-eng
+	England: F eng C A pic-bel
+POSTSTATE
+	France: F eng
+	France: A bel
+	France: A bur
+	France: F mao
+POSTSTATE_DISLODGED
+	England: F eng	
+END
+
+# Kidnapping with a disrupted convoy and
+# opposite move
+CASE 6.G.4
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: F bre
+	France: A pic
+	France: A bur
+	France: F mao
+	England: F ech
+	England: A bel
+ORDERS
+	France: F bre-ech			# will dislodged English fleet
+	France: A pic-bel			# should be successful, over land
+	France: A bur S A pic-bel	
+	France: F mao S F bre-ech
+	England: F ech C A pic-bel
+	England: A bel-pic
+POSTSTATE
+	France: F ech
+	France: A bel
+	France: A bur
+	France: F mao
+POSTSTATE_DISLODGED	
+	England: A bel		# dislodged via land route
+	England: F ech
+END
+	
+# swapping with intent
+#
+CASE 6.G.5
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Italy: A rom
+	Italy: F tyn
+	Turkey: A apu
+	Turkey: F ion
+ORDERS
+	Italy: A rom-apu
+	Italy: F tyn C A apu-rom
+	Turkey: A apu-rom
+	Turkey: F ion C A apu-rom
+POSTSTATE
+	Italy: A apu
+	Italy: F tyn
+	Turkey: A rom
+	Turkey: F ion
+END
+
+
+# swapping with unintended intent
+CASE 6.G.6
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lvp
+	England: F eng
+	Germany: A edi
+	France: F iri
+	France: F nth
+	Russia: F nrg
+	Russia: F nao
+ORDERS
+	England: A lvp-edi
+	England: F eng C A lvp-edi
+	Germany: A edi-lvp
+	France: F iri H
+	France: F nth H
+	Russia: F nrg C A lvp-edi
+	Russia: F nao C A lvp-edi
+POSTSTATE
+	England: A edi
+	England: F eng
+	Germany: A lvp
+	France: F iri
+	France: F nth
+	Russia: F nrg
+	Russia: F nao
+END
+
+# swapping with illegal intent
+CASE 6.G.7
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F ska
+	England: F norway
+	Russia: A swe
+	Russia: F gob
+ORDERS
+	England: F ska C A swe-norway
+	England: F norway-swe
+	Russia: A swe-norway
+	Russia: F gob C A swe-norway
+POSTSTATE	
+	England: F ska
+	England: F norway
+	Russia: A swe
+	Russia: F gob
+END
+
+
+
+# explicit convoy that isn't there
+# explicit 'by convoy' should be irrelevent if
+# there is not both a land and convoy route.
+#
+CASE 6.G.8
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	France: A bel
+	England: F nth
+	England: A hol
+ORDERS
+	France: A bel-hol by convoy		# explicit!
+	England: F nth-hel
+	England: A hol-kie
+POSTSTATE
+	France: A hol
+	England: F hel
+	England: A kie
+END
+
+
+# swapped or dislodged?
+CASE 6.G.9
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A nor
+	England: F ska
+	England: F fin
+	Russia: A swe
+ORDERS
+	England: A nor-swe				# intent is to convoy
+	England: F ska C A nor-swe		# this is the order that shows intent
+	England: F fin S A nor-swe
+	Russia: A swe-nor
+POSTSTATE
+	England: A swe
+	England: F ska
+	England: F fin
+	Russia: A nor
+END
+
+
+# swapped or a head-to-head battle?
+CASE 6.G.10
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A nor
+	England: F den
+	England: F fin
+	Germany: F ska
+	Russia: A swe
+	Russia: F bar
+	France: F nrg
+	France: F nth
+ORDERS
+	England: A nor-swe by convoy		# explicit!
+	England: F den S A nor-swe
+	England: F fin S A nor-swe
+	Germany: F ska C A nor-swe
+	Russia: A swe-nor
+	Russia: F bar S A swe-nor
+	France: F nrg-nor
+	France: F nth S F nrg-nor
+POSTSTATE
+	England: A swe
+	England: F den
+	England: F fin
+	Germany: F ska
+	Russia: F bar
+	France: F nrg
+	France: F nth
+POSTSTATE_DISLODGED
+	# Russia: A swe 	# dislodged, destroyed
+END
+
+# swapped or a head-to-head battle?
+#
+# we remove the "by convoy" here, just to do 
+# a further test. 
+#
+CASE 6.G.10.mod
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A nor
+	England: F den
+	England: F fin
+	Germany: F ska
+	Russia: A swe
+	Russia: F bar
+	France: F nrg
+	France: F nth
+ORDERS
+	England: A nor-swe
+	England: F den S A nor-swe
+	England: F fin S A nor-swe
+	Germany: F ska C A nor-swe
+	Russia: A swe-nor
+	Russia: F bar S A swe-nor
+	France: F nrg-nor
+	France: F nth S F nrg-nor
+POSTSTATE
+	England: A swe
+	England: F den
+	England: F fin
+	Germany: F ska
+	Russia: F bar
+	France: F nor
+	France: F nth
+POSTSTATE_DISLODGED
+	# Russia: A swe 	# dislodged, destroyed
+END
+
+
+# convoy to an adjacent place with a paradox
+# 
+# The paradox is that the convoy is available when the
+# land route is chosen, but not available when the 
+# convoy route is chosen.
+# 
+# Paradox resolution is by Szykman
+#
+CASE 6.G.11
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nor
+	England: F nth
+	Russia: A swe
+	Russia: F ska
+	Russia: F bar
+ORDERS
+	England: F nor S F nth-ska
+	England: F nth-ska
+	Russia: A swe-nor			# intent is to convoy
+	Russia: F ska C A swe-nor	# this creates intent to convoy
+	Russia: F bar S A swe-nor
+POSTSTATE
+	England: F ska
+	England: F nor
+	Russia: A swe
+	Russia: F bar
+POSTSTATE_DISLODGED
+	Russia: F ska
+END
+
+
+# convoy to an adjacent place with a paradox
+#
+# Same as 6.G.11 but with an Explicit "by convoy".
+# This was to test the adjudicator before it could
+# detect 'intent' as per the rules.
+#
+# poststate valid for 2000 rules / Syzkman rule for paradoxes
+#
+CASE 6.G.11.mod
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: F nor
+	England: F nth
+	Russia: A swe
+	Russia: F ska
+	Russia: F bar
+ORDERS
+	England: F nor S F nth-ska
+	England: F nth-ska
+	Russia: A swe-nor via convoy
+	Russia: F ska C A swe-nor
+	Russia: F bar S A swe-nor
+POSTSTATE
+	England: F ska
+	England: F nor
+	Russia: A swe
+	Russia: F bar
+POSTSTATE_DISLODGED
+	Russia: F ska
+END
+
+
+#
+# Two units should be able to swap if
+# they are both convoyed.
+#
+CASE 6.G.12
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	England: A lvp
+	England: F nao
+	England: F nrg
+	Germany: A edi
+	Germany: F nth
+	Germany: F eng
+	Germany: F iri
+ORDERS
+	England: A lvp-edi by convoy
+	England: F nao C A lvp-edi
+	England: F nrg C A lvp-edi
+	Germany: A edi-lvp by convoy
+	Germany: F nth C A edi-lvp
+	Germany: F eng C A edi-lvp
+	Germany: F iri C A edi-lvp
+POSTSTATE
+	Germany: A lvp		# swap
+	England: F nao
+	England: F nrg
+	England: A edi		# swap
+	Germany: F nth
+	Germany: F eng
+	Germany: F iri
+END
+
+
+# support cut on attack on itself via convoy
+CASE 6.G.13
+PRESTATE_SETPHASE Spring 1901, Movement
+PRESTATE
+	Austria: F adr
+	Austria: A tri
+	Italy: A ven
+	Italy: F alb
+ORDERS
+	Austria: F adr C A tri-ven		# this creates intent to convoy
+	Austria: A tri-ven				# move will use convoy
+	Italy: A ven S F alb-tri
+	Italy: F alb-tri
+POSTSTATE
+	Austria: F adr
+	Italy: A ven
+	Italy: F tri
+POSTSTATE_DISLODGED
+	Austria: A tri
+END
+
+
+CASE 6.G.14. TEST CASE, BOUNCE BY CONVOY TO ADJACENT PLACE
+PRESTATE
+	England: A Norway
+	England: F Denmark
+	England: F Finland
+	France:  F Norwegian Sea
+	France:  F North Sea
+	Germany: F Skagerrak
+	Russia:  A Sweden
+	Russia:  F Barents Sea
+ORDERS
+	England: A Norway - Sweden
+	England: F Denmark Supports A Norway - Sweden
+	England: F Finland Supports A Norway - Sweden
+	France:  F Norwegian Sea - Norway
+	France:  F North Sea Supports F Norwegian Sea - Norway
+	Germany: F Skagerrak Convoys A Sweden - Norway
+	Russia:  A Sweden - Norway via Convoy
+	Russia:  F Barents Sea Supports A Sweden - Norway
+POSTSTATE
+	England: A Sweden
+	England: F Denmark
+	England: F Finland
+	France:  F Norwegian Sea
+	France:  F North Sea
+	Germany: F Skagerrak
+	Russia:  F Barents Sea
+POSTSTATE_DISLODGED
+	# Russia:  A Sweden	 -- this unit is destroyed (not dislodged)
+END
+
+CASE 6.G.15. TEST CASE, BOUNCE AND DISLODGE WITH DOUBLE CONVOY
+PRESTATE
+	England: F North Sea 
+	England: A Holland
+	England: A Yorkshire 
+	England: A London
+	France:  F English Channel
+	France:  A Belgium
+ORDERS
+	England: F North Sea Convoys A London - Belgium
+	England: A Holland Supports A London - Belgium
+	England: A Yorkshire - London
+	England: A London - Belgium via Convoy
+	France:  F English Channel Convoys A Belgium - London
+	France:  A Belgium - London via Convoy
+POSTSTATE
+	England: F North Sea 
+	England: A Holland
+	England: A Yorkshire 
+	England: A Belgium
+	France:  F English Channel
+POSTSTATE_DISLODGED
+	France:  A Belgium
+END
+
+CASE 6.G.16. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING BY CONVOY
+PRESTATE
+	England: A Norway
+	England: A Denmark
+	England: F Baltic Sea
+	England: F North Sea
+	Russia:  A Sweden
+	Russia:  F Skagerrak
+	Russia:  F Norwegian Sea
+ORDERS
+	England: A Norway - Sweden
+	England: A Denmark Supports A Norway - Sweden
+	England: F Baltic Sea Supports A Norway - Sweden
+	England: F North Sea - Norway
+	Russia:  A Sweden - Norway via Convoy
+	Russia:  F Skagerrak Convoys A Sweden - Norway
+	Russia:  F Norwegian Sea Supports A Sweden - Norway
+POSTSTATE
+	England: A Sweden
+	England: A Denmark
+	England: F Baltic Sea
+	England: F North Sea
+	Russia:  A Norway
+	Russia:  F Skagerrak
+	Russia:  F Norwegian Sea
+POSTSTATE_DISLODGED
+END
+
+CASE 6.G.17. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING OVER LAND
+PRESTATE
+	England: A Norway
+	England: A Denmark
+	England: F Baltic Sea
+	England: F Skagerrak
+	England: F North Sea
+	Russia:  A Sweden
+	Russia:  F Norwegian
+ORDERS
+	England: A Norway - Sweden via Convoy
+	England: A Denmark Supports A Norway - Sweden
+	England: F Baltic Sea Supports A Norway - Sweden
+	England: F Skagerrak Convoys A Norway - Sweden
+	England: F North Sea - Norway
+	Russia:  A Sweden - Norway
+	Russia:  F Norwegian Sea Supports A Sweden - Norway
+POSTSTATE
+	England: A Sweden
+	England: A Denmark
+	England: F Baltic Sea
+	England: F Skagerrak
+	England: F North Sea
+	Russia:  A Norway
+	Russia:  F Norwegian
+POSTSTATE_DISLODGED
+END
+
+CASE 6.G.18. TEST CASE, THE TWO UNIT IN ONE AREA BUG, WITH DOUBLE CONVOY
+PRESTATE
+	England: F North Sea
+	England: A Holland
+	England: A Yorkshire
+	England: A London
+	England: A Ruhr
+	France:  F English Channel
+	France:  A Belgium
+	France:  A Wales
+ORDERS
+	England: F North Sea Convoys A London - Belgium
+	England: A Holland Supports A London - Belgium
+	England: A Yorkshire - London
+	England: A London - Belgium
+	England: A Ruhr Supports A London - Belgium
+	France:  F English Channel Convoys A Belgium - London
+	France:  A Belgium - London
+	France:  A Wales Supports A Belgium - London
+POSTSTATE
+	England: F North Sea
+	England: A Holland
+	England: A Yorkshire
+	England: A Belgium
+	England: A Ruhr
+	France:  F English Channel
+	France:  A London
+	France:  A Wales
+POSTSTATE_DISLODGED
+END
+
+#############################################################
+#	
+# Section H: RETREATING
+#
+# NOTE: When setting PRESTATE positions in the retreat phase,
+# successful moves should have a unit in the destination of 
+# the successful move.
+#
+#############################################################
+
+# No Supports during Retreat
+#
+# shows illegality of support orders during retreat, and that
+# retreats to same place should cause disbandment of those
+# retreating units.
+# fixed prestate
+# 
+CASE 6.H.1
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	Austria: A ser
+	Italy: A ven
+	Italy: A tri
+	Italy: F gre
+	Italy: F aeg
+PRESTATE_DISLODGED
+	Austria: F tri
+	Turkey: F gre
+PRESTATE_RESULTS
+	FAILURE: Austria: F tri H
+	SUCCESS: Austria: A ser H
+	FAILURE: Turkey: F gre H
+	SUCCESS: Italy: A ven S A tyr-tri
+	SUCCESS: Italy: A tyr-tri
+	SUCCESS: Italy: F ion-gre
+	SUCCESS: Italy: F aeg S F ion-gre
+ORDERS
+	Austria: F tri-alb			# retreat
+	Austria: A ser S F tri-alb	# this is illegal
+	Turkey: F gre-alb			# retreat
+POSTSTATE
+	Austria: A ser
+	Italy: A ven
+	Italy: A tri
+	Italy: F gre
+	Italy: F aeg
+# POSTSTATE_DISLODGED			# all dislodged units destroyed
+END
+
+
+# No supports from retreating unit
+# fixed prestate
+CASE 6.H.2
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: A edi
+	England: F yor
+	Germany: A kie
+	Germany: A hol
+	Russia: A swe
+	Russia: A nor
+PRESTATE_DISLODGED
+	England: F nor
+	Russia: F edi
+	Russia: F hol
+PRESTATE_RESULTS
+	SUCCESS: England: A lvp-edi
+	SUCCESS: England: F yor S A lvp-edi
+	FAILURE: England: F nor H
+	SUCCESS: Germany: A kie S A ruh-hol
+	SUCCESS: Germany: A ruh-hol
+	FAILURE: Russia: F edi H
+	SUCCESS: Russia: A swe S A fin-nor
+	SUCCESS: Russia: A fin-nor
+	FAILURE: Russia: F hol H
+ORDERS
+	England: F nor-nth
+	Russia: F edi-nth
+	Russia: F hol S F edi-nth		# clearly illegal
+POSTSTATE
+	England: A edi
+	England: F yor
+	Germany: A kie
+	Germany: A hol
+	Russia: A swe
+	Russia: A nor
+# POSTSTATE_DISLODGED	# all dislodged units disband
+END
+
+
+# No Convoy during retreat
+# fixed prestate
+CASE 6.H.3
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: F nth
+	Germany: F kie
+	Germany: A hol
+PRESTATE_DISLODGED
+	England: A hol
+PRESTATE_RESULTS
+	SUCCESS: England: F nth H
+	FAILURE: England: A hol H
+	SUCCESS: Germany: F kie S A ruh-hol
+	SUCCESS: Germany: A ruh-hol
+ORDERS
+	England: A hol-yor			# fails; will disband
+	England: F nth C A hol-yor		# clearly illegal
+POSTSTATE
+	England: F nth
+	Germany: F kie
+	Germany: A hol
+# POSTSTATE_DISLODGED	# all dislodged units disband
+END
+
+
+# No other moves during retreat
+# fixed prestate
+CASE 6.H.4
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: F nth
+	Germany: F kie
+	Germany: A hol
+PRESTATE_DISLODGED
+	England: A hol
+PRESTATE_RESULTS
+	SUCCESS: England: F nth H
+	FAILURE: England: A hol H
+	SUCCESS: Germany: F kie S A ruh-hol
+	SUCCESS: Germany: A ruh-hol
+ORDERS
+	England: A hol-bel			# valid retreat order
+	England: F nth-nor			# clearly illegal; unit isn't dislodged
+POSTSTATE
+	England: F nth
+	England: A bel 				# retreated unit
+	Germany: F kie
+	Germany: A hol
+END
+
+# Unit may not retreat to the area from which it was attacked
+# 
+# legal retreat areas for ank: smy, arm
+# illegal retreat areas for ank: con, bla
+# fixed prestate
+#
+CASE 6.H.5
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	Russia: F con
+	Russia: F ank
+PRESTATE_DISLODGED
+	Turkey: F ank
+PRESTATE_RESULTS
+	FAILURE: Turkey: F ank H
+	SUCCESS: Russia: F con S A ruh-hol
+	SUCCESS: Russia: F bla-ank
+ORDERS
+	Turkey: F ank-bla			# cannot retreat to black sea! disbanded
+POSTSTATE
+	Russia: F con
+	Russia: F ank
+END
+
+
+# MODIFIED case 8: unit cannot retreat to occupied area
+# fixed prestate
+#
+CASE 6.H.5.mod
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	Russia: F con
+	Russia: F ank
+PRESTATE_DISLODGED
+	Turkey: F ank
+PRESTATE_RESULTS
+	FAILURE: Turkey: F ank H
+	SUCCESS: Russia: F con S A ruh-hol
+	SUCCESS: Russia: F bla-ank
+ORDERS
+	Turkey: F ank-con			# cannot retreat to con (unit there)! disbanded
+POSTSTATE
+	Russia: F con
+	Russia: F ank
+END
+
+
+# Unit may not retreat to a contested area
+# fixed prestate
+#
+CASE 6.H.6
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	Austria: A bud
+	Austria: A vie
+	Germany: A mun
+	Germany: A sil
+PRESTATE_DISLODGED
+	Italy: A vie
+PRESTATE_RESULTS
+	SUCCESS: Austria: A bud S A tri-vie
+	SUCCESS: Austria: A tri-vie
+	FAILURE: Germany: A mun-boh
+	FAILURE: Germany: A sil-boh
+	FAILURE: Italy: A vie H
+ORDERS
+	Italy: A vie-boh		# failure: boh is a contested area. Disbanded.
+POSTSTATE
+	Austria: A bud
+	Austria: A vie
+	Germany: A mun
+	Germany: A sil
+END
+
+
+# multiple retreat to same area will disband units
+CASE 6.H.7
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	Austria: A bud
+	Austria: A vie
+	Germany: A mun
+	Germany: A boh
+PRESTATE_DISLODGED
+	Italy: A vie
+	Italy: A boh
+PRESTATE_RESULTS
+	SUCCESS: Austria: A bud S A tri-vie
+	SUCCESS: Austria: A tri-vie
+	SUCCESS: Germany: A mun S A sil-boh
+	SUCCESS: Germany: A sil-boh
+	FAILURE: Italy: A vie H
+	FAILURE: Italy: A boh H
+ORDERS
+	Italy: A vie-tyr		
+	Italy: A boh-tyr
+POSTSTATE
+	Austria: A bud
+	Austria: A vie
+	Germany: A mun
+	Germany: A boh
+	### all dislodged units are disbanded!
+END
+
+
+# triple retreat to same area will disband units
+# fixed prestate
+CASE 6.H.8
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: A edi
+	England: F yor
+	Germany: A kie
+	Germany: A hol
+	Russia: A swe
+	Russia: A nor
+PRESTATE_DISLODGED
+	England: F nor
+	Russia: F edi
+	Russia: F hol
+PRESTATE_RESULTS
+	SUCCESS: England: A lvp-edi
+	SUCCESS: England: F yor S A lvp-edi
+	FAILURE: England: F nor H
+	SUCCESS: Germany: A kie S A ruh-hol
+	SUCCESS: Germany: A ruh-hol
+	FAILURE: Russia: F edi H
+	SUCCESS: Russia: A swe S A fin-nor
+	SUCCESS: Russia: A fin-nor
+	FAILURE: Russia: F hol H
+ORDERS
+	England: F nor-nth
+	Russia: F edi-nth
+	Russia: F hol-nth
+POSTSTATE
+	England: A edi
+	England: F yor
+	Germany: A kie
+	Germany: A hol
+	Russia: A swe
+	Russia: A nor
+# all dislodged units are disbanded.
+END
+
+
+# dislodged unit will not make attackers area contested
+# fixed prestate
+CASE 6.H.9
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: F kie
+	England: F den
+	Germany: A pru
+	Germany: A sil
+PRESTATE_DISLODGED
+	Russia: A pru
+	Germany: F kie
+PRESTATE_RESULTS
+	SUCCESS: England: F hel-kie
+	SUCCESS: England: F den S F hel-kie
+	SUCCESS: Germany: A ber-pru
+	FAILURE: Germany: F kie H
+	SUCCESS: Germany: A sil S A ber-pru
+	FAILURE: Russia: A pru-ber
+ORDERS
+	Germany: F kie-ber
+	Russia: A pru-war
+POSTSTATE
+	England: F kie
+	England: F den
+	Germany: A pru
+	Germany: A sil
+	Germany: F ber
+	Russia: A war
+END
+
+
+# not retreating to attacker does not mean contested
+CASE 6.H.10
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	Germany: A kie
+	Germany: A mun
+	Russia: A pru
+	Russia: A sil
+PRESTATE_DISLODGED
+	England: A kie
+	Germany: A pru
+PRESTATE_RESULTS
+	FAILURE: England: A kie H
+	SUCCESS: Germany: A ber-kie
+	SUCCESS: Germany: A mun S A ber-kie
+	FAILURE: Germany: A pru H
+	SUCCESS: Russia: A war-pru
+	SUCCESS: Russia: A sil S A war-pru
+ORDERS
+	England: A kie-ber		# should fail; was attacked from berlin; will disband!
+	Germany: A pru-ber		# this should succeed.
+POSTSTATE
+	Germany: A kie
+	Germany: A mun
+	Russia: A pru
+	Russia: A sil
+	Germany: A ber
+END
+
+
+# retreat when dislodged by adjacent convoy
+CASE 6.H.11
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	France: A mar
+	France: A bur
+	France: F mao
+	France: F wes
+	France: F gol
+PRESTATE_DISLODGED
+	Italy: A mar
+PRESTATE_RESULTS
+	SUCCESS: France: A gas-mar by convoy	# explicit (per DATC)
+	SUCCESS: France: A bur S A gas-mar
+	SUCCESS: France: F mao C A gas-mar
+	SUCCESS: France: F wes C A gas-mar
+	SUCCESS: France: F gol C A gas-mar
+	FAILURE: Italy: A mar H
+ORDERS
+	Italy: A mar-gas	# should succeeds since gas-mar was via convoy
+POSTSTATE
+	France: A mar
+	France: A bur
+	France: F mao
+	France: F wes
+	France: F gol
+	Italy: A gas
+END
+
+# Retreat when dislodged by adjacent convoy while
+# trying to do the same
+CASE 6.H.12
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: F iri
+	England: F nth
+	#
+	France: F ech
+	France: F mao
+	#
+	Russia: A lvp
+	Russia: F nwg
+	Russia: F nao
+	Russia: A cly
+PRESTATE_DISLODGED
+	England: A lvp
+	England: F ech
+PRESTATE_RESULTS
+	FAILURE: England: A lvp-edi by convoy 	# "by convoy" required for TestSuite
+	SUCCESS: England: F iri C A lvp-edi
+	SUCCESS: England: F ech C A lvp-edi
+	SUCCESS: England: F nth C A lvp-edi
+	#
+	SUCCESS: France: F bre-ech
+	SUCCESS: France: F mao S F bre-ech
+	#
+	SUCCESS: Russia: A edi-lvp by convoy
+	SUCCESS: Russia: F nwg C A edi-lvp
+	SUCCESS: Russia: F nao C A edi-lvp
+	SUCCESS: Russia: A cly S A edi-lvp
+ORDERS
+	England: F ech-pic
+	England: A lvp-edi		# this is the question
+POSTSTATE
+	England: F iri			
+	England: F nth
+	England: A edi			# lvp-edi retreat
+	England: F pic			# ech-pic retreat
+	#
+	France: F ech
+	France: F mao
+	#
+	Russia: A lvp
+	Russia: F nwg
+	Russia: F nao
+	Russia: A cly
+END
+
+
+# No retreat with convoy in main phase
+CASE 6.H.13
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	England: F ech
+	France: A pic
+	France: A bre
+PRESTATE_DISLODGED
+	England: A pic
+PRESTATE_RESULTS
+	FAILURE: England: A pic H
+	FAILURE: England: F ech C A pic-lon
+	SUCCESS: France: A par-pic
+	SUCCESS: France: A bre S A par-pic
+ORDERS
+	England: A pic-lon		# illegal retreat! will disband.
+POSTSTATE
+	England: F ech
+	France: A pic
+	France: A bre
+END
+
+
+
+# No retreat with support in main phase
+CASE 6.H.14
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE	
+	England: F ech
+	France: A par
+	France: A bre
+	Germany: A mun
+	Germany: A mar
+PRESTATE_DISLODGED
+	England: A pic
+	France: A bur	
+PRESTATE_RESULTS
+	FAILURE: England: A pic H
+	FAILURE: England: F ech C A pic-bel
+	SUCCESS: France: A par-pic
+	SUCCESS: France: A bre S A par-pic
+	SUCCESS: France: A bur H
+	SUCCESS: Germany: A mun S A mar-bur
+	SUCCESS: Germany: A mar-bur	
+ORDERS
+	England: A pic-bel		# will disband
+	France: A bur-bel		# will disband
+POSTSTATE
+	England: F ech
+	France: A par
+	France: A bre
+	Germany: A mun
+	Germany: A mar
+END
+
+
+
+# No coastal crawl in retreat
+CASE 6.H.15
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	France: F spa/sc
+	France: F mao
+PRESTATE_RESULTS
+	SUCCESS: France: F spa/sc-por
+	SUCCESS: France: F mao S F spa/sc-por
+	FAILURE: England: F por hold
+ORDERS
+	# NO orders; English F portugal destroyed
+POSTSTATE
+	France: F spa/sc
+	France: F mao
+END
+
+
+# Contested for Both Coasts (if one coast is 
+# contested, the other(s) is(are) not available for retreat.							 
+CASE 6.H.16
+PRESTATE_SETPHASE Spring 1901, Retreat
+PRESTATE
+	France: F mao
+	France: F gas
+	Italy: F tun 
+	Italy: F wes
+PRESTATE_DISLODGED
+	France: F wes
+PRESTATE_RESULTS
+	FAILURE: France: F mao-spa
+	FAILURE: France: F gas-spa/nc
+	FAILURE: France: F wes H
+	SUCCESS: Italy: F tun S F tys-wes
+	SUCCESS: Italy: F tys-wes
+ORDERS
+	France: F wes-spa/sc	# spain (all of) is contested; disbands
+POSTSTATE
+	France: F mao
+	France: F gas
+	Italy: F tun 
+	Italy: F wes
+END
+
+
+#############################################################
+#	
+# Section I: BUILDING
+#
+# NOTE: even though units are specified in 
+# PRESTATE_SUPPLYCENTER_OWNERS, this only changes ownership;
+# no unit is created there UNLESS it exists in the prestate.
+#
+#############################################################
+
+# too many build orders
+# 
+# Russia has 1 supply center, and 1 unit
+# Germany owns 3 supply centers, and 2 units, thus gets to build one.
+CASE 6.I.1
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A war
+	Germany: A kiel
+	Germany: A mun
+PRESTATE
+	Russia: A war
+	Germany: A par
+ORDERS
+	Germany: Build A war 		# not owned, not a Homse SC, and has a unit there!
+	Germany: Build A kiel		# this should succeed
+	Germany: Build A mun		# fails; already built kiel unit
+POSTSTATE
+	Russia: A war
+	Germany: A par
+	Germany: A kie
+END
+
+
+# fleets cannot be built in land areas
+#
+# russia: one supply center, one build
+CASE 6.I.2
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A stp
+	Russia: A mos
+PRESTATE
+	Russia: A stp
+ORDERS
+	Russia: Build F mos
+POSTSTATE
+	Russia: A stp
+END
+
+
+# supply center must be empty for building
+CASE 6.I.3
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Germany: A ber
+	Germany: A mun
+PRESTATE
+	Germany: A ber
+ORDERS
+	Germany: Build F ber
+POSTSTATE
+	Germany: A ber
+END
+
+
+# both coasts must be empty for building
+CASE 6.I.4
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A stp
+	Russia: A mos
+PRESTATE
+	Russia: F stp/sc
+ORDERS
+	Russia: Build F stp/nc
+POSTSTATE
+	Russia: F stp/sc
+END
+
+
+# building in home supply center that is not owned is prohibited
+CASE 6.I.5
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A ber
+	Germany: A mun
+PRESTATE
+	Russia: A mos
+ORDERS
+	Germany: Build A ber
+POSTSTATE
+	Russia: A mos
+END
+
+
+# building in owned supply center that is not a home supply center
+CASE 6.I.6
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Germany: A ber
+	Germany: A war
+PRESTATE
+	Germany: A ber
+ORDERS
+	Germany: Build A war
+POSTSTATE
+	Germany: A ber
+END
+
+# only one build in a home supply center
+CASE 6.I.7
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A mos
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A war
+ORDERS
+	Russia: Build A mos
+	Russia: Build A mos		# will fail; unit already build (1 build unused)
+POSTSTATE
+	Russia: A war			# old unit still present
+	Russia: A mos			# new unit built
+END
+
+
+
+#############################################################
+#	
+# Section J: CIVIL DISORDER AND DISBANDS
+#
+#############################################################
+
+# too many remove orders
+CASE 6.J.1
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	France: A par
+PRESTATE
+	France: A pic
+	France: A par
+ORDERS
+	France: Remove gol
+	France: Remove pic
+	France: Remove par
+POSTSTATE
+	France: A par
+END
+
+# removing the same unit twice
+# 2 units to remove
+CASE 6.J.2
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	France: A par		# 1 SC
+PRESTATE
+	France: A pic		# 3 units total; 2 must be removed
+	France: A par
+	France: F gol
+ORDERS
+	France: Remove A par
+	France: Remove A par
+POSTSTATE
+	France: A pic		# civil disorder rules should remove fleet.
+END
+
+
+
+# civil disorder: two armies with different distance
+CASE 6.J.3
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A mos
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: A lvn
+	Russia: A swe
+ORDERS
+POSTSTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: A lvn
+END
+
+
+# civil disorder: two armies with equal distance
+CASE 6.J.4
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A mos
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: A lvn
+	Russia: A ukr
+ORDERS
+POSTSTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: A ukr
+END
+
+
+# civil disorder: two fleets with different distance
+CASE 6.J.5
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A mos
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: F ska
+	Russia: F ber
+ORDERS
+POSTSTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: F ska
+END
+
+
+# civil disorder: two fleets with equal distance
+CASE 6.J.6
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A mos
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: F ska
+	Russia: F bal
+ORDERS
+POSTSTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: F ska
+END
+
+
+# civil disorder: 2 fleets and 1 army with equal
+# distances; fleet > army, and then fleet alpha (nth)
+# Russia must 1 unit.
+#
+# NOTE: this depends on the home supply center info
+# not changing!
+#
+CASE 6.J.7
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A boh
+	Russia: F ska
+	Russia: F nth
+ORDERS
+POSTSTATE
+	Russia: A boh
+	Russia: F ska
+END
+
+
+# civil disorder: a fleet with a shorter distance than the army
+# army should be removed
+CASE 6.J.8
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A mos
+	Russia: A stp
+	Russia: A war
+PRESTATE
+	Russia: A mos
+	Russia: A stp
+	Russia: A tyr
+	Russia: F bal
+ORDERS
+POSTSTATE
+	Russia: A mos
+	Russia: A stp
+	#
+	Russia: F bal
+END
+
+
+# civil disorder must be counted from both coasts
+# part 1
+CASE 6.J.9.part1
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A stp
+PRESTATE
+	Russia: A tyr
+	Russia: F bal
+ORDERS
+POSTSTATE
+	Russia: F bal
+END
+
+
+# part 2
+CASE 6.J.9.part2
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Russia: A stp
+PRESTATE
+	Russia: A tyr
+	Russia: F ska
+ORDERS
+POSTSTATE
+	Russia: F ska
+END
+
+
+# civil disorder: counting convoying distance
+CASE 6.J.10
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Italy: A ven
+	Italy: A rom
+	Italy: A nap
+PRESTATE
+	Italy: A ven
+	#
+	Italy: F ion
+	Italy: A gre
+	Italy: A sil
+ORDERS
+POSTSTATE
+	Italy: A ven
+	#
+	Italy: F ion
+	Italy: A gre
+END
+
+
+# civil disorder: counting distance without convoying fleet
+CASE 6.J.11
+PRESTATE_SETPHASE Fall 1901, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Italy: A ven
+	Italy: A rom
+	Italy: A nap
+PRESTATE
+	Italy: A ven
+	Italy: A rom
+	#
+	Italy: A gre
+	Italy: A sil
+ORDERS
+POSTSTATE
+	Italy: A ven
+	Italy: A rom
+	#
+	Italy: A gre
+END
+
+
+#############################################################
+#	
+# Zach's special adjudicator test cases
+# Test victory conditions
+## PRESTATE_SETPHASE Spring 1901, Movement
+#############################################################
+
+# check if game-time-limit exceeded works
+# should be a draw between remaining 3 powers.
+CASE Zach.A
+PRESTATE_SETPHASE Fall 1999, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Italy: A ven
+	Russia: A rom
+	France: A nap
+PRESTATE
+	Italy: A ven
+	Russia: A rom
+	France: A nap
+ORDERS
+	Italy: A ven H
+	Russia: A rom H
+	France: A nap H
+POSTSTATE
+	Italy: A ven
+	Russia: A rom
+	France: A nap
+END
+
+
+# check if we win, if 18 supply centers are controlled
+# (even if we do not have 18 units)
+CASE Zach.B
+PRESTATE_SETPHASE Fall 1902, Adjustment
+PRESTATE_SUPPLYCENTER_OWNERS
+	Italy: A ven
+	Italy: A rom
+	Italy: A nap
+	Italy: A vie
+	Italy: A bud		# 5
+	Italy: A ser
+	Italy: A rum
+	Italy: A bul
+	Italy: A smy
+	Italy: A ank		# 10
+	Italy: A tun
+	Italy: A spa
+	Italy: A por
+	Italy: A mar
+	Italy: A bre		# 15
+	Italy: A par
+	Italy: A mun
+	Italy: A bel		# 18
+PRESTATE
+	Italy: A ven
+	Italy: A rom
+	Italy: A nap
+ORDERS
+	Italy: A ven H
+	Italy: A rom H
+	Italy: A nap H
+POSTSTATE
+	Italy: A ven
+	Italy: A rom
+	Italy: A nap
+END
+
+

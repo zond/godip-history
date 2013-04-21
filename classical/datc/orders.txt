@@ -1,0 +1,310 @@
+#######################################################################
+#
+# Order Parsing Test Suite
+#
+# These are designed to test variations of orders to make sure the
+# order parser is performing correctly.
+#
+# All testing is using the DATC_Standard test variant. 
+#
+#######################################################################
+
+VARIANT: DATC_Standard
+SETUP
+	England: A lon
+	England: A lvp
+	England: F iri
+	England: F ech
+	England: F nao
+	France: F brest
+	France: F North Africa
+	France: A bur
+END
+SETUPDISLODGED
+	France: A pic
+END
+
+#Army in Spain supports army in Marseilles
+#
+#Move fleet in North Africa to Mid-Atlantic Ocean
+#
+#Fleet in Breast supports Fleet in North Africa move to Mid-Atlantic Ocean
+#
+#4)  Army Bulgaria --> Constantinople
+#
+#5)  Fleet Greece --> Aegean Sea 
+#
+#6)  Fleet Trieste --> Albania
+#F(Con) - Bul
+#
+#F(aeg) - support fleet into Bul
+
+#######################################################################
+#
+# Power name tests
+#
+#######################################################################
+ORD: f: a burgundy holds
+RES: hold(france, bur/mv, army)
+
+ORD: e: a lon holds
+RES: hold(england, lon/mv, army)
+
+ORD: b: a lon holds
+RES: hold(england, lon/mv, army)
+
+ORD: france: a burgundy holds
+RES: hold(france, bur/mv, army)
+
+ORD: fra a burgundy holds
+RES: FAIL
+
+ORD: fra: a burgundy holds
+RES: hold(france, bur/mv, army)
+
+ORD: britain: a lon holds
+RES: hold(england, lon/mv, army)
+
+ORD: britaine: a lon holds
+RES: hold(england, lon/mv, army)
+
+ORD: bretain: a lon holds
+RES: hold(england, lon/mv, army)
+
+ORD: ingland: a lon holds
+RES: hold(england, lon/mv, army)
+
+#######################################################################
+#
+# Misspelling tests
+#
+#######################################################################
+ORD: a burgandy holds
+RES: hold(france, bur/mv, army)
+
+ORD: a bargandy holds
+RES: hold(france, bur/mv, army)
+
+ORD: a bergendee holds
+RES: hold(france, bur/mv, army)
+
+ORD: a brigawly holds	# this matches too many
+RES: FAIL
+
+ORD: a bargdrly holds	# believe it or not, this works
+RES: hold(france, bur/mv, army)
+
+#######################################################################
+#
+# Move order variation tests
+#
+#######################################################################
+ORD: lvp->edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp-->edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp=>edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp-=>edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp==>edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp - edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp -> edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp --> edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp => edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp -=> edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp ==> edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: A(lvp) - edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: A(lvp) to edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp to edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp into edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp m edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp move edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp moves edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp move to edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp moves to edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attacks edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attacks on edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attack on edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attack edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attack of edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attack into edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp attacks into edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: lvp ---> edi
+RES: FAIL
+
+# NOTE: 'liv' not 'lvp'
+ORD: liv -> edi
+RES: FAIL
+
+#######################################################################
+# 
+# Command-first Move order tests
+# here, the Move command comes before any location info.
+# 
+#######################################################################
+ORD: m lvp-edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: move lvp to edi
+RES: move(england, lvp/mv, army, edi, false)
+
+ORD: move army lvp-edi
+RES: move(england, lvp/mv, army, edi, false)
+
+#######################################################################
+# 
+# Convoyed Move order tests; explicit and implicit convoying
+# 
+#######################################################################
+
+ORD: a lvp-lon			# typical implicit convoyed move
+RES: move(england, lvp/mv, army, lon, false)	# NOTE: isByConvoy NOT set until validate() occurs
+
+ORD: a lvp-iri-ech-lon		# typical explicit convoyed move
+RES: move(england, lvp/mv, army, lon, true)
+
+ORD: m a lvp-lon		# command-first implicit convoyed move 
+RES: move(england, lvp/mv, army, lon, false)	# NOTE: isByConvoy NOT set until validate() occurs
+
+ORD: m a lvp-iri-ech-lon	# command-first explicit convoyed move
+RES: move(england, lvp/mv, army, lon, true)
+
+ORD: lon-wal by convoy		# typical explicit adjacent convoyed move
+RES: move(england, lon/mv, army, wal, true)
+
+ORD: m lon-wal by convoy	# command-first explicit adjacent convoyed move
+RES: move(england, lon/mv, army, wal, true)
+
+#######################################################################
+# 
+# Support order variation tests
+# 
+#######################################################################
+
+ORD: Army lvp s army edi
+RES: support(england, lvp/mv, army, edi, army, edi)
+
+ORD: Army lvp support army edi
+RES: support(england, lvp/mv, army, edi, army, edi)
+
+ORD: Army lvp supports army edi
+RES: support(england, lvp/mv, army, edi, army, edi)
+
+ORD: Army in lvp supports army in edi
+RES: support(england, lvp/mv, army, edi, army, edi)
+
+ORD: Fleet in Brest supports Fleet in North Africa move to Mid-Atlantic Ocean
+RES: support(france, bre/xc, fleet, naf, fleet, mao)
+
+ORD: Fleet in Brest supports Fleet in North Africa moving to Mid-Atlantic Ocean
+RES: support(france, bre/xc, fleet, naf, fleet, mao)
+
+#######################################################################
+# 
+# Waive order tests
+# 
+#######################################################################
+#ORD: England: waive lon
+#RES: waive(england, lon)
+#
+#ORD: England: waive build in lon
+#RES: waive(france, xxx)
+#
+#ORD: waive lon
+#RES: waive(england, lon)
+#  
+#ORD: waive build lon
+#RES: waive(england, lon)
+#
+
+#######################################################################
+# 
+# Remove order tests
+# 
+#######################################################################
+ORD: France: Remove fleet North Africa.
+RES: remove(france, naf/xc, fleet)
+
+ORD: France: Remove fleet in North Africa.
+RES: remove(france, naf/xc, fleet)
+
+ORD: France: Removes the fleet in North Africa.
+RES: remove(france, naf/xc, fleet)
+
+ORD: France: Removes the fleet in the North Africa.
+RES: remove(france, naf/xc, fleet)
+
+#######################################################################
+# 
+# Build order tests
+# 
+#######################################################################
+ORD: Germany: Build Army Berlin.
+RES: build(Germany, ber/mv, army)
+
+ORD: Germany: Build an Army in Berlin.
+RES: build(Germany, ber/mv, army)
+
+ORD: Germany: Build a Fleet in Berlin.
+RES: build(Germany, ber/xc, fleet)
+
+ORD: Germany: Builds Army Berlin.
+RES: build(Germany, ber/mv, army)
+
+ORD: Germany: Builds an Army in Berlin.
+RES: build(Germany, ber/mv, army)
+
+ORD: Germany: Builds a Fleet in Berlin.
+RES: build(Germany, ber/xc, fleet)
+

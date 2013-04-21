@@ -1,0 +1,394 @@
+#############################################################
+#
+# Real game test cases.
+# http://devel.diplom.org/Showcase/main-describe.html#gamelist
+#
+# game: "Describe"; standard map
+#
+#	NOTE: we change the dates from 1910 to 1901, because the
+#	"no change of SC within 7 years" rule will trigger 
+#	otherwise. This is due to a limitation of the TestSuite.
+#
+#############################################################
+
+# set variant for all cases.
+VARIANT_ALL Standard
+
+# Spring 1910, movement.
+# This consists of 34 orders.
+#
+CASE Describe Spring 1910 [Movement]
+PRESTATE_SETPHASE Spring 1901 (Movement)
+PRESTATE
+	Austria: Army Bulgaria 
+	Austria: Army Silesia 
+	Austria: Fleet Constantinople 
+	Austria: Army Rumania 
+	Austria: Army Bohemia 
+	Austria: Army Tyrolia 
+	Austria: Army Trieste 
+	#
+	England: Fleet Spain/sc
+	England: Fleet North Sea
+	England: Fleet Portugal 
+	England: Fleet Baltic Sea 
+	England: Fleet Mid-Atlantic Ocean
+	England: Army Kiel 
+	England: Army Gascony
+	England: Army Brest 
+	England: Army Holland
+	England: Fleet London
+	#	
+	France: Army Marseilles
+	#
+	Germany: Army Munich
+	Germany: Army Burgundy
+	Germany: Army Ruhr
+	#
+	Italy: Army Venice
+	Italy: Army Tunis
+	Italy: Fleet Smyrna
+	Italy: Fleet North Africa
+	Italy: Fleet Western Mediterranean
+	Italy: Fleet Aegean Sea
+	#
+	Russia: Army Norway
+	Russia: Army Ukraine
+	Russia: Army Ankara
+	Russia: Army Warsaw
+	Russia: Army Berlin
+	Russia: Fleet Sevastopol
+	Russia: Fleet St Petersburg/sc
+ORDERS
+	Austria: Army Bulgaria => Serbia
+	Austria: Army Silesia => Munich
+	Austria: Fleet Constantinople => Bulgaria/sc
+	Austria: Army Rumania HOLD
+	Austria: Army Bohemia SUPPORT Army Silesia => Munich
+	Austria: Army Tyrolia SUPPORT Army Silesia => Munich 
+	Austria: Army Trieste HOLD
+	#
+	England: Fleet Spain (south coast) => Marseilles
+	England: Fleet North Sea SUPPORT Army Holland
+	England: Fleet Portugal SUPPORT Fleet Mid-Atlantic Ocean
+	England: Fleet Baltic Sea => Berlin
+	England: Fleet Mid-Atlantic Ocean CONVOY Army Brest => Spain
+	England: Army Kiel SUPPORT German Army Munich
+	England: Army Gascony SUPPORT Army Brest => Spain
+	England: Army Brest-Spain					# this is a convoy order
+	England: Army Holland SUPPORT Army Kiel
+	England: Fleet London => English Channel
+	#	
+	France: Army Marseilles => Spain
+	#
+	Germany: Army Munich SUPPORT Austrian Army Silesia => Berlin
+	Germany: Army Burgundy SUPPORT English Fleet Spain (south coast) => Marseilles
+	Germany: Army Ruhr SUPPORT Army Munich
+	#
+	Italy: Army Venice => Piedmont
+	Italy: Army Tunis => North Africa
+	Italy: Fleet Smyrna SUPPORT Fleet Aegean Sea => Constantinople
+	Italy: Fleet North Africa => Western Mediterranean
+	Italy: Fleet Western Mediterranean => Gulf of Lyon
+	Italy: Fleet Aegean Sea => Constantinople
+	#
+	Russia: Army Norway HOLD
+	Russia: Army Ukraine SUPPORT Army Warsaw
+	Russia: Army Ankara SUPPORT Austrian Fleet Constantinople
+	Russia: Army Warsaw SUPPORT Army Ukraine
+	Russia: Army Berlin SUPPORT Austrian Army Bohemia => Munich
+	Russia: Fleet Sevastopol => Black Sea
+	Russia: Fleet St Petersburg/sc HOLD
+POSTSTATE
+	Austria: Army Serbia. 
+	Austria: Army Silesia
+	Austria: Fleet Bulgaria/sc
+	Austria: Army Rumania
+	Austria: Army Bohemia
+	Austria: Army Tyrolia
+	Austria: Army Trieste
+	#
+	England: Fleet Marseilles. 
+	England: Fleet North Sea
+	England: Fleet Portuga
+	England: Fleet Baltic Sea
+	England: Fleet Mid-Atlantic Ocean
+	England: Army Kiel
+	England: Army Gascony
+	England: Army Spain. 
+	England: Army Holland
+	England: Fleet English Channel. 
+	#
+	# France: mar dislodged
+	#
+	Germany: Army Munich
+	Germany: Army Burgund
+	Germany: Army Ruhr
+	#
+	Italy: Army Piedmont. 
+	Italy: Army North Africa. 
+	Italy: Fleet Smyrna
+	Italy: Fleet Western Mediterranean. 
+	Italy: Fleet Gulf of Lyon. 
+	Italy: Fleet Constantinople. 
+	#
+	Russia: Army Norway
+	Russia: Army Ukraine 
+	Russia: Army Ankara 
+	Russia: Army Warsaw 
+	Russia: Army Berlin 
+	Russia: Fleet Black Sea. 			# move succeeds
+	Russia: Fleet St Petersburg/sc
+END
+
+
+
+# Fall 1910 movement
+# F Nth C A Ank-Swi, A Hol H:	 The first is a joke order, 
+# since we don't support the notion of switzerland..
+#
+CASE Describe Fall 1910 [Movement]
+PRESTATE_SETPHASE Fall 1901 (Movement)
+PRESTATE
+	Austria: Army Serbia
+	Austria: Army Silesia
+	Austria: Fleet Bulgaria (south coast)
+	Austria: Army Rumania 
+	Austria: Army Bohemia 
+	Austria: Army Tyrolia 
+	Austria: Army Trieste 
+	#
+	England: Fleet Marseilles 
+	England: Fleet North Sea 
+	England: Fleet Portugal 
+	England: Fleet Baltic Sea 
+	England: Fleet Mid-Atlantic Ocean
+	England: Army Kiel 
+	England: Army Gascony
+	England: Army Spain
+	England: Army Holland
+	England: Fleet English Channel 
+	#
+	Germany: Army Munich 
+	Germany: Army Burgundy
+	Germany: Army Ruhr 
+	#
+	Italy: Army Piedmont
+	Italy: Army North Africa
+	Italy: Fleet Smyrna 
+	Italy: Fleet Western Mediterranean 
+	Italy: Fleet Gulf of Lyon 
+	Italy: Fleet Constantinople 
+	#
+	Russia: Army Norway 
+	Russia: Army Ukraine
+	Russia: Army Ankara 
+	Russia: Army Warsaw 
+	Russia: Army Berlin 
+	Russia: Fleet Black Sea 
+	Russia: Fleet St Petersburg (south coast)
+ORDERS
+	Austria: Army Serbia SUPPORT Fleet Bulgaria (south coast). 
+	Austria: Army Silesia => Munich.
+	Austria: Fleet Bulgaria (south coast) HOLD. 
+	Austria: Army Rumania SUPPORT Fleet Bulgaria (south coast). 
+	Austria: Army Bohemia SUPPORT Army Silesia => Munich. 
+	Austria: Army Tyrolia SUPPORT Army Silesia => Munich. 
+	Austria: Army Trieste HOLD. 
+	#
+	England: Fleet Marseilles SUPPORT Fleet Mid-Atlantic Ocean => Spain (south coast).
+	England: Fleet North Sea HOLD	# converted from joke order
+	England: Fleet Portugal SUPPORT Fleet Mid-Atlantic Ocean => Spain (south coast). 
+	England: Fleet Baltic Sea => Berlin.
+	England: Fleet Mid-Atlantic Ocean => Spain (south coast). 
+	England: Army Kiel SUPPORT German Army Munich. 
+	England: Army Gascony => Brest. 
+	England: Army Spain => Gascony. 
+	England: Army Holland HOLD. 
+	England: Fleet English Channel => Mid-Atlantic Ocean. 
+	#
+	Germany: Army Munich SUPPORT Russian Army Berlin => Silesia.
+	Germany: Army Burgundy SUPPORT English Fleet Marseilles. 
+	Germany: Army Ruhr SUPPORT Army Munich. 
+	#
+	Italy: Army Piedmont => Marseilles.
+	Italy: Army North Africa HOLD. 
+	Italy: Fleet Smyrna SUPPORT Fleet Constantinople. 
+	Italy: Fleet Western Mediterranean SUPPORT Fleet Gulf of Lyon. 
+	Italy: Fleet Gulf of Lyon SUPPORT Fleet Western Mediterranean. 
+	Italy: Fleet Constantinople HOLD. 
+	#
+	Russia: Army Norway => Sweden. 
+	Russia: Army Ukraine SUPPORT Army Warsaw. 
+	Russia: Army Ankara HOLD. 
+	Russia: Army Warsaw SUPPORT Army Ukraine. 
+	Russia: Army Berlin SUPPORT Austrian Army Silesia => Munich. 
+	Russia: Fleet Black Sea SUPPORT Army Ankara. 
+	Russia: Fleet St Petersburg (south coast) HOLD. 
+POSTSTATE
+	Austria: Army Serbia 
+	Austria: Army Silesia
+	Austria: Fleet Bulgaria (south coast). 
+	Austria: Army Rumania 
+	Austria: Army Bohemia 
+	Austria: Army Tyrolia 
+	Austria: Army Trieste 
+	#
+	England: Fleet Marseilles 
+	England: Fleet North Sea 
+	England: Fleet Portugal 
+	England: Fleet Baltic Sea
+	England: Fleet Spain (south coast). 
+	England: Army Kiel 
+	England: Army Brest. 
+	England: Army Gascony. 
+	England: Army Holland 
+	England: Fleet Mid-Atlantic Ocean. 
+	#
+	Germany: Army Munich 
+	Germany: Army Burgundy
+	Germany: Army Ruhr 
+	#
+	Italy: Army Piedmont 
+	Italy: Army North Africa 
+	Italy: Fleet Smyrna 
+	Italy: Fleet Western Mediterranean 
+	Italy: Fleet Gulf of Lyon 
+	Italy: Fleet Constantinople 
+	#
+	Russia: Army Sweden. 
+	Russia: Army Ukraine 
+	Russia: Army Ankara 
+	Russia: Army Warsaw 
+	Russia: Army Berlin 
+	Russia: Fleet Black Sea 
+	Russia: Fleet St Petersburg (south coast)
+END
+
+
+
+
+# Fall 1912 movement
+#
+CASE Describe Fall 1912 [Movement]
+PRESTATE_SETPHASE Fall 1902 (Movement)
+PRESTATE
+	Austria: Army Bulgaria 
+	Austria: Army Galicia 
+	Austria: Fleet Greece 
+	Austria: Army Rumania 
+	Austria: Army Trieste 
+	Austria: Army Tyrolia 
+	Austria: Army Serbia 
+	#
+	England: Fleet Gulf of Lyon 
+	England: Fleet Norway 
+	England: Fleet Marseilles
+	England: Fleet Baltic Sea
+	England: Fleet Ionian Sea
+	England: Army Denmark 
+	England: Army Picardy 
+	England: Army Tuscany 
+	England: Army Kiel 
+	England: Fleet Tyrrhenian Sea
+	England: Fleet North Sea 
+	#
+	Germany: Army Munich 
+	Germany: Army Burgundy
+	Germany: Army Ruhr
+	#
+	Italy: Army Piedmont
+	Italy: Fleet Eastern Mediterranean 
+	Italy: Fleet Apulia 
+	Italy: Fleet Aegean Sea 
+	#
+	Russia: Army Sweden
+	Russia: Army Sevastopol 
+	Russia: Army Ankara 
+	Russia: Army Warsaw 
+	Russia: Army Silesia 
+	Russia: Fleet Constantinople 
+	Russia: Fleet St Petersburg (south coast)
+	Russia: Army Smyrna 
+	Russia: Army Ukraine
+ORDERS
+	Austria: Army Bulgaria SUPPORT Fleet Greece. 
+	Austria: Army Galicia HOLD. 
+	Austria: Fleet Greece SUPPORT Army Bulgaria.
+	Austria: Army Rumania SUPPORT Army Bulgaria. 
+	Austria: Army Trieste => Venice.
+	Austria: Army Tyrolia SUPPORT Army Trieste => Venice. 
+	Austria: Army Serbia SUPPORT Army Rumania. 
+	#
+	England: Fleet Gulf of Lyon => Tyrrhenian Sea. 
+	England: Fleet Norway => Sweden. 
+	England: Fleet Marseilles => Piedmont. 
+	England: Fleet Baltic Sea => Gulf of Bothnia. 
+	England: Fleet Ionian Sea => Greece.
+	England: Army Denmark SUPPORT Fleet Norway => Sweden. 
+	England: Army Picardy => Paris. 
+	England: Army Tuscany SUPPORT Italian Army Piedmont => Venice. 
+	England: Army Kiel SUPPORT German Army Munich => Berlin. 
+	England: Fleet Tyrrhenian Sea => Rome. 
+	England: Fleet North Sea => Norway. 
+	#
+	Germany: Army Munich => Berlin. 
+	Germany: Army Burgundy => Munich. 
+	Germany: Army Ruhr SUPPORT Army Burgundy => Munich. 
+	#
+	Italy: Army Piedmont => Venice. 
+	Italy: Fleet Eastern Mediterranean SUPPORT Fleet Aegean Sea. 
+	Italy: Fleet Apulia SUPPORT Army Piedmont => Venice. 
+	Italy: Fleet Aegean Sea SUPPORT English Fleet Ionian Sea => Greece. 
+	#
+	Russia: Army Sweden => Norway
+	Russia: Army Sevastopol => Moscow. 
+	Russia: Army Ankara SUPPORT Army Smyrna. 
+	Russia: Army Warsaw => Prussia. 
+	Russia: Army Silesia => Berlin. 
+	Russia: Fleet Constantinople SUPPORT Army Smyrna. 
+	Russia: Fleet St Petersburg (south coast) HOLD. 
+	Russia: Army Smyrna SUPPORT Fleet Constantinople. 
+	Russia: Army Ukraine => Warsaw. 
+POSTSTATE
+	Austria: Army Bulgaria 
+	Austria: Army Galicia 
+	Austria: Fleet Greece 
+	Austria: Army Rumania 
+	Austria: Army Trieste 
+	Austria: Army Tyrolia 
+	Austria: Army Serbia 
+	#
+	England: Fleet Tyrrhenian Sea. 
+	England: Fleet Sweden. 
+	England: Fleet Piedmont. 
+	England: Fleet Gulf of Bothnia. 
+	England: Fleet Ionian Sea 
+	England: Army Denmark 
+	England: Army Paris. 
+	England: Army Tuscany
+	England: Army Kiel 
+	England: Fleet Rome. 
+	England: Fleet Norway. 
+	#
+	Germany: Army Berlin. 
+	Germany: Army Munich. 
+	Germany: Army Ruhr
+	#
+	Italy: Army Venice. 
+	Italy: Fleet Eastern Mediterranean 
+	Italy: Fleet Apulia 
+	Italy: Fleet Aegean Sea
+	#
+	Russia: Army Moscow. 
+	Russia: Army Ankara
+	Russia: Army Prussia. 
+	Russia: Army Silesia 
+	Russia: Fleet Constantinople
+	Russia: Fleet St Petersburg (south coast)
+	Russia: Army Smyrna 
+	Russia: Army Warsaw. 
+POSTSTATE_DISLODGED
+	Russia: Army Sweden
+END
+
