@@ -24,7 +24,7 @@ const (
 
   Spring = "S"
   Winter = "W"
-  Autumn = "A"
+  Fall   = "F"
 
   Movement = "M"
   Build    = "B"

@@ -55,7 +55,7 @@ func (self phase) Prev() (result common.Phase, err error) {
   } else {
     result = phase{
       year:   self.year,
-      season: Autumn,
+      season: Fall,
       typ:    Retreat,
     }
   }
@@ -73,7 +73,7 @@ func (self phase) Next() (result common.Phase, err error) {
     if self.season == Spring {
       result = phase{
         year:   self.year,
-        season: Autumn,
+        season: Fall,
         typ:    Movement,
       }
     } else {

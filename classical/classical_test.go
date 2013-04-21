@@ -4,6 +4,7 @@ import (
   cla "github.com/zond/godip/classical/common"
   "github.com/zond/godip/classical/orders"
   dip "github.com/zond/godip/common"
+  "github.com/zond/godip/judge"
   "reflect"
   "testing"
 )
@@ -45,41 +46,39 @@ func TestMoveValidation(t *testing.T) {
   assertOrderValidity(t, judge, orders.Move("bre", "mid"), cla.ErrInvalidPhase)
 }
 
-func assertMoveFailure(t *testing.T, src, dst dip.Province) {
-  j := Start()
-  unit, _ := j.Unit(src)
-  j.SetOrder(src, orders.Move(src, dst))
-  j.Next()
-  if _, ok := j.Errors()[src]; !ok {
-    t.Errorf("Move from %v to %v should not have worked", src, dst)
-  }
-  if now, ok := j.Unit(src); !ok && !reflect.DeepEqual(now, unit) {
-    t.Errorf("%v should not have moved from %v", now, src)
-  }
-}
-
-func assertMoveSuccess(t *testing.T, src, dst dip.Province) {
-  j := Start()
-  unit, ok := j.Unit(src)
-  if !ok {
-    t.Errorf("Should be a unit at %v", src)
-  }
-  j.SetOrder(src, orders.Move(src, dst))
-  j.Next()
-  if err, ok := j.Errors()[src]; ok {
-    t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
-  }
-  if now, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
-    t.Errorf("%v should have moved from %v", now, src)
-  }
-  if now, ok := j.Unit(dst); !ok || !reflect.DeepEqual(now, unit) {
-    t.Errorf("%v should be at %v now", unit, dst)
+func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success bool) {
+  if success {
+    unit, ok := j.Unit(src)
+    if !ok {
+      t.Errorf("Should be a unit at %v", src)
+    }
+    j.SetOrder(src, orders.Move(src, dst))
+    j.Next()
+    if err, ok := j.Errors()[src]; ok {
+      t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
+    }
+    if now, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
+      t.Errorf("%v should have moved from %v", now, src)
+    }
+    if now, ok := j.Unit(dst); !ok || !reflect.DeepEqual(now, unit) {
+      t.Errorf("%v should be at %v now", unit, dst)
+    }
+  } else {
+    unit, _ := j.Unit(src)
+    j.SetOrder(src, orders.Move(src, dst))
+    j.Next()
+    if _, ok := j.Errors()[src]; !ok {
+      t.Errorf("Move from %v to %v should not have worked", src, dst)
+    }
+    if now, ok := j.Unit(src); !ok && !reflect.DeepEqual(now, unit) {
+      t.Errorf("%v should not have moved from %v", now, src)
+    }
   }
 }
 
 func TestMoveAdjudication(t *testing.T) {
-  assertMoveSuccess(t, "bre", "mid")
-  assertMoveSuccess(t, "stp/sc", "bal")
-  assertMoveFailure(t, "vie", "bud")
-  assertMoveFailure(t, "mid", "nat")
+  assertMove(t, Start(), "bre", "mid", true)
+  assertMove(t, Start(), "stp/sc", "bal", true)
+  assertMove(t, Start(), "vie", "bud", false)
+  assertMove(t, Start(), "mid", "nat", false)
 }
