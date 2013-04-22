@@ -38,9 +38,9 @@ const (
 
 var Coast = []Flag{Sea, Land}
 
-var ErrTargetLength = fmt.Errorf("ErrTargetLength")
 var ErrInvalidSource = fmt.Errorf("ErrInvalidSource")
 var ErrInvalidDestination = fmt.Errorf("ErrInvalidDestination")
+var ErrInvalidTarget = fmt.Errorf("ErrInvalidTarget")
 var ErrInvalidPhase = fmt.Errorf("ErrInvalidPhase")
 var ErrMissingUnit = fmt.Errorf("ErrMissingUnit")
 var ErrIllegalDestination = fmt.Errorf("ErrIllegalDestination")
@@ -50,6 +50,9 @@ var ErrMissingConvoyPath = fmt.Errorf("ErrMissignConvoyPath")
 var ErrIllegalDistance = fmt.Errorf("ErrIllegalDistance")
 var ErrConvoyParadox = fmt.Errorf("ErrConvoyParadox")
 var ErrMissingConvoy = fmt.Errorf("ErrMissingConvoy")
+var ErrIllegalSupport = fmt.Errorf("ErrIllegalSupport")
+var ErrMissingSupportee = fmt.Errorf("ErrMissingSupportee")
+var ErrInvalidSupportedMove = fmt.Errorf("ErrInvalidSupportedMove")
 
 type ErrBounce struct {
   Province Province

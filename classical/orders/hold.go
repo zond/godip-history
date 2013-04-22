@@ -27,12 +27,9 @@ func (self *hold) Adjudicate(r dip.Resolver) (result bool, err error) {
   return true, nil
 }
 
-func (self *hold) Validate(validator dip.Validator) error {
-  if validator.Phase().Type() != cla.Movement {
+func (self *hold) Validate(v dip.Validator) error {
+  if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
-  }
-  if len(self.targets) != 1 {
-    return cla.ErrTargetLength
   }
   return nil
 }

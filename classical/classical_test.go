@@ -15,6 +15,59 @@ func assertOrderValidity(t *testing.T, validator dip.Validator, order dip.Order,
   }
 }
 
+func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success bool) {
+  if success {
+    unit, ok := j.Unit(src)
+    if !ok {
+      t.Errorf("Should be a unit at %v", src)
+    }
+    j.SetOrder(src, orders.Move(src, dst))
+    j.Next()
+    if err, ok := j.Errors()[src]; ok {
+      t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
+    }
+    if now, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
+      t.Errorf("%v should have moved from %v", now, src)
+    }
+    if now, ok := j.Unit(dst); !ok || !reflect.DeepEqual(now, unit) {
+      t.Errorf("%v should be at %v now", unit, dst)
+    }
+  } else {
+    unit, _ := j.Unit(src)
+    j.SetOrder(src, orders.Move(src, dst))
+    j.Next()
+    if _, ok := j.Errors()[src]; !ok {
+      t.Errorf("Move from %v to %v should not have worked", src, dst)
+    }
+    if now, ok := j.Unit(src); !ok && !reflect.DeepEqual(now, unit) {
+      t.Errorf("%v should not have moved from %v", now, src)
+    }
+  }
+}
+
+func TestSupportValidation(t *testing.T) {
+  judge := Start()
+  // Happy paths
+  assertOrderValidity(t, judge, orders.Support("bre", "par", "gas"), nil)
+  assertOrderValidity(t, judge, orders.Support("par", "bre"), nil)
+  assertOrderValidity(t, judge, orders.Support("par", "bre", "gas"), nil)
+  judge.SetUnit("spa/sc", dip.Unit{cla.Fleet, cla.France})
+  judge.SetUnit("por", dip.Unit{cla.Fleet, cla.France})
+  judge.SetUnit("gol", dip.Unit{cla.Fleet, cla.France})
+  assertOrderValidity(t, judge, orders.Support("spa/sc", "por", "mid"), nil)
+  assertOrderValidity(t, judge, orders.Support("gol", "mar", "spa"), nil)
+  // Missing unit
+  assertOrderValidity(t, judge, orders.Support("ruh", "kie", "hol"), cla.ErrMissingUnit)
+  // Missing supportee
+  assertOrderValidity(t, judge, orders.Support("ber", "sil"), cla.ErrMissingSupportee)
+  // Illegal support
+  assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalSupport)
+  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalSupport)
+  assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalSupport)
+  // Illegal moves
+  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrInvalidSupportedMove)
+}
+
 func TestMoveValidation(t *testing.T) {
   judge := Start()
   // Happy path fleet
@@ -44,36 +97,6 @@ func TestMoveValidation(t *testing.T) {
   // Bad phase
   judge.Next()
   assertOrderValidity(t, judge, orders.Move("bre", "mid"), cla.ErrInvalidPhase)
-}
-
-func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success bool) {
-  if success {
-    unit, ok := j.Unit(src)
-    if !ok {
-      t.Errorf("Should be a unit at %v", src)
-    }
-    j.SetOrder(src, orders.Move(src, dst))
-    j.Next()
-    if err, ok := j.Errors()[src]; ok {
-      t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
-    }
-    if now, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
-      t.Errorf("%v should have moved from %v", now, src)
-    }
-    if now, ok := j.Unit(dst); !ok || !reflect.DeepEqual(now, unit) {
-      t.Errorf("%v should be at %v now", unit, dst)
-    }
-  } else {
-    unit, _ := j.Unit(src)
-    j.SetOrder(src, orders.Move(src, dst))
-    j.Next()
-    if _, ok := j.Errors()[src]; !ok {
-      t.Errorf("Move from %v to %v should not have worked", src, dst)
-    }
-    if now, ok := j.Unit(src); !ok && !reflect.DeepEqual(now, unit) {
-      t.Errorf("%v should not have moved from %v", now, src)
-    }
-  }
 }
 
 func TestMoveAdjudication(t *testing.T) {

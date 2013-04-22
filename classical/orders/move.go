@@ -100,47 +100,44 @@ func (self *move) Adjudicate(r dip.Resolver) (result bool, err error) {
   return true, nil
 }
 
-func (self *move) Validate(validator dip.Validator) error {
-  if validator.Phase().Type() != cla.Movement {
+func (self *move) Validate(v dip.Validator) error {
+  if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
   }
-  if len(self.targets) != 2 {
-    return cla.ErrTargetLength
-  }
-  if !validator.Graph().Has(self.targets[0]) {
+  if !v.Graph().Has(self.targets[0]) {
     return cla.ErrInvalidSource
   }
-  if !validator.Graph().Has(self.targets[1]) {
+  if !v.Graph().Has(self.targets[1]) {
     return cla.ErrInvalidDestination
   }
-  if unit, ok := validator.Unit(self.targets[0]); !ok {
+  if unit, ok := v.Unit(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   } else {
     if unit.Type == cla.Army {
-      if !validator.Graph().Flags(self.targets[1])[cla.Land] {
+      if !v.Graph().Flags(self.targets[1])[cla.Land] {
         return cla.ErrIllegalDestination
       }
     } else if unit.Type == cla.Fleet {
-      if !validator.Graph().Flags(self.targets[1])[cla.Sea] {
+      if !v.Graph().Flags(self.targets[1])[cla.Sea] {
         return cla.ErrIllegalDestination
       }
     } else {
       panic(fmt.Errorf("Unknown unit type %v", unit.Type))
     }
   }
-  found, path := validator.Graph().Path(self.targets[0], self.targets[1], nil)
+  found, path := v.Graph().Path(self.targets[0], self.targets[1], nil)
   if !found {
     return cla.ErrMissingPath
   }
   if len(path) > 1 {
-    if unit, _ := validator.Unit(self.targets[0]); unit.Type == cla.Army {
-      if found, _ = validator.Graph().Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
+    if unit, _ := v.Unit(self.targets[0]); unit.Type == cla.Army {
+      if found, _ = v.Graph().Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
         return name == self.targets[0] || name == self.targets[1] || !flags[cla.Land]
       }); !found {
         return cla.ErrMissingSeaPath
       }
-      if found, _ = validator.Graph().Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
-        unit, ok := validator.Unit(name)
+      if found, _ = v.Graph().Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
+        unit, ok := v.Unit(name)
         return ok && unit.Type == cla.Fleet && (name == self.targets[0] || name == self.targets[1] || flags[cla.Sea])
       }); !found {
         return cla.ErrMissingConvoyPath
