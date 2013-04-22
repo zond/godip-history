@@ -29,6 +29,11 @@ func (self *support) Targets() []dip.Province {
 
 func (self *support) Adjudicate(r dip.Resolver) error {
   unit := r.Unit(self.targets[0])
+  if len(self.targets) == 3 {
+    if victim := r.Unit(self.targets[2]); victim != nil && victim.Nationality == unit.Nationality {
+      return cla.ErrIllegalSupportDestinationNationality
+    }
+  }
   if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
     return (o.Type() == cla.Move && // move
       o.Targets()[1] == self.targets[0] && // against us
@@ -39,15 +44,6 @@ func (self *support) Adjudicate(r dip.Resolver) error {
     return cla.ErrSupportBroken{breaks[0]}
   }
   return nil
-}
-
-func (self *support) anyMovePossible(v dip.Validator, src, dst dip.Province) bool {
-  for coast, _ := range v.Graph().Coasts(dst) {
-    if cla.MovePossible(v, src, coast, false, false) == nil {
-      return true
-    }
-  }
-  return false
 }
 
 func (self *support) Validate(v dip.Validator) error {
@@ -64,21 +60,21 @@ func (self *support) Validate(v dip.Validator) error {
     return cla.ErrMissingUnit
   }
   if unit := v.Unit(self.targets[1]); unit == nil {
-    return cla.ErrMissingSupportee
+    return cla.ErrMissingSupportUnit
   }
   if len(self.targets) == 2 {
-    if !self.anyMovePossible(v, self.targets[0], self.targets[1]) {
-      return cla.ErrIllegalHoldSupport
+    if cla.AnyMovePossible(v, self.targets[0], self.targets[1]) != nil {
+      return cla.ErrIllegalSupportPosition
     }
   } else {
     if !v.Graph().Has(self.targets[2]) {
       return cla.ErrInvalidTarget
     }
-    if !self.anyMovePossible(v, self.targets[0], self.targets[2]) {
-      return cla.ErrIllegalMoveSupport
+    if cla.AnyMovePossible(v, self.targets[0], self.targets[2]) != nil {
+      return cla.ErrIllegalSupportDestination
     }
-    if !self.anyMovePossible(v, self.targets[1], self.targets[2]) {
-      return cla.ErrInvalidSupportedMove
+    if cla.AnyMovePossible(v, self.targets[1], self.targets[2]) != nil {
+      return cla.ErrInvalidSupportMove
     }
   }
   return nil

@@ -59,13 +59,13 @@ func TestSupportValidation(t *testing.T) {
   // Missing unit
   assertOrderValidity(t, judge, orders.Support("ruh", "kie", "hol"), cla.ErrMissingUnit)
   // Missing supportee
-  assertOrderValidity(t, judge, orders.Support("ber", "sil"), cla.ErrMissingSupportee)
+  assertOrderValidity(t, judge, orders.Support("ber", "sil"), cla.ErrMissingSupportUnit)
   // Illegal support
-  assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalHoldSupport)
-  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalMoveSupport)
-  assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalMoveSupport)
+  assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalSupportPosition)
+  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalSupportDestination)
+  assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalSupportDestination)
   // Illegal moves
-  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrInvalidSupportedMove)
+  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrInvalidSupportMove)
 }
 
 func TestMoveValidation(t *testing.T) {

@@ -91,6 +91,12 @@ func (self *move) Validate(v dip.Validator) error {
   if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
   }
+  if !v.Graph().Has(self.targets[0]) {
+    return cla.ErrInvalidSource
+  }
+  if !v.Graph().Has(self.targets[1]) {
+    return cla.ErrInvalidDestination
+  }
   return cla.MovePossible(v, self.targets[0], self.targets[1], true, false)
 }
 

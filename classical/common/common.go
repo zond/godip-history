@@ -50,11 +50,21 @@ var ErrMissingConvoyPath = fmt.Errorf("ErrMissignConvoyPath")
 var ErrIllegalDistance = fmt.Errorf("ErrIllegalDistance")
 var ErrConvoyParadox = fmt.Errorf("ErrConvoyParadox")
 var ErrMissingConvoy = fmt.Errorf("ErrMissingConvoy")
-var ErrIllegalHoldSupport = fmt.Errorf("ErrIllegalHoldSupport")
-var ErrIllegalMoveSupport = fmt.Errorf("ErrIllegalMoveSupport")
-var ErrMissingSupportee = fmt.Errorf("ErrMissingSupportee")
-var ErrInvalidSupportedMove = fmt.Errorf("ErrInvalidSupportedMove")
+var ErrIllegalSupportPosition = fmt.Errorf("ErrIllegalSupportPosition")
+var ErrIllegalSupportDestination = fmt.Errorf("ErrIllegalSupportDestination")
+var ErrIllegalSupportDestinationNationality = fmt.Errorf("ErrIllegalSupportDestinationNationality")
+var ErrMissingSupportUnit = fmt.Errorf("ErrMissingSupportUnit")
+var ErrInvalidSupportMove = fmt.Errorf("ErrInvalidSupportMove")
 var ErrIllegalConvoy = fmt.Errorf("ErrIllegalConvoy")
+var ErrMissingConvoyee = fmt.Errorf("ErrMissingConvoyee")
+
+type ErrConvoyDislodged struct {
+  Province Province
+}
+
+func (self ErrConvoyDislodged) Error() string {
+  return fmt.Sprintf("ErrConvoyDislodged:%v", self.Province)
+}
 
 type ErrSupportBroken struct {
   Province Province
@@ -100,6 +110,19 @@ func ConvoyPossible(v Validator, src, dst Province, checkOrders bool) error {
     return ErrMissingConvoyPath
   }
   return nil
+}
+
+/*
+AnyMovePossible returns true if MovePossible would return true for any movement between src and any coast of dst.
+*/
+func AnyMovePossible(v Validator, src, dst Province) error {
+  var err error
+  for coast, _ := range v.Graph().Coasts(dst) {
+    if err = MovePossible(v, src, coast, false, false); err == nil {
+      return nil
+    }
+  }
+  return err
 }
 
 /*
