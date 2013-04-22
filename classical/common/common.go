@@ -30,9 +30,10 @@ const (
   Build    = "B"
   Retreat  = "R"
 
-  Move   = "M"
-  Hold   = "H"
-  Convoy = "C"
+  Move    = "M"
+  Hold    = "H"
+  Convoy  = "C"
+  Support = "S"
 )
 
 var Coast = []Flag{Sea, Land}
@@ -48,6 +49,7 @@ var ErrMissingSeaPath = fmt.Errorf("ErrMissingSeaPath")
 var ErrMissingConvoyPath = fmt.Errorf("ErrMissignConvoyPath")
 var ErrIllegalDistance = fmt.Errorf("ErrIllegalDistance")
 var ErrConvoyParadox = fmt.Errorf("ErrConvoyParadox")
+var ErrMissingConvoy = fmt.Errorf("ErrMissingConvoy")
 
 type ErrBounce struct {
   Province Province

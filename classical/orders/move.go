@@ -24,21 +24,76 @@ func (self *move) Targets() []dip.Province {
   return self.targets
 }
 
+func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
+  _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+    if o.Type() == cla.Support && len(o.Targets()) == 3 && o.Targets()[1] == src && o.Targets()[2] == dst {
+      if success, _ := r.Resolve(p); success {
+        return true
+      }
+    }
+    return false
+  })
+  return len(supports)
+}
+
+func (self *move) calcHoldSupport(r dip.Resolver, p dip.Province) int {
+  _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+    if o.Type() == cla.Support && len(o.Targets()) == 2 && o.Targets()[1] == p {
+      if success, _ := r.Resolve(p); success {
+        return true
+      }
+    }
+    return false
+  })
+  return len(supports)
+}
+
 func (self *move) Adjudicate(r dip.Resolver) (result bool, err error) {
-  _, movingToDest, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  // my power
+  attackStrength := self.calcAttackSupport(r, self.targets[0], self.targets[1]) + 1
+
+  // competing moves for the same destination
+  _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
     return p != self.targets[0] && o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
   })
-  if len(movingToDest) > 0 { // bounce
-    return false, cla.ErrBounce{movingToDest[0].Targets()[0]}
+  for _, competingOrder := range competingOrders {
+    if self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1])+1 >= attackStrength {
+      return false, cla.ErrBounce{competingOrder.Targets()[0]}
+    }
   }
+
+  convoyed := false
+  if unit, _ := r.Unit(self.targets[0]); unit.Type == cla.Army {
+    if _, steps := r.Graph().Path(self.targets[0], self.targets[1], nil); len(steps) > 1 {
+      convoyed = true
+    }
+  }
+
+  if convoyed {
+    if found, _ := r.Graph().Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
+      if unit, ok := r.Unit(name); ok && unit.Type == cla.Fleet {
+        if order, ok := r.Order(name); ok && order.Type() == cla.Convoy && order.Targets()[1] == self.targets[0] && order.Targets()[2] == self.targets[1] {
+          if success, _ := r.Resolve(name); success {
+            return true
+          }
+        }
+      }
+      return false
+    }); !found {
+      return false, cla.ErrMissingConvoy
+    }
+  }
+
   if atDest, ok := r.Order(self.targets[1]); ok {
-    if atDest.Type() == cla.Move {
-      if atDest.Targets()[1] == self.targets[0] { // head to head
-        return false, cla.ErrBounce{self.targets[1]}
-      } else if ok, _ = r.Resolve(self.targets[1]); !ok { // moving away
+    if !convoyed && atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
+      if self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1])+1 >= attackStrength {
         return false, cla.ErrBounce{self.targets[1]}
       }
-    } else if atDest.Type() == cla.Hold {
+    } else if atDest.Type() == cla.Move {
+      if success, _ := r.Resolve(self.targets[1]); !success && 1 >= attackStrength { // attack against something that moves away
+        return false, cla.ErrBounce{self.targets[1]}
+      }
+    } else if self.calcHoldSupport(r, self.targets[1])+1 >= attackStrength { // simple attack
       return false, cla.ErrBounce{self.targets[1]}
     }
   }
@@ -77,7 +132,7 @@ func (self *move) Validate(validator dip.Validator) error {
   if !found {
     return cla.ErrMissingPath
   }
-  if len(path) > 2 {
+  if len(path) > 1 {
     if unit, _ := validator.Unit(self.targets[0]); unit.Type == cla.Army {
       if found, _ = validator.Graph().Path(self.targets[0], self.targets[1], func(name dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
         return name == self.targets[0] || name == self.targets[1] || !flags[cla.Land]

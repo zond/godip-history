@@ -78,7 +78,7 @@ func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success boo
 
 func TestMoveAdjudication(t *testing.T) {
   assertMove(t, Start(), "bre", "mid", true)
-  assertMove(t, Start(), "stp/sc", "bal", true)
+  assertMove(t, Start(), "stp/sc", "bot", true)
   assertMove(t, Start(), "vie", "bud", false)
   assertMove(t, Start(), "mid", "nat", false)
 }
