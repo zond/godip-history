@@ -3,6 +3,7 @@ package common
 import (
   "fmt"
   . "github.com/zond/godip/common"
+  "sort"
 )
 
 const (
@@ -34,6 +35,7 @@ const (
   Hold    = "H"
   Convoy  = "C"
   Support = "S"
+  Disband = "D"
 )
 
 var Coast = []Flag{Sea, Land}
@@ -58,7 +60,12 @@ var ErrInvalidSupportMove = fmt.Errorf("ErrInvalidSupportMove")
 var ErrIllegalConvoy = fmt.Errorf("ErrIllegalConvoy")
 var ErrMissingConvoyee = fmt.Errorf("ErrMissingConvoyee")
 var ErrIllegalBuild = fmt.Errorf("ErrIllegalBuild")
+var ErrIllegalDisband = fmt.Errorf("ErrIllegalDisband")
 var ErrOccupiedSupplyCenter = fmt.Errorf("ErrOccupiedSupplyCenter")
+var ErrMissingSupplyCenter = fmt.Errorf("ErrMissingSupplyCenter")
+var ErrMissingSurplus = fmt.Errorf("ErrMissingSurplus")
+var ErrIllegalUnitType = fmt.Errorf("ErrIllegalUnitType")
+var ErrMissingDeficit = fmt.Errorf("ErrMissingDeficit")
 
 type ErrConvoyDislodged struct {
   Province Province
@@ -169,4 +176,43 @@ func MovePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders
     return ErrIllegalDistance
   }
   return nil
+}
+
+func BuildStatus(v Validator, me Nationality) (builds Orders, disbands Orders, balance int) {
+  scs := 0
+  for _, nat := range v.SupplyCenters() {
+    if nat == me {
+      scs += 1
+    }
+  }
+
+  units := 0
+  v.Find(func(p Province, o Order, u Unit) bool {
+    if u.Nationality == me {
+      if o.Type() == Disband {
+        disbands = append(disbands, o)
+      }
+      units += 1
+    }
+    if v.SupplyCenters()[p] == me && o.Type() == Build {
+      builds = append(builds, o)
+    }
+    return false
+  })
+  sort.Sort(builds)
+  sort.Sort(disbands)
+
+  change := scs - units
+  if change > 0 {
+    disbands = nil
+    builds = builds[:Min(len(builds)-1, change)]
+  } else if change < 0 {
+    builds = nil
+    disbands = disbands[:Min(len(disbands)-1, change)]
+  } else {
+    builds = nil
+    disbands = nil
+  }
+
+  return
 }

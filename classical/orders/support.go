@@ -4,6 +4,7 @@ import (
   "fmt"
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
+  "time"
 )
 
 func Support(targets ...dip.Province) *support {
@@ -17,6 +18,10 @@ func Support(targets ...dip.Province) *support {
 
 type support struct {
   targets []dip.Province
+}
+
+func (self *support) At() time.Time {
+  return time.Now()
 }
 
 func (self *support) Type() dip.OrderType {
@@ -56,10 +61,10 @@ func (self *support) Validate(v dip.Validator) error {
   if !v.Graph().Has(self.targets[1]) {
     return cla.ErrInvalidTarget
   }
-  if unit := v.Unit(self.targets[0]); unit == nil {
+  if v.Unit(self.targets[0]) == nil {
     return cla.ErrMissingUnit
   }
-  if unit := v.Unit(self.targets[1]); unit == nil {
+  if v.Unit(self.targets[1]) == nil {
     return cla.ErrMissingSupportUnit
   }
   if len(self.targets) == 2 {

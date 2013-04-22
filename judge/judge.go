@@ -110,38 +110,60 @@ func (self *Judge) SetOrder(prov Province, order Adjudicator) {
   self.orders[prov] = order
 }
 
-func (self *Judge) Dislodged(prov Province) *Unit {
-  var result Unit
-  var ok bool
-  if result, ok := self.dislodgeds[prov]; ok {
-    return &result
+func (self *Judge) RemoveDislodged(prov Province) {
+  if _, p, ok := self.findDislodged(prov); ok {
+    delete(self.dislodgeds, p)
+  }
+}
+
+func (self *Judge) findDislodged(prov Province) (u Unit, p Province, ok bool) {
+  if u, ok = self.dislodgeds[prov]; ok {
+    p = prov
+    return
   }
   sup, _ := prov.Split()
-  if result, ok = self.dislodgeds[sup]; ok {
-    return &result
+  if u, ok = self.dislodgeds[sup]; ok {
+    p = sup
+    return
   }
   for name, _ := range self.graph.Coasts(prov) {
-    if result, ok = self.dislodgeds[name]; ok {
-      return &result
+    if u, ok = self.dislodgeds[name]; ok {
+      p = name
+      return
     }
+  }
+  return
+}
+
+func (self *Judge) Dislodged(prov Province) *Unit {
+  if u, _, ok := self.findDislodged(prov); ok {
+    return &u
   }
   return nil
 }
 
-func (self *Judge) Unit(prov Province) *Unit {
-  var result Unit
-  var ok bool
-  if result, ok := self.units[prov]; ok {
-    return &result
+func (self *Judge) findUnit(prov Province) (u Unit, p Province, ok bool) {
+  if u, ok = self.units[prov]; ok {
+    p = prov
+    return
   }
   sup, _ := prov.Split()
-  if result, ok = self.units[sup]; ok {
-    return &result
+  if u, ok = self.units[sup]; ok {
+    p = sup
+    return
   }
   for name, _ := range self.graph.Coasts(prov) {
-    if result, ok = self.units[name]; ok {
-      return &result
+    if u, ok = self.units[name]; ok {
+      p = name
+      return
     }
+  }
+  return
+}
+
+func (self *Judge) Unit(prov Province) *Unit {
+  if u, _, ok := self.findUnit(prov); ok {
+    return &u
   }
   return nil
 }
@@ -188,6 +210,32 @@ func (self *Judge) Move(src, dst Province) {
 
 func (self *Judge) Graph() Graph {
   return self.graph
+}
+
+func (self *Judge) Find(filter StateFilter) (provinces []Province, orders []Order, units []Unit) {
+  visitedProvinces := make(map[Province]bool)
+  for prov, unit := range self.units {
+    visitedProvinces[prov] = true
+    order := self.defaultOrderGenerator(prov)
+    if ord := self.Order(prov); ord != nil {
+      order = ord
+    }
+    if filter(prov, order, unit) {
+      provinces = append(provinces, prov)
+      orders = append(orders, order)
+      units = append(units, unit)
+    }
+  }
+  for prov, order := range self.orders {
+    if !visitedProvinces[prov] {
+      if filter(prov, order, Unit{}) {
+        provinces = append(provinces, prov)
+        orders = append(orders, order)
+        units = append(units, Unit{})
+      }
+    }
+  }
+  return
 }
 
 func (self *Judge) Next() (err error) {

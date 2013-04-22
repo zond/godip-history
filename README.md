@@ -29,7 +29,6 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Todo
 
-* Implement Build
 * Implement Disband
 * Implement Retreat
 * Make the Phase interface able to post process a State

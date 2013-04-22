@@ -3,6 +3,7 @@ package orders
 import (
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
+  "time"
 )
 
 func Hold(source dip.Province) *hold {
@@ -21,6 +22,10 @@ func (self *hold) Type() dip.OrderType {
 
 func (self *hold) Targets() []dip.Province {
   return self.targets
+}
+
+func (self *hold) At() time.Time {
+  return time.Now()
 }
 
 func (self *hold) Adjudicate(r dip.Resolver) error {

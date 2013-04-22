@@ -3,36 +3,21 @@ package orders
 import (
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
-  "sort"
   "time"
 )
 
 func Build(source dip.Province, typ dip.UnitType, at time.Time) *build {
   return &build{
-    targets:   []dip.Province{source},
-    typ:       typ,
-    createdAt: at,
+    targets: []dip.Province{source},
+    typ:     typ,
+    at:      at,
   }
 }
 
-type builds []*build
-
-func (self builds) Less(a, b int) bool {
-  return self[a].createdAt.Before(self[b].createdAt)
-}
-
-func (self builds) Swap(a, b int) {
-  self[a], self[b] = self[b], self[a]
-}
-
-func (self builds) Len() int {
-  return len(self)
-}
-
 type build struct {
-  targets   []dip.Province
-  typ       dip.UnitType
-  createdAt time.Time
+  targets []dip.Province
+  typ     dip.UnitType
+  at      time.Time
 }
 
 func (self *build) Type() dip.OrderType {
@@ -44,40 +29,11 @@ func (self *build) Targets() []dip.Province {
 }
 
 func (self *build) Adjudicate(r dip.Resolver) error {
-  me, ok := r.SupplyCenters()[self.targets[0]]
-  if !ok {
+  me := r.Graph().SC(self.targets[0])
+  builds, _, _ := cla.BuildStatus(r, *me)
+  if self.at.After(builds[len(builds)-1].At()) {
     return cla.ErrIllegalBuild
   }
-
-  scs := 0
-  for _, nat := range r.SupplyCenters() {
-    if nat == me {
-      scs += 1
-    }
-  }
-
-  units := 0
-  var buildOrders builds
-  r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
-    if u.Nationality == me {
-      units += 1
-    }
-    if r.SupplyCenters()[p] == me {
-      if buildOrder, ok := o.(*build); ok {
-        buildOrders = append(buildOrders, buildOrder)
-      }
-    }
-    return false
-  })
-  sort.Sort(buildOrders)
-
-  allowed := scs - units
-  buildOrders = buildOrders[:allowed]
-
-  if !self.createdAt.After(buildOrders[len(buildOrders)-1].createdAt) {
-    return cla.ErrIllegalBuild
-  }
-
   return nil
 }
 
@@ -87,6 +43,19 @@ func (self *build) Validate(v dip.Validator) error {
   }
   if v.Unit(self.targets[0]) != nil {
     return cla.ErrOccupiedSupplyCenter
+  }
+  me := v.Graph().SC(self.targets[0])
+  if me == nil {
+    return cla.ErrMissingSupplyCenter
+  }
+  if _, _, balance := cla.BuildStatus(v, *me); balance < 1 {
+    return cla.ErrMissingSurplus
+  }
+  if self.typ == cla.Army && !v.Graph().Flags(self.targets[0])[cla.Land] {
+    return cla.ErrIllegalUnitType
+  }
+  if self.typ == cla.Fleet && !v.Graph().Flags(self.targets[0])[cla.Sea] {
+    return cla.ErrIllegalUnitType
   }
   return nil
 }

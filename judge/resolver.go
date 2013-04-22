@@ -40,29 +40,3 @@ func (self *resolver) Resolve(prov Province) (err error) {
   }
   return
 }
-
-func (self *resolver) Find(filter StateFilter) (provinces []Province, orders []Order, units []Unit) {
-  visitedProvinces := make(map[Province]bool)
-  for prov, unit := range self.Judge.units {
-    visitedProvinces[prov] = true
-    order := self.Judge.defaultOrderGenerator(prov)
-    if ord := self.Judge.Order(prov); ord != nil {
-      order = ord
-    }
-    if filter(prov, order, unit) {
-      provinces = append(provinces, prov)
-      orders = append(orders, order)
-      units = append(units, unit)
-    }
-  }
-  for prov, order := range self.Judge.orders {
-    if !visitedProvinces[prov] {
-      if filter(prov, order, Unit{}) {
-        provinces = append(provinces, prov)
-        orders = append(orders, order)
-        units = append(units, Unit{})
-      }
-    }
-  }
-  return
-}

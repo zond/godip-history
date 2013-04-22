@@ -3,6 +3,7 @@ package orders
 import (
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
+  "time"
 )
 
 func Move(source, dest dip.Province) *move {
@@ -21,6 +22,10 @@ func (self *move) Type() dip.OrderType {
 
 func (self *move) Targets() []dip.Province {
   return self.targets
+}
+
+func (self *move) At() time.Time {
+  return time.Now()
 }
 
 func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {

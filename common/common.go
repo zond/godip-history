@@ -3,7 +3,26 @@ package common
 import (
   "fmt"
   "strings"
+  "time"
 )
+
+func Max(is ...int) (result int) {
+  for index, i := range is {
+    if index == 0 || i > result {
+      result = i
+    }
+  }
+  return
+}
+
+func Min(is ...int) (result int) {
+  for index, i := range is {
+    if index == 0 || i < result {
+      result = i
+    }
+  }
+  return
+}
 
 type UnitType string
 
@@ -60,11 +79,26 @@ type Graph interface {
   Coasts(Province) map[Province]bool
 }
 
+type Orders []Order
+
+func (self Orders) Less(a, b int) bool {
+  return self[a].At().Before(self[b].At())
+}
+
+func (self Orders) Swap(a, b int) {
+  self[a], self[b] = self[b], self[a]
+}
+
+func (self Orders) Len() int {
+  return len(self)
+}
+
 type Order interface {
   Type() OrderType
   Targets() []Province
   Validate(Validator) error
   Execute(State)
+  At() time.Time
 }
 
 type Adjudicator interface {
@@ -83,21 +117,23 @@ type StateFilter func(n Province, o Order, u Unit) bool
 type Validator interface {
   Order(Province) Order
   Unit(Province) *Unit
+  Dislodged(Province) *Unit
   Graph() Graph
   Phase() Phase
   SupplyCenters() map[Province]Nationality
+  Find(StateFilter) (provinces []Province, orders []Order, units []Unit)
 }
 
 type Resolver interface {
   Validator
   Resolve(Province) error
-  Find(StateFilter) (provinces []Province, orders []Order, units []Unit)
 }
 
 type State interface {
   Validator
   Move(Province, Province)
   SetUnit(Province, Unit)
+  RemoveDislodged(Province)
 }
 
 type OrderGenerator func(prov Province) Order
