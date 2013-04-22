@@ -23,8 +23,8 @@ func (self *hold) Targets() []dip.Province {
   return self.targets
 }
 
-func (self *hold) Adjudicate(r dip.Resolver) (result bool, err error) {
-  return true, nil
+func (self *hold) Adjudicate(r dip.Resolver) error {
+  return nil
 }
 
 func (self *hold) Validate(v dip.Validator) error {

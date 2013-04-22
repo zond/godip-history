@@ -75,7 +75,7 @@ type pathStep struct {
   pos  common.Province
 }
 
-func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter common.PathFilter, seen map[common.Province]bool) (bool, []common.Province) {
+func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter common.PathFilter, seen map[common.Province]bool) []common.Province {
   var newQueue []pathStep
   for _, step := range queue {
     seen[step.pos] = true
@@ -84,7 +84,7 @@ func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter comm
         if filter == nil || filter(name, sub.flags, sub.node.sc) {
           thisPath := append(append([]common.Province{}, step.path...), name)
           if name == dst {
-            return true, thisPath
+            return thisPath
           }
           newQueue = append(newQueue, pathStep{
             path: thisPath,
@@ -97,10 +97,10 @@ func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter comm
   if len(newQueue) > 0 {
     return self.pathHelper(dst, newQueue, filter, seen)
   }
-  return false, nil
+  return nil
 }
 
-func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) (ok bool, result []common.Province) {
+func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) []common.Province {
   queue := []pathStep{
     pathStep{
       path: nil,

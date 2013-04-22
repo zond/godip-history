@@ -17,8 +17,8 @@ func assertOrderValidity(t *testing.T, validator dip.Validator, order dip.Order,
 
 func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success bool) {
   if success {
-    unit, ok := j.Unit(src)
-    if !ok {
+    unit := j.Unit(src)
+    if unit == nil {
       t.Errorf("Should be a unit at %v", src)
     }
     j.SetOrder(src, orders.Move(src, dst))
@@ -26,20 +26,20 @@ func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success boo
     if err, ok := j.Errors()[src]; ok {
       t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
     }
-    if now, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
+    if now := j.Unit(src); now != nil && reflect.DeepEqual(now, unit) {
       t.Errorf("%v should have moved from %v", now, src)
     }
-    if now, ok := j.Unit(dst); !ok || !reflect.DeepEqual(now, unit) {
+    if now := j.Unit(dst); now == nil || !reflect.DeepEqual(now, unit) {
       t.Errorf("%v should be at %v now", unit, dst)
     }
   } else {
-    unit, _ := j.Unit(src)
+    unit := j.Unit(src)
     j.SetOrder(src, orders.Move(src, dst))
     j.Next()
     if _, ok := j.Errors()[src]; !ok {
       t.Errorf("Move from %v to %v should not have worked", src, dst)
     }
-    if now, ok := j.Unit(src); !ok && !reflect.DeepEqual(now, unit) {
+    if now := j.Unit(src); now == nil && !reflect.DeepEqual(now, unit) {
       t.Errorf("%v should not have moved from %v", now, src)
     }
   }
@@ -61,9 +61,9 @@ func TestSupportValidation(t *testing.T) {
   // Missing supportee
   assertOrderValidity(t, judge, orders.Support("ber", "sil"), cla.ErrMissingSupportee)
   // Illegal support
-  assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalSupport)
-  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalSupport)
-  assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalSupport)
+  assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalHoldSupport)
+  assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalMoveSupport)
+  assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalMoveSupport)
   // Illegal moves
   assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrInvalidSupportedMove)
 }
@@ -75,7 +75,7 @@ func TestMoveValidation(t *testing.T) {
   // Happy path army
   assertOrderValidity(t, judge, orders.Move("mun", "ruh"), nil)
   // Too far
-  assertOrderValidity(t, judge, orders.Move("bre", "wes"), cla.ErrIllegalDistance)
+  assertOrderValidity(t, judge, orders.Move("bre", "wes"), cla.ErrIllegalConvoy)
   // Fleet on land
   assertOrderValidity(t, judge, orders.Move("bre", "par"), cla.ErrIllegalDestination)
   // Army at sea
@@ -85,7 +85,7 @@ func TestMoveValidation(t *testing.T) {
   // Unknown destination
   assertOrderValidity(t, judge, orders.Move("bre", "a"), cla.ErrInvalidDestination)
   // Missing sea path
-  assertOrderValidity(t, judge, orders.Move("par", "mos"), cla.ErrMissingSeaPath)
+  assertOrderValidity(t, judge, orders.Move("par", "mos"), cla.ErrMissingConvoyPath)
   // No unit
   assertOrderValidity(t, judge, orders.Move("spa", "por"), cla.ErrMissingUnit)
   // Working convoy

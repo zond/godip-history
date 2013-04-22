@@ -50,9 +50,19 @@ var ErrMissingConvoyPath = fmt.Errorf("ErrMissignConvoyPath")
 var ErrIllegalDistance = fmt.Errorf("ErrIllegalDistance")
 var ErrConvoyParadox = fmt.Errorf("ErrConvoyParadox")
 var ErrMissingConvoy = fmt.Errorf("ErrMissingConvoy")
-var ErrIllegalSupport = fmt.Errorf("ErrIllegalSupport")
+var ErrIllegalHoldSupport = fmt.Errorf("ErrIllegalHoldSupport")
+var ErrIllegalMoveSupport = fmt.Errorf("ErrIllegalMoveSupport")
 var ErrMissingSupportee = fmt.Errorf("ErrMissingSupportee")
 var ErrInvalidSupportedMove = fmt.Errorf("ErrInvalidSupportedMove")
+var ErrIllegalConvoy = fmt.Errorf("ErrIllegalConvoy")
+
+type ErrSupportBroken struct {
+  Province Province
+}
+
+func (self ErrSupportBroken) Error() string {
+  return fmt.Sprintf("ErrSupportBroken:%v", self.Province)
+}
 
 type ErrBounce struct {
   Province Province
@@ -60,4 +70,78 @@ type ErrBounce struct {
 
 func (self ErrBounce) Error() string {
   return fmt.Sprintf("ErrBounce:%v", self.Province)
+}
+
+func ConvoyPossible(v Validator, src, dst Province, checkOrders bool) error {
+  unit := v.Unit(src)
+  if unit == nil {
+    return ErrMissingUnit
+  }
+  if unit.Type != Army {
+    return ErrIllegalConvoy
+  }
+  if path := v.Graph().Path(src, dst, func(name Province, flags map[Flag]bool, sc *Nationality) bool {
+    if u := v.Unit(name); u != nil && u.Type == Fleet {
+      if !checkOrders {
+        return true
+      }
+      if order := v.Order(name); order != nil && order.Type() == Convoy && order.Targets()[1] == src && order.Targets()[2] == dst {
+        if r, ok := v.(Resolver); ok {
+          if err := r.Resolve(name); err == nil {
+            return true
+          }
+        } else {
+          return true
+        }
+      }
+    }
+    return false
+  }); path == nil {
+    return ErrMissingConvoyPath
+  }
+  return nil
+}
+
+/*
+PossibleMove returns true if a move from src to dst is possible in v.
+
+It will validate that the move is theoretically possible without privileged information.
+
+It will (if allowConvoy and the need for convoying) validate the presence of fleets along the path.
+
+It will (if allowConvoy, the need for convoying and resolveConvoy) validate presence of successful and relevant convoy orders along the path.
+*/
+func MovePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders bool) error {
+  if !v.Graph().Has(src) {
+    return ErrInvalidSource
+  }
+  if !v.Graph().Has(dst) {
+    return ErrInvalidDestination
+  }
+  unit := v.Unit(src)
+  if unit == nil {
+    return ErrMissingUnit
+  }
+  if unit.Type == Army {
+    if !v.Graph().Flags(dst)[Land] {
+      return ErrIllegalDestination
+    }
+  } else if unit.Type == Fleet {
+    if !v.Graph().Flags(dst)[Sea] {
+      return ErrIllegalDestination
+    }
+  } else {
+    panic(fmt.Errorf("Unknown unit type %v", unit.Type))
+  }
+  path := v.Graph().Path(src, dst, nil)
+  if path == nil {
+    return ErrMissingPath
+  }
+  if len(path) > 1 {
+    if allowConvoy {
+      return ConvoyPossible(v, src, dst, checkConvoyOrders)
+    }
+    return ErrIllegalDistance
+  }
+  return nil
 }

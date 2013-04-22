@@ -15,21 +15,21 @@ type phase struct {
   typ    common.PhaseType
 }
 
-func (self phase) Year() int {
+func (self *phase) Year() int {
   return self.year
 }
 
-func (self phase) Season() string {
+func (self *phase) Season() string {
   return self.season
 }
 
-func (self phase) Type() common.PhaseType {
+func (self *phase) Type() common.PhaseType {
   return self.typ
 }
 
-func (self phase) Prev() (result common.Phase, err error) {
+func (self *phase) Prev() common.Phase {
   if self.typ == Retreat {
-    result = phase{
+    return &phase{
       year:   self.year,
       season: self.season,
       typ:    Movement,
@@ -37,60 +37,59 @@ func (self phase) Prev() (result common.Phase, err error) {
   } else if self.typ == Movement {
     if self.season == Spring {
       if self.year == 1901 {
-        err = fmt.Errorf("No year earlier than 1901")
-        return
+        return nil
       }
-      result = phase{
+      return &phase{
         year:   self.year - 1,
         season: Winter,
         typ:    Build,
       }
     } else {
-      result = phase{
+      return &phase{
         year:   self.year,
         season: Spring,
         typ:    Retreat,
       }
     }
   } else {
-    result = phase{
+    return &phase{
       year:   self.year,
       season: Fall,
       typ:    Retreat,
     }
   }
-  return
+  return nil
 }
 
-func (self phase) Next() (result common.Phase, err error) {
+func (self *phase) Next() common.Phase {
   if self.typ == Movement {
-    result = phase{
+    return &phase{
       year:   self.year,
       season: self.season,
       typ:    Retreat,
     }
   } else if self.typ == Retreat {
     if self.season == Spring {
-      result = phase{
+      return &phase{
         year:   self.year,
         season: Fall,
         typ:    Movement,
       }
     } else {
-      result = phase{
+      return &phase{
         year:   self.year,
         season: Winter,
         typ:    Build,
       }
     }
   } else {
-    result = phase{
+    return &phase{
       year:   self.year + 1,
       season: Spring,
       typ:    Movement,
     }
   }
-  return
+  return nil
 }
 
 func Blank(phase common.Phase) *judge.Judge {
@@ -98,7 +97,7 @@ func Blank(phase common.Phase) *judge.Judge {
 }
 
 func Start() *judge.Judge {
-  return judge.New(start.Graph(), phase{1901, Spring, Movement}, BackupRule, DefaultOrderGenerator).
+  return judge.New(start.Graph(), &phase{1901, Spring, Movement}, BackupRule, DefaultOrderGenerator).
     SetUnits(start.Units()).
     SetSupplyCenters(start.SupplyCenters())
 }
@@ -111,24 +110,25 @@ func DefaultOrderGenerator(prov common.Province) common.Order {
 BackupRule will make sets of only Move orders succeed, while orders with at least one Convoy all fail.
 Any other alternative will cause a panic.
 */
-func BackupRule(resolver common.Resolver, prov common.Province, deps map[common.Province]bool) (result bool, err error) {
+func BackupRule(resolver common.Resolver, prov common.Province, deps map[common.Province]bool) error {
   only_moves := true
   convoys := false
   for prov, _ := range deps {
-    order, ok := resolver.Order(prov)
-    if ok && order.Type() != Move {
-      only_moves = false
-    }
-    if ok && order.Type() == Convoy {
-      convoys = true
+    if order := resolver.Order(prov); order != nil {
+      if order.Type() != Move {
+        only_moves = false
+      }
+      if order.Type() == Convoy {
+        convoys = true
+      }
     }
   }
 
   if only_moves {
-    return true, nil
+    return nil
   }
   if convoys {
-    return false, ErrConvoyParadox
+    return ErrConvoyParadox
   }
   panic(fmt.Errorf("Unknown circular dependency between %v", deps))
 }

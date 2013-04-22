@@ -27,22 +27,23 @@ func (self *support) Targets() []dip.Province {
   return self.targets
 }
 
-func (self *support) Adjudicate(r dip.Resolver) (result bool, err error) {
-  return true, nil
+func (self *support) Adjudicate(r dip.Resolver) error {
+  unit := r.Unit(self.targets[0])
+  if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+    return (o.Type() == cla.Move && // move
+      o.Targets()[1] == self.targets[0] && // against us
+      (len(self.targets) == 2 || o.Targets()[0] != self.targets[2]) && // not from something we support attacking
+      u.Nationality != unit.Nationality && // not friendly
+      cla.MovePossible(r, o.Targets()[0], o.Targets()[1], true, true) == nil) // and legal move counting convoy success
+  }); len(breaks) > 0 {
+    return cla.ErrSupportBroken{breaks[0]}
+  }
+  return nil
 }
 
-func (self *support) simpleMoveAllowed(v dip.Validator, src, dst dip.Province) bool {
-  unit, _ := v.Unit(src)
-  var flag dip.Flag
-  if unit.Type == cla.Army {
-    flag = cla.Land
-  } else {
-    flag = cla.Sea
-  }
+func (self *support) anyMovePossible(v dip.Validator, src, dst dip.Province) bool {
   for coast, _ := range v.Graph().Coasts(dst) {
-    if found, steps := v.Graph().Path(src, coast, func(p dip.Province, f map[dip.Flag]bool, sc *dip.Nationality) bool {
-      return f[flag]
-    }); found && len(steps) == 1 {
+    if cla.MovePossible(v, src, coast, false, false) == nil {
       return true
     }
   }
@@ -59,24 +60,24 @@ func (self *support) Validate(v dip.Validator) error {
   if !v.Graph().Has(self.targets[1]) {
     return cla.ErrInvalidTarget
   }
-  if _, ok := v.Unit(self.targets[0]); !ok {
+  if unit := v.Unit(self.targets[0]); unit == nil {
     return cla.ErrMissingUnit
   }
-  if _, ok := v.Unit(self.targets[1]); !ok {
+  if unit := v.Unit(self.targets[1]); unit == nil {
     return cla.ErrMissingSupportee
   }
   if len(self.targets) == 2 {
-    if !self.simpleMoveAllowed(v, self.targets[0], self.targets[1]) {
-      return cla.ErrIllegalSupport
+    if !self.anyMovePossible(v, self.targets[0], self.targets[1]) {
+      return cla.ErrIllegalHoldSupport
     }
   } else {
     if !v.Graph().Has(self.targets[2]) {
       return cla.ErrInvalidTarget
     }
-    if !self.simpleMoveAllowed(v, self.targets[0], self.targets[2]) {
-      return cla.ErrIllegalSupport
+    if !self.anyMovePossible(v, self.targets[0], self.targets[2]) {
+      return cla.ErrIllegalMoveSupport
     }
-    if Move(self.targets[1], self.targets[2]).Validate(v) != nil {
+    if !self.anyMovePossible(v, self.targets[1], self.targets[2]) {
       return cla.ErrInvalidSupportedMove
     }
   }
@@ -84,5 +85,4 @@ func (self *support) Validate(v dip.Validator) error {
 }
 
 func (self *support) Execute(state dip.State) {
-  state.Move(self.targets[0], self.targets[1])
 }

@@ -44,8 +44,8 @@ type Phase interface {
   Year() int
   Season() string
   Type() PhaseType
-  Next() (Phase, error)
-  Prev() (Phase, error)
+  Next() Phase
+  Prev() Phase
 }
 
 type PathFilter func(n Province, flags map[Flag]bool, sc *Nationality) bool
@@ -56,7 +56,7 @@ type Graph interface {
   Has(Province) bool
   Flags(Province) map[Flag]bool
   SC(Province) *Nationality
-  Path(src, dst Province, filter PathFilter) (found bool, path []Province)
+  Path(src, dst Province, filter PathFilter) []Province
   Coasts(Province) map[Province]bool
 }
 
@@ -69,27 +69,27 @@ type Order interface {
 
 type Adjudicator interface {
   Order
-  Adjudicate(Resolver) (bool, error)
+  Adjudicate(Resolver) error
 }
 
 /*
 The BackupRule takes a state, a Province causing an inconsistency and set of all Provinces visited while finding the inconsistency, 
 and returns whether the Order provided Province ought to succeed.
 */
-type BackupRule func(Resolver, Province, map[Province]bool) (bool, error)
+type BackupRule func(Resolver, Province, map[Province]bool) error
 
 type StateFilter func(n Province, o Order, u Unit) bool
 
 type Validator interface {
-  Order(Province) (order Order, found bool)
-  Unit(Province) (unit Unit, found bool)
+  Order(Province) Order
+  Unit(Province) *Unit
   Graph() Graph
   Phase() Phase
 }
 
 type Resolver interface {
   Validator
-  Resolve(Province) (result bool, reason error)
+  Resolve(Province) error
   Find(StateFilter) (provinces []Province, orders []Order, units []Unit)
 }
 

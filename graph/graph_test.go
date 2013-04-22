@@ -6,9 +6,9 @@ import (
   "testing"
 )
 
-func assertPath(t *testing.T, g *Graph, src, dst common.Province, ok bool, found []common.Province) {
-  if o, f := g.Path(src, dst, nil); ok != o || !reflect.DeepEqual(f, found) {
-    t.Errorf("%v should have a path between %v and %v like %v, %v but found %v, %v", g, src, dst, ok, found, o, f)
+func assertPath(t *testing.T, g *Graph, src, dst common.Province, found []common.Province) {
+  if f := g.Path(src, dst, nil); !reflect.DeepEqual(f, found) {
+    t.Errorf("%v should have a path between %v and %v like %v but found %v", g, src, dst, found, f)
   }
 }
 
@@ -24,7 +24,7 @@ func TestPath(t *testing.T) {
     Prov("h").Conn("a").Conn("c").Conn("d").Conn("g").
     Prov("i").Conn("c").
     Done()
-  assertPath(t, g, "a", "e", true, []common.Province{"f", "e"})
-  assertPath(t, g, "a", "d", true, []common.Province{"h", "d"})
-  assertPath(t, g, "a", "i", true, []common.Province{"h", "c", "i"})
+  assertPath(t, g, "a", "e", []common.Province{"f", "e"})
+  assertPath(t, g, "a", "d", []common.Province{"h", "d"})
+  assertPath(t, g, "a", "i", []common.Province{"h", "c", "i"})
 }

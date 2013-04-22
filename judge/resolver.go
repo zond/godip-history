@@ -1,13 +1,14 @@
 package judge
 
 import (
+  "fmt"
   . "github.com/zond/godip/common"
 )
 
 type resolver struct {
   *Judge
   visited map[Province]bool
-  guesses map[Province]bool
+  guesses map[Province]error
 }
 
 /*
@@ -19,21 +20,20 @@ otherwise a BackupRule will be invoced.
 
 Make sure never to call Order#Adjudicate from another Order! Only call Resolver#Resolve from Orders.
 */
-func (self *resolver) Resolve(prov Province) (result bool, err error) {
+func (self *resolver) Resolve(prov Province) (err error) {
   var ok bool
-  if result, ok = self.guesses[prov]; !ok { // Already guessed
-    if self.visited[prov] { // Not yet guessed, but visited before, introduce a guess (the default false result) and return it.
-      self.guesses[prov] = result
+  if err, ok = self.guesses[prov]; !ok { // Already guessed
+    if self.visited[prov] { // Not yet guessed, but visited before, introduce a negative guess and return it.
+      self.guesses[prov] = fmt.Errorf("Negative guess")
     } else { // Not yet visited, do a proper adjudication.
       self.visited[prov] = true
 
-      result, err = self.Judge.orders[prov].Adjudicate(self) // Ask order to adjudicate itself.
-      if _, ok := self.guesses[prov]; ok {                   // We were visited again, and depend on our guess.
-        self.guesses[prov] = true // Switch the guess to true.
-        var second_result bool
-        second_result, err = self.Judge.orders[prov].Adjudicate(self) // Ask order to adjudicate itself with the new guess.
-        if result != second_result {                                  // If the results are the same, it means that exactly one of them were consistent (and any one of them could be returned). If not, none or both are consistent.
-          result, err = self.Judge.backupRule(self, prov, self.visited) // So, run the BackupRule on the orders we visited and let it decide.
+      err = self.Judge.orders[prov].Adjudicate(self) // Ask order to adjudicate itself.
+      if _, ok := self.guesses[prov]; ok {           // We were visited again, and depend on our guess.
+        self.guesses[prov] = nil                                                    // Switch the guess to success.
+        second_err := self.Judge.orders[prov].Adjudicate(self)                      // Ask order to adjudicate itself with the new guess.
+        if (err == nil && second_err != nil) || (err != nil && second_err == nil) { // If the results are the same (in regards to success), it means that exactly one of them were consistent (and any one of them could be returned). If not, none or both are consistent.
+          err = self.Judge.backupRule(self, prov, self.visited) // So, run the BackupRule on the orders we visited and let it decide.
         }
       }
     }
@@ -44,7 +44,7 @@ func (self *resolver) Resolve(prov Province) (result bool, err error) {
 func (self *resolver) Find(filter StateFilter) (provinces []Province, orders []Order, units []Unit) {
   for prov, unit := range self.Judge.units {
     order := self.Judge.defaultOrderGenerator(prov)
-    if ord, ok := self.Judge.Order(prov); ok {
+    if ord := self.Judge.Order(prov); ord != nil {
       order = ord
     }
     if filter(prov, order, unit) {
