@@ -29,9 +29,11 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Todo
 
-* Implement Move#Adjudicate
-* Build simple test cases for adjudicating only Move orders.
-* Implement Convoy, Support and Hold.
+* Implement Convoy
+* Implement Build
+* Implement Disband
+* Implement Retreat
+* Make the Phase interface able to post process a State
 * Build a DATC parser.
 * Introduce the DATC test cases from http://mtn-host.prjek.net/viewmtn/droidippy/branch/changes/cx.ath.troja.jdip.droidippy
 * Make the DATC cases pass...
