@@ -85,6 +85,7 @@ type Validator interface {
   Unit(Province) *Unit
   Graph() Graph
   Phase() Phase
+  SupplyCenters() map[Province]Nationality
 }
 
 type Resolver interface {
@@ -94,7 +95,9 @@ type Resolver interface {
 }
 
 type State interface {
+  Validator
   Move(Province, Province)
+  SetUnit(Province, Unit)
 }
 
 type OrderGenerator func(prov Province) Order

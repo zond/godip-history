@@ -57,6 +57,8 @@ var ErrMissingSupportUnit = fmt.Errorf("ErrMissingSupportUnit")
 var ErrInvalidSupportMove = fmt.Errorf("ErrInvalidSupportMove")
 var ErrIllegalConvoy = fmt.Errorf("ErrIllegalConvoy")
 var ErrMissingConvoyee = fmt.Errorf("ErrMissingConvoyee")
+var ErrIllegalBuild = fmt.Errorf("ErrIllegalBuild")
+var ErrOccupiedSupplyCenter = fmt.Errorf("ErrOccupiedSupplyCenter")
 
 type ErrConvoyDislodged struct {
   Province Province

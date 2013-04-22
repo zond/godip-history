@@ -85,6 +85,10 @@ func (self *Judge) Errors() map[Province]error {
   return self.errors
 }
 
+func (self *Judge) SupplyCenters() map[Province]Nationality {
+  return self.supplyCenters
+}
+
 func (self *Judge) SetDislodged(prov Province, unit Unit) {
   if found := self.Dislodged(prov); found != nil {
     panic(fmt.Errorf("%v is already at %v", found, prov))

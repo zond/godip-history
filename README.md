@@ -29,7 +29,6 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Todo
 
-* Implement Convoy
 * Implement Build
 * Implement Disband
 * Implement Retreat
