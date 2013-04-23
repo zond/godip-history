@@ -320,6 +320,7 @@ func (self *State) Next() (err error) {
     order.Execute(self)
     delete(self.orders, prov)
   }
+  self.phase.PostProcess(self)
   self.phase = self.phase.Next()
   return
 }
