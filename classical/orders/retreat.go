@@ -29,7 +29,7 @@ func (self *retreat) At() time.Time {
 }
 
 func (self *retreat) Adjudicate(r dip.Resolver) error {
-  _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return p != self.targets[0] && o.Type() == cla.Retreat && o.Targets()[1] == self.targets[1]
   })
   if len(competingOrders) > 0 {

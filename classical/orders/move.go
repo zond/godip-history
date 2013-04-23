@@ -29,7 +29,7 @@ func (self *move) At() time.Time {
 }
 
 func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
-  _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     if o.Type() == cla.Support && len(o.Targets()) == 3 && o.Targets()[1] == src && o.Targets()[2] == dst {
       if err := r.Resolve(p); err == nil {
         return true
@@ -41,7 +41,7 @@ func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
 }
 
 func (self *move) calcHoldSupport(r dip.Resolver, p dip.Province) int {
-  _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     if o.Type() == cla.Support && len(o.Targets()) == 2 && o.Targets()[1] == p {
       if err := r.Resolve(p); err == nil {
         return true
@@ -57,7 +57,7 @@ func (self *move) Adjudicate(r dip.Resolver) error {
   attackStrength := self.calcAttackSupport(r, self.targets[0], self.targets[1]) + 1
 
   // competing moves for the same destination
-  _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return p != self.targets[0] && o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
   })
   for _, competingOrder := range competingOrders {

@@ -39,7 +39,7 @@ func (self *support) Adjudicate(r dip.Resolver) error {
       return cla.ErrIllegalSupportDestinationNationality
     }
   }
-  if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return (o.Type() == cla.Move && // move
       o.Targets()[1] == self.targets[0] && // against us
       (len(self.targets) == 2 || o.Targets()[0] != self.targets[2]) && // not from something we support attacking

@@ -192,8 +192,8 @@ func BuildStatus(v Validator, me Nationality) (builds Orders, disbands Orders, b
   }
 
   units := 0
-  v.Find(func(p Province, o Order, u Unit) bool {
-    if u.Nationality == me {
+  v.Find(func(p Province, o Order, u *Unit) bool {
+    if u != nil && u.Nationality == me {
       if o.Type() == Disband {
         disbands = append(disbands, o)
       }

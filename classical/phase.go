@@ -64,9 +64,12 @@ func (self *phase) sortedUnits(s dip.State, n dip.Nationality) []dip.Province {
   provs := remoteUnitSlice{
     distances: make(map[dip.Province]int),
   }
-  provs.provinces, _, _ = s.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
-    provs.distances[p] = self.shortestDistance(s, p, s.Graph().SCs(n))
-    return u.Nationality == n
+  provs.provinces, _, _ = s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+    if u != nil && u.Nationality == n {
+      provs.distances[p] = self.shortestDistance(s, p, s.Graph().SCs(n))
+      return true
+    }
+    return false
   })
   sort.Sort(provs)
   return provs.provinces
@@ -74,7 +77,7 @@ func (self *phase) sortedUnits(s dip.State, n dip.Nationality) []dip.Province {
 
 func (self *phase) PostProcess(s dip.State) {
   if self.typ == cla.Retreat {
-    s.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+    s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
       if s.Dislodged(p) != nil {
         s.RemoveDislodged(p)
         s.SetError(p, cla.ErrForcedDisband)
@@ -92,9 +95,11 @@ func (self *phase) PostProcess(s dip.State) {
       }
     }
   } else if self.typ == cla.Movement && self.season == cla.Fall {
-    s.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
-      if s.Graph().SC(p) != nil {
-        s.SetSC(p, u.Nationality)
+    s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+      if u != nil {
+        if s.Graph().SC(p) != nil {
+          s.SetSC(p, u.Nationality)
+        }
       }
       return false
     })

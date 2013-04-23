@@ -25,7 +25,7 @@ func (self *convoy) Targets() []dip.Province {
 
 func (self *convoy) Adjudicate(r dip.Resolver) error {
   unit := r.Unit(self.targets[0])
-  if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u dip.Unit) bool {
+  if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return (o.Type() == cla.Move && // move
       o.Targets()[1] == self.targets[0] && // against us
       u.Nationality != unit.Nationality && // not friendly

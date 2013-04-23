@@ -284,7 +284,7 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
     if ord := self.Order(prov); ord != nil {
       order = ord
     }
-    if filter(prov, order, unit) {
+    if filter(prov, order, &unit) {
       provinces = append(provinces, prov)
       orders = append(orders, order)
       units = append(units, unit)
@@ -292,7 +292,7 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
   }
   for prov, order := range self.orders {
     if !visitedProvinces[prov] {
-      if filter(prov, order, common.Unit{}) {
+      if filter(prov, order, nil) {
         provinces = append(provinces, prov)
         orders = append(orders, order)
         units = append(units, common.Unit{})
@@ -303,12 +303,18 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
 }
 
 func (self *State) Next() (err error) {
+  /*
+     Validate orders
+  */
   for prov, order := range self.orders {
     if err := order.Validate(self); err != nil {
       self.errors[prov] = err
       delete(self.orders, prov)
     }
   }
+  /*
+     Adjudicate orders.
+  */
   for prov, _ := range self.orders {
     err := self.Resolver().Resolve(prov)
     if err != nil {
@@ -316,10 +322,16 @@ func (self *State) Next() (err error) {
       delete(self.orders, prov)
     }
   }
+  /*
+     Execute orders.
+  */
   for prov, order := range self.orders {
     order.Execute(self)
     delete(self.orders, prov)
   }
+  /*
+     Change phase.
+  */
   self.phase.PostProcess(self)
   self.phase = self.phase.Next()
   return
