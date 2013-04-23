@@ -65,6 +65,7 @@ type Phase interface {
   Type() PhaseType
   Next() Phase
   Prev() Phase
+  PostProcess(State)
 }
 
 type PathFilter func(n Province, flags map[Flag]bool, sc *Nationality) bool
