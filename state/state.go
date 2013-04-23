@@ -1,69 +1,69 @@
-package judge
+package state
 
 import (
   "bytes"
   "fmt"
-  . "github.com/zond/godip/common"
+  "github.com/zond/godip/common"
 )
 
-func New(graph Graph, phase Phase, backupRule BackupRule, defaultOrderGenerator OrderGenerator) *Judge {
-  return &Judge{
+func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule, defaultOrderGenerator common.OrderGenerator) *State {
+  return &State{
     graph:                 graph,
     phase:                 phase,
     backupRule:            backupRule,
     defaultOrderGenerator: defaultOrderGenerator,
-    orders:                make(map[Province]Adjudicator),
-    units:                 make(map[Province]Unit),
-    dislodgeds:            make(map[Province]Unit),
-    supplyCenters:         make(map[Province]Nationality),
-    errors:                make(map[Province]error),
-    dislodgers:            make(map[Province]Province),
+    orders:                make(map[common.Province]common.Adjudicator),
+    units:                 make(map[common.Province]common.Unit),
+    dislodgeds:            make(map[common.Province]common.Unit),
+    supplyCenters:         make(map[common.Province]common.Nationality),
+    errors:                make(map[common.Province]error),
+    dislodgers:            make(map[common.Province]common.Province),
   }
 }
 
-type Judge struct {
-  orders                map[Province]Adjudicator
-  units                 map[Province]Unit
-  dislodgeds            map[Province]Unit
-  supplyCenters         map[Province]Nationality
-  graph                 Graph
-  phase                 Phase
-  backupRule            BackupRule
-  defaultOrderGenerator OrderGenerator
-  errors                map[Province]error
-  dislodgers            map[Province]Province
+type State struct {
+  orders                map[common.Province]common.Adjudicator
+  units                 map[common.Province]common.Unit
+  dislodgeds            map[common.Province]common.Unit
+  supplyCenters         map[common.Province]common.Nationality
+  graph                 common.Graph
+  phase                 common.Phase
+  backupRule            common.BackupRule
+  defaultOrderGenerator common.OrderGenerator
+  errors                map[common.Province]error
+  dislodgers            map[common.Province]common.Province
 }
 
-func (self *Judge) SetOrders(orders map[Province]Adjudicator) *Judge {
-  self.orders = make(map[Province]Adjudicator)
+func (self *State) SetOrders(orders map[common.Province]common.Adjudicator) *State {
+  self.orders = make(map[common.Province]common.Adjudicator)
   for prov, order := range orders {
     self.SetOrder(prov, order)
   }
   return self
 }
 
-func (self *Judge) SetUnits(units map[Province]Unit) *Judge {
-  self.units = make(map[Province]Unit)
+func (self *State) SetUnits(units map[common.Province]common.Unit) *State {
+  self.units = make(map[common.Province]common.Unit)
   for prov, unit := range units {
     self.SetUnit(prov, unit)
   }
   return self
 }
 
-func (self *Judge) SetDislodgeds(dislodgeds map[Province]Unit) *Judge {
-  self.dislodgeds = make(map[Province]Unit)
+func (self *State) SetDislodgeds(dislodgeds map[common.Province]common.Unit) *State {
+  self.dislodgeds = make(map[common.Province]common.Unit)
   for prov, unit := range dislodgeds {
     self.SetDislodged(prov, unit)
   }
   return self
 }
 
-func (self *Judge) SetSupplyCenters(supplyCenters map[Province]Nationality) *Judge {
+func (self *State) SetSupplyCenters(supplyCenters map[common.Province]common.Nationality) *State {
   self.supplyCenters = supplyCenters
   return self
 }
 
-func (self *Judge) String() string {
+func (self *State) String() string {
   buf := new(bytes.Buffer)
   fmt.Fprintln(buf, self.graph)
   fmt.Fprintln(buf, "SC", self.supplyCenters)
@@ -75,50 +75,50 @@ func (self *Judge) String() string {
   return string(buf.Bytes())
 }
 
-func (self *Judge) Resolver() *resolver {
+func (self *State) Resolver() *resolver {
   return &resolver{
-    Judge:   self,
-    visited: make(map[Province]bool),
-    guesses: make(map[Province]error),
+    State:   self,
+    visited: make(map[common.Province]bool),
+    guesses: make(map[common.Province]error),
   }
 }
 
-func (self *Judge) Errors() map[Province]error {
+func (self *State) Errors() map[common.Province]error {
   return self.errors
 }
 
-func (self *Judge) SupplyCenters() map[Province]Nationality {
+func (self *State) SupplyCenters() map[common.Province]common.Nationality {
   return self.supplyCenters
 }
 
-func (self *Judge) SetDislodged(prov Province, unit Unit) {
+func (self *State) SetDislodged(prov common.Province, unit common.Unit) {
   if found := self.Dislodged(prov); found != nil {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.dislodgeds[prov] = unit
 }
 
-func (self *Judge) SetUnit(prov Province, unit Unit) {
+func (self *State) SetUnit(prov common.Province, unit common.Unit) {
   if found := self.Unit(prov); found != nil {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.units[prov] = unit
 }
 
-func (self *Judge) SetOrder(prov Province, order Adjudicator) {
+func (self *State) SetOrder(prov common.Province, order common.Adjudicator) {
   if found := self.findOrder(prov); found != nil {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.orders[prov] = order
 }
 
-func (self *Judge) RemoveDislodged(prov Province) {
+func (self *State) RemoveDislodged(prov common.Province) {
   if _, p, ok := self.findDislodged(prov); ok {
     delete(self.dislodgeds, p)
   }
 }
 
-func (self *Judge) findDislodged(prov Province) (u Unit, p Province, ok bool) {
+func (self *State) findDislodged(prov common.Province) (u common.Unit, p common.Province, ok bool) {
   if u, ok = self.dislodgeds[prov]; ok {
     p = prov
     return
@@ -137,14 +137,14 @@ func (self *Judge) findDislodged(prov Province) (u Unit, p Province, ok bool) {
   return
 }
 
-func (self *Judge) Dislodged(prov Province) *Unit {
+func (self *State) Dislodged(prov common.Province) *common.Unit {
   if u, _, ok := self.findDislodged(prov); ok {
     return &u
   }
   return nil
 }
 
-func (self *Judge) findDislodger(prov Province) (p Province, ok bool) {
+func (self *State) findDislodger(prov common.Province) (p common.Province, ok bool) {
   if p, ok = self.dislodgers[prov]; ok {
     return
   }
@@ -160,7 +160,7 @@ func (self *Judge) findDislodger(prov Province) (p Province, ok bool) {
   return
 }
 
-func (self *Judge) IsDislodger(attacker, victim Province) bool {
+func (self *State) IsDislodger(attacker, victim common.Province) bool {
   if dislodger, ok := self.findDislodger(victim); ok {
     if dislodger == attacker {
       return true
@@ -178,7 +178,7 @@ func (self *Judge) IsDislodger(attacker, victim Province) bool {
   return false
 }
 
-func (self *Judge) findUnit(prov Province) (u Unit, p Province, ok bool) {
+func (self *State) findUnit(prov common.Province) (u common.Unit, p common.Province, ok bool) {
   if u, ok = self.units[prov]; ok {
     p = prov
     return
@@ -197,14 +197,14 @@ func (self *Judge) findUnit(prov Province) (u Unit, p Province, ok bool) {
   return
 }
 
-func (self *Judge) Unit(prov Province) *Unit {
+func (self *State) Unit(prov common.Province) *common.Unit {
   if u, _, ok := self.findUnit(prov); ok {
     return &u
   }
   return nil
 }
 
-func (self *Judge) findOrder(prov Province) (result Order) {
+func (self *State) findOrder(prov common.Province) (result common.Order) {
   var ok bool
   if result, ok = self.orders[prov]; ok {
     return
@@ -221,7 +221,7 @@ func (self *Judge) findOrder(prov Province) (result Order) {
   return
 }
 
-func (self *Judge) Order(prov Province) (result Order) {
+func (self *State) Order(prov common.Province) (result common.Order) {
   result = self.findOrder(prov)
   if result == nil {
     if unit := self.Unit(prov); unit != nil {
@@ -231,7 +231,7 @@ func (self *Judge) Order(prov Province) (result Order) {
   return
 }
 
-func (self *Judge) Move(src, dst Province) {
+func (self *State) Move(src, dst common.Province) {
   if unit, prov, ok := self.findUnit(src); !ok {
     panic(fmt.Errorf("No unit at %v?", src))
   } else {
@@ -245,7 +245,7 @@ func (self *Judge) Move(src, dst Province) {
   }
 }
 
-func (self *Judge) Retreat(src, dst Province) {
+func (self *State) Retreat(src, dst common.Province) {
   if unit, prov, ok := self.findDislodged(src); !ok {
     panic(fmt.Errorf("No dislodged at %v?", src))
   } else {
@@ -254,12 +254,12 @@ func (self *Judge) Retreat(src, dst Province) {
   }
 }
 
-func (self *Judge) Graph() Graph {
+func (self *State) Graph() common.Graph {
   return self.graph
 }
 
-func (self *Judge) Find(filter StateFilter) (provinces []Province, orders []Order, units []Unit) {
-  visitedProvinces := make(map[Province]bool)
+func (self *State) Find(filter common.StateFilter) (provinces []common.Province, orders []common.Order, units []common.Unit) {
+  visitedProvinces := make(map[common.Province]bool)
   for prov, unit := range self.units {
     visitedProvinces[prov] = true
     order := self.defaultOrderGenerator(prov)
@@ -274,17 +274,17 @@ func (self *Judge) Find(filter StateFilter) (provinces []Province, orders []Orde
   }
   for prov, order := range self.orders {
     if !visitedProvinces[prov] {
-      if filter(prov, order, Unit{}) {
+      if filter(prov, order, common.Unit{}) {
         provinces = append(provinces, prov)
         orders = append(orders, order)
-        units = append(units, Unit{})
+        units = append(units, common.Unit{})
       }
     }
   }
   return
 }
 
-func (self *Judge) Next() (err error) {
+func (self *State) Next() (err error) {
   for prov, order := range self.orders {
     if err := order.Validate(self); err != nil {
       self.errors[prov] = err
@@ -301,11 +301,11 @@ func (self *Judge) Next() (err error) {
   for _, order := range self.orders {
     order.Execute(self)
   }
-  self.orders = make(map[Province]Adjudicator)
+  self.orders = make(map[common.Province]common.Adjudicator)
   self.phase = self.phase.Next()
   return
 }
 
-func (self *Judge) Phase() Phase {
+func (self *State) Phase() common.Phase {
   return self.phase
 }

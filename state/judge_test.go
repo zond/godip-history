@@ -1,7 +1,7 @@
-package judge
+package state
 
 import (
-  . "github.com/zond/godip/common"
+  "github.com/zond/godip/common"
   "github.com/zond/godip/graph"
   "testing"
 )
@@ -11,10 +11,10 @@ type testOrder int
 func (self testOrder) Type() OrderType {
   return ""
 }
-func (self testOrder) Targets() []Province {
+func (self testOrder) Targets() []common.Province {
   return nil
 }
-func (self testOrder) Adjudicate(Resolver) (bool, error) {
+func (self testOrder) Adjudicate(common.Resolver) (bool, error) {
   return false, nil
 }
 func (self testOrder) Validate(Validator) error {
@@ -40,19 +40,19 @@ func testGraph() Graph {
     Done()
 }
 
-func assertOrderLocation(t *testing.T, j *Judge, prov Province, order Order, ok bool) {
+func assertOrderLocation(t *testing.T, j *State, prov common.Province, order common.Order, ok bool) {
   if o, k := j.Order(prov); o != order || k != ok {
     t.Errorf("Wrong order, wanted %v, %v at %v but got %v, %v", order, ok, prov, o, k)
   }
 }
 
-func TestJudgeLocations(t *testing.T) {
+func TestStateLocations(t *testing.T) {
   j := New(testGraph(), nil, nil)
-  j.SetOrders(map[Province]Order{
+  j.SetOrders(map[common.Province]common.Order{
     "a":    testOrder(1),
     "b/ec": testOrder(2),
   })
-  j.SetOrders(map[Province]Order{
+  j.SetOrders(map[common.Province]common.Order{
     "b": testOrder(2),
   })
   assertOrderLocation(t, j, "a", nil, false)

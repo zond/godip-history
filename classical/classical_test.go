@@ -4,7 +4,7 @@ import (
   cla "github.com/zond/godip/classical/common"
   "github.com/zond/godip/classical/orders"
   dip "github.com/zond/godip/common"
-  "github.com/zond/godip/judge"
+  "github.com/zond/godip/state"
   "reflect"
   "testing"
 )
@@ -15,7 +15,7 @@ func assertOrderValidity(t *testing.T, validator dip.Validator, order dip.Order,
   }
 }
 
-func assertMove(t *testing.T, j *judge.Judge, src, dst dip.Province, success bool) {
+func assertMove(t *testing.T, j *state.State, src, dst dip.Province, success bool) {
   if success {
     unit := j.Unit(src)
     if unit == nil {
