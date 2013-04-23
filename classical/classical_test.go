@@ -75,7 +75,7 @@ func TestMoveValidation(t *testing.T) {
   // Happy path army
   assertOrderValidity(t, judge, orders.Move("mun", "ruh"), nil)
   // Too far
-  assertOrderValidity(t, judge, orders.Move("bre", "wes"), cla.ErrIllegalConvoy)
+  assertOrderValidity(t, judge, orders.Move("bre", "wes"), cla.ErrIllegalConvoyUnit)
   // Fleet on land
   assertOrderValidity(t, judge, orders.Move("bre", "par"), cla.ErrIllegalDestination)
   // Army at sea

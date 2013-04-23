@@ -118,6 +118,7 @@ type Validator interface {
   Order(Province) Order
   Unit(Province) *Unit
   Dislodged(Province) *Unit
+  IsDislodger(attacker Province, victim Province) bool
   Graph() Graph
   Phase() Phase
   SupplyCenters() map[Province]Nationality
@@ -132,6 +133,7 @@ type Resolver interface {
 type State interface {
   Validator
   Move(Province, Province)
+  Retreat(Province, Province)
   SetUnit(Province, Unit)
   RemoveDislodged(Province)
 }

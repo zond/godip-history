@@ -17,6 +17,7 @@ func New(graph Graph, phase Phase, backupRule BackupRule, defaultOrderGenerator 
     dislodgeds:            make(map[Province]Unit),
     supplyCenters:         make(map[Province]Nationality),
     errors:                make(map[Province]error),
+    dislodgers:            make(map[Province]Province),
   }
 }
 
@@ -30,6 +31,7 @@ type Judge struct {
   backupRule            BackupRule
   defaultOrderGenerator OrderGenerator
   errors                map[Province]error
+  dislodgers            map[Province]Province
 }
 
 func (self *Judge) SetOrders(orders map[Province]Adjudicator) *Judge {
@@ -142,6 +144,40 @@ func (self *Judge) Dislodged(prov Province) *Unit {
   return nil
 }
 
+func (self *Judge) findDislodger(prov Province) (p Province, ok bool) {
+  if p, ok = self.dislodgers[prov]; ok {
+    return
+  }
+  sup, _ := prov.Split()
+  if p, ok = self.dislodgers[sup]; ok {
+    return
+  }
+  for name, _ := range self.graph.Coasts(prov) {
+    if p, ok = self.dislodgers[name]; ok {
+      return
+    }
+  }
+  return
+}
+
+func (self *Judge) IsDislodger(attacker, victim Province) bool {
+  if dislodger, ok := self.findDislodger(victim); ok {
+    if dislodger == attacker {
+      return true
+    }
+    sup, _ := dislodger.Split()
+    if sup == attacker {
+      return true
+    }
+    for name, _ := range self.graph.Coasts(dislodger) {
+      if name == attacker {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 func (self *Judge) findUnit(prov Province) (u Unit, p Province, ok bool) {
   if u, ok = self.units[prov]; ok {
     p = prov
@@ -196,16 +232,26 @@ func (self *Judge) Order(prov Province) (result Order) {
 }
 
 func (self *Judge) Move(src, dst Province) {
-  unit := self.Unit(src)
-  if unit == nil {
+  if unit, prov, ok := self.findUnit(src); !ok {
     panic(fmt.Errorf("No unit at %v?", src))
+  } else {
+    if d, p, ok := self.findDislodged(dst); ok {
+      delete(self.units, p)
+      self.SetDislodged(p, d)
+      self.dislodgers[dst] = prov
+    }
+    delete(self.units, prov)
+    self.SetUnit(dst, unit)
   }
-  if dislodged := self.Unit(dst); dislodged != nil {
-    delete(self.units, dst)
-    self.dislodgeds[dst] = *dislodged
+}
+
+func (self *Judge) Retreat(src, dst Province) {
+  if unit, prov, ok := self.findDislodged(src); !ok {
+    panic(fmt.Errorf("No dislodged at %v?", src))
+  } else {
+    delete(self.dislodgeds, prov)
+    self.SetUnit(dst, unit)
   }
-  delete(self.units, src)
-  self.units[dst] = *unit
 }
 
 func (self *Judge) Graph() Graph {

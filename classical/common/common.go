@@ -57,7 +57,8 @@ var ErrIllegalSupportDestination = fmt.Errorf("ErrIllegalSupportDestination")
 var ErrIllegalSupportDestinationNationality = fmt.Errorf("ErrIllegalSupportDestinationNationality")
 var ErrMissingSupportUnit = fmt.Errorf("ErrMissingSupportUnit")
 var ErrInvalidSupportMove = fmt.Errorf("ErrInvalidSupportMove")
-var ErrIllegalConvoy = fmt.Errorf("ErrIllegalConvoy")
+var ErrIllegalConvoyUnit = fmt.Errorf("ErrIllegalConvoyUnit")
+var ErrIllegalConvoyMove = fmt.Errorf("ErrIllegalConvoyMove")
 var ErrMissingConvoyee = fmt.Errorf("ErrMissingConvoyee")
 var ErrIllegalBuild = fmt.Errorf("ErrIllegalBuild")
 var ErrIllegalDisband = fmt.Errorf("ErrIllegalDisband")
@@ -66,6 +67,8 @@ var ErrMissingSupplyCenter = fmt.Errorf("ErrMissingSupplyCenter")
 var ErrMissingSurplus = fmt.Errorf("ErrMissingSurplus")
 var ErrIllegalUnitType = fmt.Errorf("ErrIllegalUnitType")
 var ErrMissingDeficit = fmt.Errorf("ErrMissingDeficit")
+var ErrOccupiedDestination = fmt.Errorf("ErrOccupiedDestination")
+var ErrIllegalRetreat = fmt.Errorf("ErrIllegalRetreat")
 
 type ErrConvoyDislodged struct {
   Province Province
@@ -97,7 +100,7 @@ func ConvoyPossible(v Validator, src, dst Province, checkOrders bool) error {
     return ErrMissingUnit
   }
   if unit.Type != Army {
-    return ErrIllegalConvoy
+    return ErrIllegalConvoyUnit
   }
   if path := v.Graph().Path(src, dst, func(name Province, flags map[Flag]bool, sc *Nationality) bool {
     if u := v.Unit(name); u != nil && u.Type == Fleet {
