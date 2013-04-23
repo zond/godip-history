@@ -77,7 +77,8 @@ type Graph interface {
   Flags(Province) map[Flag]bool
   SC(Province) *Nationality
   Path(src, dst Province, filter PathFilter) []Province
-  Coasts(Province) map[Province]bool
+  Coasts(Province) []Province
+  SCs(Nationality) []Province
 }
 
 type Orders []Order
@@ -137,6 +138,10 @@ type State interface {
   Retreat(Province, Province)
   SetUnit(Province, Unit)
   RemoveDislodged(Province)
+  RemoveUnit(Province)
+  ClearDislodgers()
+  SetError(Province, error)
+  SetSC(Province, Nationality)
 }
 
 type OrderGenerator func(prov Province) Order

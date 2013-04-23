@@ -76,5 +76,9 @@ func (self *disband) Validate(v dip.Validator) error {
 }
 
 func (self *disband) Execute(state dip.State) {
-  state.RemoveDislodged(self.targets[0])
+  if state.Phase().Type() == cla.Build {
+    state.RemoveUnit(self.targets[0])
+  } else {
+    state.RemoveDislodged(self.targets[0])
+  }
 }

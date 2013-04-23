@@ -39,6 +39,7 @@ const (
 )
 
 var Coast = []Flag{Sea, Land}
+var Nations = []Nationality{Austria, England, France, Germany, Italy, Turkey, Russia}
 
 var ErrInvalidSource = fmt.Errorf("ErrInvalidSource")
 var ErrInvalidDestination = fmt.Errorf("ErrInvalidDestination")
@@ -69,6 +70,7 @@ var ErrIllegalUnitType = fmt.Errorf("ErrIllegalUnitType")
 var ErrMissingDeficit = fmt.Errorf("ErrMissingDeficit")
 var ErrOccupiedDestination = fmt.Errorf("ErrOccupiedDestination")
 var ErrIllegalRetreat = fmt.Errorf("ErrIllegalRetreat")
+var ErrForcedDisband = fmt.Errorf("ErrForcedDisband")
 
 type ErrConvoyDislodged struct {
   Province Province
@@ -129,7 +131,7 @@ AnyMovePossible returns true if MovePossible would return true for any movement 
 */
 func AnyMovePossible(v Validator, src, dst Province) error {
   var err error
-  for coast, _ := range v.Graph().Coasts(dst) {
+  for _, coast := range v.Graph().Coasts(dst) {
     if err = MovePossible(v, src, coast, false, false); err == nil {
       return nil
     }

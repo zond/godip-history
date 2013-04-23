@@ -60,6 +60,15 @@ func (self *Graph) SC(n common.Province) (result *common.Nationality) {
   return
 }
 
+func (self *Graph) SCs(n common.Nationality) (result []common.Province) {
+  for name, node := range self.nodes {
+    if node.sc != nil && *node.sc == n {
+      result = append(result, name)
+    }
+  }
+  return
+}
+
 func (self *Graph) edges(n common.Province) (result map[common.Province]*subNode) {
   p, c := n.Split()
   if node, ok := self.nodes[p]; ok {
@@ -110,12 +119,11 @@ func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) []co
   return self.pathHelper(dst, queue, filter, make(map[common.Province]bool))
 }
 
-func (self *Graph) Coasts(prov common.Province) (result map[common.Province]bool) {
-  result = make(map[common.Province]bool)
+func (self *Graph) Coasts(prov common.Province) (result []common.Province) {
   p, _ := prov.Split()
   if node, ok := self.nodes[p]; ok {
     for _, sub := range node.subs {
-      result[sub.getName()] = true
+      result = append(result, sub.getName())
     }
   }
   return

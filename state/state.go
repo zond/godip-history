@@ -42,6 +42,18 @@ func (self *State) SetOrders(orders map[common.Province]common.Adjudicator) *Sta
   return self
 }
 
+func (self *State) ClearDislodgers() {
+  self.dislodgers = make(map[common.Province]common.Province)
+}
+
+func (self *State) SetError(p common.Province, e error) {
+  self.errors[p] = e
+}
+
+func (self *State) SetSC(p common.Province, n common.Nationality) {
+  self.supplyCenters[p] = n
+}
+
 func (self *State) SetUnits(units map[common.Province]common.Unit) *State {
   self.units = make(map[common.Province]common.Unit)
   for prov, unit := range units {
@@ -112,6 +124,12 @@ func (self *State) SetOrder(prov common.Province, order common.Adjudicator) {
   self.orders[prov] = order
 }
 
+func (self *State) RemoveUnit(prov common.Province) {
+  if _, p, ok := self.findUnit(prov); ok {
+    delete(self.units, p)
+  }
+}
+
 func (self *State) RemoveDislodged(prov common.Province) {
   if _, p, ok := self.findDislodged(prov); ok {
     delete(self.dislodgeds, p)
@@ -128,7 +146,7 @@ func (self *State) findDislodged(prov common.Province) (u common.Unit, p common.
     p = sup
     return
   }
-  for name, _ := range self.graph.Coasts(prov) {
+  for _, name := range self.graph.Coasts(prov) {
     if u, ok = self.dislodgeds[name]; ok {
       p = name
       return
@@ -152,7 +170,7 @@ func (self *State) findDislodger(prov common.Province) (p common.Province, ok bo
   if p, ok = self.dislodgers[sup]; ok {
     return
   }
-  for name, _ := range self.graph.Coasts(prov) {
+  for _, name := range self.graph.Coasts(prov) {
     if p, ok = self.dislodgers[name]; ok {
       return
     }
@@ -169,7 +187,7 @@ func (self *State) IsDislodger(attacker, victim common.Province) bool {
     if sup == attacker {
       return true
     }
-    for name, _ := range self.graph.Coasts(dislodger) {
+    for _, name := range self.graph.Coasts(dislodger) {
       if name == attacker {
         return true
       }
@@ -188,7 +206,7 @@ func (self *State) findUnit(prov common.Province) (u common.Unit, p common.Provi
     p = sup
     return
   }
-  for name, _ := range self.graph.Coasts(prov) {
+  for _, name := range self.graph.Coasts(prov) {
     if u, ok = self.units[name]; ok {
       p = name
       return
@@ -213,7 +231,7 @@ func (self *State) findOrder(prov common.Province) (result common.Order) {
   if result, ok = self.orders[sup]; ok {
     return
   }
-  for name, _ := range self.graph.Coasts(prov) {
+  for _, name := range self.graph.Coasts(prov) {
     if result, ok = self.orders[name]; ok {
       return
     }
@@ -236,11 +254,11 @@ func (self *State) Move(src, dst common.Province) {
     panic(fmt.Errorf("No unit at %v?", src))
   } else {
     if d, p, ok := self.findDislodged(dst); ok {
-      delete(self.units, p)
+      self.RemoveUnit(p)
       self.SetDislodged(p, d)
       self.dislodgers[dst] = prov
     }
-    delete(self.units, prov)
+    self.RemoveUnit(prov)
     self.SetUnit(dst, unit)
   }
 }
@@ -249,7 +267,7 @@ func (self *State) Retreat(src, dst common.Province) {
   if unit, prov, ok := self.findDislodged(src); !ok {
     panic(fmt.Errorf("No dislodged at %v?", src))
   } else {
-    delete(self.dislodgeds, prov)
+    self.RemoveDislodged(prov)
     self.SetUnit(dst, unit)
   }
 }
@@ -298,10 +316,10 @@ func (self *State) Next() (err error) {
       delete(self.orders, prov)
     }
   }
-  for _, order := range self.orders {
+  for prov, order := range self.orders {
     order.Execute(self)
+    delete(self.orders, prov)
   }
-  self.orders = make(map[common.Province]common.Adjudicator)
   self.phase = self.phase.Next()
   return
 }
