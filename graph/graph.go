@@ -141,6 +141,15 @@ func (self *Graph) Prov(n common.Province) *subNode {
   return self.nodes[p].sub(c)
 }
 
+func (self *Graph) Provinces() (result []common.Province) {
+  for _, node := range self.nodes {
+    for _, sub := range node.subs {
+      result = append(result, sub.getName())
+    }
+  }
+  return
+}
+
 type node struct {
   name  common.Province
   subs  map[common.Province]*subNode

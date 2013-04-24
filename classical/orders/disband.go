@@ -28,7 +28,7 @@ func (self *disband) Targets() []dip.Province {
 
 func (self *disband) adjudicateBuildPhase(r dip.Resolver) error {
   unit := r.Unit(self.targets[0])
-  _, disbands, _ := cla.BuildStatus(r, unit.Nationality)
+  _, disbands, _ := cla.AdjustmentStatus(r, unit.Nationality)
   if self.at.After(disbands[len(disbands)-1].At()) {
     return cla.ErrIllegalDisband
   }
@@ -40,7 +40,7 @@ func (self *disband) adjudicateRetreatPhase(r dip.Resolver) error {
 }
 
 func (self *disband) Adjudicate(r dip.Resolver) error {
-  if r.Phase().Type() == cla.Build {
+  if r.Phase().Type() == cla.Adjustment {
     return self.adjudicateBuildPhase(r)
   }
   return self.adjudicateRetreatPhase(r)
@@ -58,14 +58,14 @@ func (self *disband) validateBuildPhase(v dip.Validator) error {
   if unit == nil {
     return cla.ErrMissingUnit
   }
-  if _, _, balance := cla.BuildStatus(v, unit.Nationality); balance > -1 {
+  if _, _, balance := cla.AdjustmentStatus(v, unit.Nationality); balance > -1 {
     return cla.ErrMissingDeficit
   }
   return nil
 }
 
 func (self *disband) Validate(v dip.Validator) error {
-  if v.Phase().Type() == cla.Build {
+  if v.Phase().Type() == cla.Adjustment {
     return self.validateBuildPhase(v)
   } else if v.Phase().Type() == cla.Retreat {
     return self.validateRetreatPhase(v)
@@ -76,7 +76,7 @@ func (self *disband) Validate(v dip.Validator) error {
 }
 
 func (self *disband) Execute(state dip.State) {
-  if state.Phase().Type() == cla.Build {
+  if state.Phase().Type() == cla.Adjustment {
     state.RemoveUnit(self.targets[0])
   } else {
     state.RemoveDislodged(self.targets[0])

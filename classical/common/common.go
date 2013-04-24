@@ -7,35 +7,34 @@ import (
 )
 
 const (
-  Sea  = "S"
-  Land = "L"
+  Sea  Flag = "Sea"
+  Land Flag = "Land"
 
-  Army  = "A"
-  Fleet = "F"
+  Army  UnitType = "Army"
+  Fleet UnitType = "Fleet"
 
-  England = "E"
-  France  = "F"
-  Germany = "G"
-  Russia  = "R"
-  Austria = "A"
-  Italy   = "I"
-  Turkey  = "T"
+  England Nationality = "England"
+  France  Nationality = "France"
+  Germany Nationality = "Germany"
+  Russia  Nationality = "Russia"
+  Austria Nationality = "Austria"
+  Italy   Nationality = "Italy"
+  Turkey  Nationality = "Turkey"
+  Neutral Nationality = "Neutral"
 
-  Neutral = "N"
+  Spring Season = "Spring"
+  Fall   Season = "Fall"
 
-  Spring = "S"
-  Winter = "W"
-  Fall   = "F"
+  Movement   PhaseType = "Movement"
+  Retreat    PhaseType = "Retreat"
+  Adjustment PhaseType = "Adjustment"
 
-  Movement = "M"
-  Build    = "B"
-  Retreat  = "R"
-
-  Move    = "M"
-  Hold    = "H"
-  Convoy  = "C"
-  Support = "S"
-  Disband = "D"
+  Build   OrderType = "Build"
+  Move    OrderType = "Move"
+  Hold    OrderType = "Hold"
+  Convoy  OrderType = "Convoy"
+  Support OrderType = "Support"
+  Disband OrderType = "Disband"
 )
 
 var Coast = []Flag{Sea, Land}
@@ -71,6 +70,7 @@ var ErrMissingDeficit = fmt.Errorf("ErrMissingDeficit")
 var ErrOccupiedDestination = fmt.Errorf("ErrOccupiedDestination")
 var ErrIllegalRetreat = fmt.Errorf("ErrIllegalRetreat")
 var ErrForcedDisband = fmt.Errorf("ErrForcedDisband")
+var ErrHostileSupplyCenter = fmt.Errorf("ErrHostileSupplyCenter")
 
 type ErrConvoyDislodged struct {
   Province Province
@@ -183,7 +183,7 @@ func MovePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders
   return nil
 }
 
-func BuildStatus(v Validator, me Nationality) (builds Orders, disbands Orders, balance int) {
+func AdjustmentStatus(v Validator, me Nationality) (builds Orders, disbands Orders, balance int) {
   scs := 0
   for _, nat := range v.SupplyCenters() {
     if nat == me {
@@ -210,10 +210,10 @@ func BuildStatus(v Validator, me Nationality) (builds Orders, disbands Orders, b
   change := scs - units
   if change > 0 {
     disbands = nil
-    builds = builds[:Min(len(builds)-1, change)]
+    builds = builds[:Max(0, Min(len(builds)-1, change))]
   } else if change < 0 {
     builds = nil
-    disbands = disbands[:Min(len(disbands)-1, change)]
+    disbands = disbands[:Max(0, Min(len(disbands)-1, change))]
   } else {
     builds = nil
     disbands = nil

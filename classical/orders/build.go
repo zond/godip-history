@@ -28,9 +28,13 @@ func (self *build) Targets() []dip.Province {
   return self.targets
 }
 
+func (self *build) At() time.Time {
+  return self.at
+}
+
 func (self *build) Adjudicate(r dip.Resolver) error {
   me := r.Graph().SC(self.targets[0])
-  builds, _, _ := cla.BuildStatus(r, *me)
+  builds, _, _ := cla.AdjustmentStatus(r, *me)
   if self.at.After(builds[len(builds)-1].At()) {
     return cla.ErrIllegalBuild
   }
@@ -38,7 +42,7 @@ func (self *build) Adjudicate(r dip.Resolver) error {
 }
 
 func (self *build) Validate(v dip.Validator) error {
-  if v.Phase().Type() != cla.Build {
+  if v.Phase().Type() != cla.Adjustment {
     return cla.ErrInvalidPhase
   }
   if v.Unit(self.targets[0]) != nil {
@@ -48,7 +52,10 @@ func (self *build) Validate(v dip.Validator) error {
   if me == nil {
     return cla.ErrMissingSupplyCenter
   }
-  if _, _, balance := cla.BuildStatus(v, *me); balance < 1 {
+  if owner := v.SupplyCenter(self.targets[0]); owner == nil || *owner != *me {
+    return cla.ErrHostileSupplyCenter
+  }
+  if _, _, balance := cla.AdjustmentStatus(v, *me); balance < 1 {
     return cla.ErrMissingSurplus
   }
   if self.typ == cla.Army && !v.Graph().Flags(self.targets[0])[cla.Land] {

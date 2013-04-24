@@ -3,6 +3,7 @@ package orders
 import (
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
+  "time"
 )
 
 func Convoy(source, from, to dip.Province) *convoy {
@@ -13,6 +14,10 @@ func Convoy(source, from, to dip.Province) *convoy {
 
 type convoy struct {
   targets []dip.Province
+}
+
+func (self *convoy) At() time.Time {
+  return time.Now()
 }
 
 func (self *convoy) Type() dip.OrderType {

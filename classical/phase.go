@@ -9,7 +9,7 @@ import (
 
 type phase struct {
   year   int
-  season string
+  season dip.Season
   typ    dip.PhaseType
 }
 
@@ -84,9 +84,10 @@ func (self *phase) PostProcess(s dip.State) {
       }
       return false
     })
-  } else if self.typ == cla.Build {
+    s.ClearDislodgers()
+  } else if self.typ == cla.Adjustment {
     for _, nationality := range cla.Nations {
-      _, _, balance := cla.BuildStatus(s, nationality)
+      _, _, balance := cla.AdjustmentStatus(s, nationality)
       if balance < 0 {
         for _, prov := range self.sortedUnits(s, nationality)[:-balance] {
           s.RemoveUnit(prov)
@@ -110,7 +111,7 @@ func (self *phase) Year() int {
   return self.year
 }
 
-func (self *phase) Season() string {
+func (self *phase) Season() dip.Season {
   return self.season
 }
 
@@ -132,8 +133,8 @@ func (self *phase) Prev() dip.Phase {
       }
       return &phase{
         year:   self.year - 1,
-        season: cla.Winter,
-        typ:    cla.Build,
+        season: cla.Fall,
+        typ:    cla.Adjustment,
       }
     } else {
       return &phase{
@@ -169,8 +170,8 @@ func (self *phase) Next() dip.Phase {
     } else {
       return &phase{
         year:   self.year,
-        season: cla.Winter,
-        typ:    cla.Build,
+        season: cla.Fall,
+        typ:    cla.Adjustment,
       }
     }
   } else {

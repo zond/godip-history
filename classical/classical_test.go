@@ -1,10 +1,13 @@
 package classical
 
 import (
+  "fmt"
   cla "github.com/zond/godip/classical/common"
   "github.com/zond/godip/classical/orders"
   dip "github.com/zond/godip/common"
+  "github.com/zond/godip/datc"
   "github.com/zond/godip/state"
+  "os"
   "reflect"
   "testing"
 )
@@ -94,9 +97,6 @@ func TestMoveValidation(t *testing.T) {
   assertOrderValidity(t, judge, orders.Move("wal", "bre"), nil)
   // Missing convoy
   assertOrderValidity(t, judge, orders.Move("wal", "gas"), cla.ErrMissingConvoyPath)
-  // Bad phase
-  judge.Next()
-  assertOrderValidity(t, judge, orders.Move("bre", "mid"), cla.ErrInvalidPhase)
 }
 
 func TestMoveAdjudication(t *testing.T) {
@@ -104,4 +104,53 @@ func TestMoveAdjudication(t *testing.T) {
   assertMove(t, Start(), "stp/sc", "bot", true)
   assertMove(t, Start(), "vie", "bud", false)
   assertMove(t, Start(), "mid", "nat", false)
+}
+
+func testDATC(t *testing.T, statePair *datc.StatePair) {
+  s := Blank(statePair.Before.Phase)
+  for prov, unit := range statePair.Before.Units {
+    s.SetUnit(prov, unit)
+  }
+  for prov, dislodged := range statePair.Before.Dislodgeds {
+    s.SetDislodged(prov, dislodged)
+  }
+  for prov, nation := range statePair.Before.SCs {
+    s.SetSC(prov, nation)
+  }
+  for prov, order := range statePair.Before.Orders {
+    s.SetOrder(prov, order)
+  }
+  s.Next()
+  for prov, unit := range statePair.After.Units {
+    if found, ok := s.Units()[prov]; ok {
+      if !found.Equal(unit) {
+        t.Errorf("%v: Expected %v in %v, but found %v", statePair.Case, unit, prov, found)
+      }
+    } else {
+      t.Errorf("%v: Expected %v in %v, but found nothing", statePair.Case, unit, prov)
+    }
+  }
+}
+
+func assertDATC(t *testing.T, file string) {
+  in, err := os.Open(file)
+  if err != nil {
+    panic(err)
+  }
+  parser := datc.Parser{
+    Variant:           "Standard",
+    OrderParser:       DATCOrder,
+    PhaseParser:       DATCPhase,
+    NationalityParser: DATCNationality,
+    UnitTypeParser:    DATCUnitType,
+    ProvinceParser:    DATCProvince,
+  }
+  parser.Parse(in, func(statePair *datc.StatePair) {
+    fmt.Printf("Running %v\n", statePair.Case)
+    testDATC(t, statePair)
+  })
+}
+
+func TestDATC(t *testing.T) {
+  assertDATC(t, "datc/datc_v2.4_06.txt")
 }

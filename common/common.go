@@ -2,9 +2,18 @@ package common
 
 import (
   "fmt"
+  "strconv"
   "strings"
   "time"
 )
+
+func MustParseInt(s string) (result int) {
+  var err error
+  if result, err = strconv.Atoi(s); err != nil {
+    panic(err)
+  }
+  return
+}
 
 func Max(is ...int) (result int) {
   for index, i := range is {
@@ -34,6 +43,8 @@ type PhaseType string
 
 type Province string
 
+type Season string
+
 func (self Province) Split() (sup Province, sub Province) {
   split := strings.Split(string(self), "/")
   if len(split) > 0 {
@@ -59,9 +70,13 @@ type Unit struct {
   Nationality Nationality
 }
 
+func (self Unit) Equal(o Unit) bool {
+  return self.Type == o.Type && self.Nationality == o.Nationality
+}
+
 type Phase interface {
   Year() int
-  Season() string
+  Season() Season
   Type() PhaseType
   Next() Phase
   Prev() Phase
@@ -79,6 +94,7 @@ type Graph interface {
   Path(src, dst Province, filter PathFilter) []Province
   Coasts(Province) []Province
   SCs(Nationality) []Province
+  Provinces() []Province
 }
 
 type Orders []Order
@@ -116,14 +132,19 @@ type BackupRule func(Resolver, Province, map[Province]bool) error
 
 type StateFilter func(n Province, o Order, u *Unit) bool
 
+type OrderGenerator func(prov Province) Order
+
 type Validator interface {
   Order(Province) Order
   Unit(Province) *Unit
   Dislodged(Province) *Unit
+  SupplyCenter(Province) *Nationality
+
+  SupplyCenters() map[Province]Nationality
+
   IsDislodger(attacker Province, victim Province) bool
   Graph() Graph
   Phase() Phase
-  SupplyCenters() map[Province]Nationality
   Find(StateFilter) (provinces []Province, orders []Order, units []Unit)
 }
 
@@ -134,14 +155,21 @@ type Resolver interface {
 
 type State interface {
   Validator
+
+  Orders() map[Province]Adjudicator
+  Units() map[Province]Unit
+  Dislodgeds() map[Province]Unit
+
   Move(Province, Province)
   Retreat(Province, Province)
-  SetUnit(Province, Unit)
+
   RemoveDislodged(Province)
   RemoveUnit(Province)
-  ClearDislodgers()
+
   SetError(Province, error)
   SetSC(Province, Nationality)
-}
+  SetOrder(Province, Adjudicator)
+  SetUnit(Province, Unit)
 
-type OrderGenerator func(prov Province) Order
+  ClearDislodgers()
+}
