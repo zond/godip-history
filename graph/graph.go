@@ -8,9 +8,9 @@ import (
 
 type Connectable interface {
   Prov(common.Province) Connectable
-  Conn(common.Province) Connectable
+  Conn(common.Province, ...common.Flag) Connectable
   Flag([]common.Flag) Connectable
-  SC(common.Nationality) Connectable
+  SC(common.Nation) Connectable
   Done() *Graph
 }
 
@@ -52,7 +52,7 @@ func (self *Graph) Flags(n common.Province) (result map[common.Flag]bool) {
   return
 }
 
-func (self *Graph) SC(n common.Province) (result *common.Nationality) {
+func (self *Graph) SC(n common.Province) (result *common.Nation) {
   p, _ := n.Split()
   if node, ok := self.nodes[p]; ok {
     result = node.sc
@@ -60,7 +60,7 @@ func (self *Graph) SC(n common.Province) (result *common.Nationality) {
   return
 }
 
-func (self *Graph) SCs(n common.Nationality) (result []common.Province) {
+func (self *Graph) SCs(n common.Nation) (result []common.Province) {
   for name, node := range self.nodes {
     if node.sc != nil && *node.sc == n {
       result = append(result, name)
@@ -69,7 +69,7 @@ func (self *Graph) SCs(n common.Nationality) (result []common.Province) {
   return
 }
 
-func (self *Graph) edges(n common.Province) (result map[common.Province]*subNode) {
+func (self *Graph) edges(n common.Province) (result map[common.Province]*edge) {
   p, c := n.Split()
   if node, ok := self.nodes[p]; ok {
     if sub, ok := node.subs[c]; ok {
@@ -88,9 +88,9 @@ func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter comm
   var newQueue []pathStep
   for _, step := range queue {
     seen[step.pos] = true
-    for name, sub := range self.edges(step.pos) {
+    for name, edge := range self.edges(step.pos) {
       if !seen[name] {
-        if filter == nil || filter(name, sub.flags, sub.node.sc) {
+        if filter == nil || filter(name, edge.flags, edge.sub.flags, edge.sub.node.sc) {
           thisPath := append(append([]common.Province{}, step.path...), name)
           if name == dst {
             return thisPath
@@ -153,7 +153,7 @@ func (self *Graph) Provinces() (result []common.Province) {
 type node struct {
   name  common.Province
   subs  map[common.Province]*subNode
-  sc    *common.Nationality
+  sc    *common.Nation
   graph *Graph
 }
 
@@ -178,7 +178,7 @@ func (self *node) sub(n common.Province) *subNode {
   if self.subs[n] == nil {
     self.subs[n] = &subNode{
       name:  n,
-      edges: make(map[common.Province]*subNode),
+      edges: make(map[common.Province]*edge),
       node:  self,
       flags: make(map[common.Flag]bool),
     }
@@ -186,9 +186,14 @@ func (self *node) sub(n common.Province) *subNode {
   return self.subs[n]
 }
 
+type edge struct {
+  sub   *subNode
+  flags map[common.Flag]bool
+}
+
 type subNode struct {
   name  common.Province
-  edges map[common.Province]*subNode
+  edges map[common.Province]*edge
   node  *node
   flags map[common.Flag]bool
 }
@@ -206,8 +211,16 @@ func (self *subNode) String() string {
     fmt.Fprintf(buf, "%v ", flags)
   }
   dests := make([]string, 0, len(self.edges))
-  for n, _ := range self.edges {
-    dests = append(dests, string(n))
+  for n, edge := range self.edges {
+    var flags []common.Flag
+    for f, _ := range edge.flags {
+      flags = append(flags, f)
+    }
+    if len(flags) > 0 {
+      dests = append(dests, fmt.Sprintf("%v %v", n, flags))
+    } else {
+      dests = append(dests, string(n))
+    }
   }
   fmt.Fprintf(buf, "=> %v", dests)
   return string(buf.Bytes())
@@ -217,13 +230,20 @@ func (self *subNode) getName() common.Province {
   return self.node.name.Join(self.name)
 }
 
-func (self *subNode) Conn(n common.Province) *subNode {
+func (self *subNode) Conn(n common.Province, flags ...common.Flag) *subNode {
   target := self.node.graph.Prov(n)
-  self.edges[target.getName()] = target
+  flagMap := make(map[common.Flag]bool)
+  for _, flag := range flags {
+    flagMap[flag] = true
+  }
+  self.edges[target.getName()] = &edge{
+    sub:   target,
+    flags: flagMap,
+  }
   return self
 }
 
-func (self *subNode) SC(n common.Nationality) *subNode {
+func (self *subNode) SC(n common.Nation) *subNode {
   self.node.sc = &n
   return self
 }
