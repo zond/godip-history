@@ -38,11 +38,6 @@ func (self *support) Targets() []dip.Province {
 
 func (self *support) Adjudicate(r dip.Resolver) error {
   unit, _, _ := r.Unit(self.targets[0])
-  if len(self.targets) == 3 {
-    if victim, _, ok := r.Unit(self.targets[2]); ok && victim.Nation == unit.Nation {
-      return cla.ErrIllegalSupportDestinationNation
-    }
-  }
   if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     if o != nil && // is an order
       u != nil && // is a unit
