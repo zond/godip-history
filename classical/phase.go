@@ -87,6 +87,16 @@ func (self *phase) PostProcess(s dip.State) {
       return false
     })
     s.ClearDislodgers()
+    if self.season == cla.Fall {
+      s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+        if u != nil {
+          if s.Graph().SC(p) != nil {
+            s.SetSC(p, u.Nation)
+          }
+        }
+        return false
+      })
+    }
   } else if self.typ == cla.Adjustment {
     for _, nationality := range cla.Nations {
       _, _, balance := cla.AdjustmentStatus(s, nationality)
@@ -97,15 +107,6 @@ func (self *phase) PostProcess(s dip.State) {
         }
       }
     }
-  } else if self.typ == cla.Movement && self.season == cla.Fall {
-    s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-      if u != nil {
-        if s.Graph().SC(p) != nil {
-          s.SetSC(p, u.Nation)
-        }
-      }
-      return false
-    })
   }
 }
 

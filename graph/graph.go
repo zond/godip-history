@@ -60,6 +60,12 @@ func (self *Graph) SCs(n common.Nation) (result []common.Province) {
   return
 }
 
+func (self *Graph) Edges(n common.Province) (result []common.Province) {
+  for p, _ := range self.edges(n) {
+    result = append(result, p)
+  }
+}
+
 func (self *Graph) edges(n common.Province) (result map[common.Province]*edge) {
   p, c := n.Split()
   if node, ok := self.nodes[p]; ok {

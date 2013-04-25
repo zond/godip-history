@@ -121,6 +121,7 @@ type Graph interface {
   SC(Province) *Nation
   Path(src, dst Province, filter PathFilter) []Province
   Coasts(Province) []Province
+  Edges(src Province) []Province
   SCs(Nation) []Province
   Provinces() []Province
 }

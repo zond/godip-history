@@ -168,6 +168,22 @@ func (self *State) Next() (err error) {
   }
 
   /*
+     Destroy dislodgeds without retreat.
+  */
+  for prov, dislodged := range self.dislodgeds {
+    hasRetreat := false
+    for _, edge := range self.graph.Edges(prov) {
+      if _, _, ok := self.Unit(edge); !ok && !self.IsDislodger(edge, prov) {
+        hasRetreat = true
+        break
+      }
+    }
+    if !hasRetreat {
+      self.RemoveDislodged(prov)
+    }
+  }
+
+  /*
      Change phase.
   */
   self.phase.PostProcess(self)
