@@ -59,6 +59,17 @@ func (self *support) Adjudicate(r dip.Resolver) error {
     dip.Logf("%v: broken by: %v", self, breaks)
     return cla.ErrSupportBroken{breaks[0]}
   }
+
+  if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+    return o != nil && // is an order
+      u != nil && // is a unit
+      o.Type() == cla.Move && // move
+      o.Targets()[1].Super() == self.targets[0].Super() && // against us
+      r.Resolve(p) == nil
+  }); len(dislodgers) > 0 {
+    dip.Logf("%v: dislodged by: %v", self, dislodgers)
+    return cla.ErrSupportBroken{dislodgers[0]}
+  }
   return nil
 }
 
