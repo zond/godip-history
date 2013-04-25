@@ -21,6 +21,30 @@ func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule, d
   }
 }
 
+type movement struct {
+  src  common.Province
+  dst  common.Province
+  unit common.Unit
+}
+
+func (self *movement) prepare(s *State) {
+  var ok bool
+  if self.unit, self.src, ok = s.Unit(self.src); !ok {
+    panic(fmt.Errorf("No unit at %v?", self.src))
+  } else {
+    s.RemoveUnit(self.src)
+  }
+}
+
+func (self *movement) execute(s *State) {
+  if dislodged, prov, ok := s.Unit(self.dst); ok {
+    s.RemoveUnit(prov)
+    s.SetDislodged(prov, dislodged)
+    s.dislodgers[prov] = self.src
+  }
+  s.SetUnit(self.dst, self.unit)
+}
+
 type State struct {
   orders                map[common.Province]common.Adjudicator
   units                 map[common.Province]common.Unit
@@ -32,6 +56,7 @@ type State struct {
   defaultOrderGenerator common.OrderGenerator
   errors                map[common.Province]error
   dislodgers            map[common.Province]common.Province
+  movements             []*movement
 }
 
 func (self *State) String() string {
@@ -129,6 +154,18 @@ func (self *State) Next() (err error) {
     order.Execute(self)
     delete(self.orders, prov)
   }
+
+  /*
+     Execute movements.
+  */
+  for _, movement := range self.movements {
+    movement.prepare(self)
+  }
+  for _, movement := range self.movements {
+    movement.execute(self)
+  }
+  self.movements = nil
+
   /*
      Change phase.
   */
@@ -368,17 +405,10 @@ func (self *State) findDislodger(prov common.Province) (p common.Province, ok bo
 // Mutators
 
 func (self *State) Move(src, dst common.Province) {
-  if unit, prov, ok := self.Unit(src); !ok {
-    panic(fmt.Errorf("No unit at %v?", src))
-  } else {
-    if d, p, ok := self.Unit(dst); ok {
-      self.RemoveUnit(p)
-      self.SetDislodged(p, d)
-      self.dislodgers[dst] = prov
-    }
-    self.RemoveUnit(prov)
-    self.SetUnit(dst, unit)
-  }
+  self.movements = append(self.movements, &movement{
+    src: src,
+    dst: dst,
+  })
 }
 
 func (self *State) Retreat(src, dst common.Province) {

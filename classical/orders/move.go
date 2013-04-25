@@ -163,11 +163,12 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
     return cla.ErrInvalidDestination
   }
   var ok bool
-  if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
+  var unit dip.Unit
+  if unit, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
   var err error
-  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], false, true); err != nil {
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true); err != nil {
     return err
   }
   return nil
