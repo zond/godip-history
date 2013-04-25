@@ -235,25 +235,25 @@ func movePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders
 
 func AdjustmentStatus(v Validator, me Nation) (builds Orders, disbands Orders, balance int) {
   scs := 0
-  for _, nat := range v.SupplyCenters() {
+  for prov, nat := range v.SupplyCenters() {
     if nat == me {
       scs += 1
+      if order, _, ok := v.Order(prov); ok && order.Type() == Build {
+        builds = append(builds, order)
+      }
     }
   }
 
   units := 0
-  v.Find(func(p Province, o Order, u *Unit) bool {
-    if u != nil && u.Nation == me {
-      if o.Type() == Disband {
-        disbands = append(disbands, o)
-      }
+  for prov, unit := range v.Units() {
+    if unit.Nation == me {
       units += 1
+      if order, _, ok := v.Order(prov); ok && order.Type() == Disband {
+        disbands = append(disbands, order)
+      }
     }
-    if v.SupplyCenters()[p] == me && o.Type() == Build {
-      builds = append(builds, o)
-    }
-    return false
-  })
+  }
+
   sort.Sort(builds)
   sort.Sort(disbands)
 

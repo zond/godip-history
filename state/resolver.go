@@ -22,18 +22,22 @@ Make sure never to call Order#Adjudicate from another Order! Only call Resolver#
 */
 func (self *resolver) Resolve(prov common.Province) (err error) {
   var ok bool
-  if err, ok = self.guesses[prov]; !ok { // Already guessed
-    if self.visited[prov] { // Not yet guessed, but visited before, introduce a negative guess and return it.
-      self.guesses[prov] = fmt.Errorf("Negative guess")
-    } else { // Not yet visited, do a proper adjudication.
-      self.visited[prov] = true
+  if !self.State.successes[prov] { // Already resolved
+    if err, ok = self.State.errors[prov]; !ok { // Already found error
+      if err, ok = self.guesses[prov]; !ok { // Already guessed
+        if self.visited[prov] { // Not yet guessed, but visited before, introduce a negative guess and return it.
+          self.guesses[prov] = fmt.Errorf("Negative guess")
+        } else { // Not yet visited, do a proper adjudication.
+          self.visited[prov] = true
 
-      err = self.State.orders[prov].Adjudicate(self) // Ask order to adjudicate itself.
-      if _, ok := self.guesses[prov]; ok {           // We were visited again, and depend on our guess.
-        self.guesses[prov] = nil                                                    // Switch the guess to success.
-        second_err := self.State.orders[prov].Adjudicate(self)                      // Ask order to adjudicate itself with the new guess.
-        if (err == nil && second_err != nil) || (err != nil && second_err == nil) { // If the results are the same (in regards to success), it means that exactly one of them were consistent (and any one of them could be returned). If not, none or both are consistent.
-          err = self.State.backupRule(self, prov, self.visited) // So, run the BackupRule on the orders we visited and let it decide.
+          err = self.State.orders[prov].Adjudicate(self) // Ask order to adjudicate itself.
+          if _, ok := self.guesses[prov]; ok {           // We were visited again, and depend on our guess.
+            self.guesses[prov] = nil                                                    // Switch the guess to success.
+            second_err := self.State.orders[prov].Adjudicate(self)                      // Ask order to adjudicate itself with the new guess.
+            if (err == nil && second_err != nil) || (err != nil && second_err == nil) { // If the results are the same (in regards to success), it means that exactly one of them were consistent (and any one of them could be returned). If not, none or both are consistent.
+              err = self.State.backupRule(self, prov, self.visited) // So, run the BackupRule on the orders we visited and let it decide.
+            }
+          }
         }
       }
     }

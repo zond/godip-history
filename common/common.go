@@ -7,6 +7,20 @@ import (
   "time"
 )
 
+var Debug = false
+
+func Log(s string) {
+  if Debug {
+    fmt.Println(s)
+  }
+}
+
+func Logf(s string, o ...interface{}) {
+  if Debug {
+    fmt.Printf(fmt.Sprintf("%v\n", s), o...)
+  }
+}
+
 func MustParseInt(s string) (result int) {
   var err error
   if result, err = strconv.Atoi(s); err != nil {
@@ -146,7 +160,7 @@ type BackupRule func(Resolver, Province, map[Province]bool) error
 
 type StateFilter func(n Province, o Order, u *Unit) bool
 
-type OrderGenerator func(prov Province) Order
+type OrderGenerator func(prov Province) Adjudicator
 
 type Validator interface {
   Order(Province) (Order, Province, bool)
@@ -154,12 +168,15 @@ type Validator interface {
   Dislodged(Province) (Unit, Province, bool)
   SupplyCenter(Province) (Nation, Province, bool)
 
+  Orders() map[Province]Adjudicator
+  Units() map[Province]Unit
+  Dislodgeds() map[Province]Unit
   SupplyCenters() map[Province]Nation
 
   IsDislodger(attacker Province, victim Province) bool
   Graph() Graph
   Phase() Phase
-  Find(StateFilter) (provinces []Province, orders []Order, units []Unit)
+  Find(StateFilter) (provinces []Province, orders []Order, units []*Unit)
 }
 
 type Resolver interface {
@@ -169,10 +186,6 @@ type Resolver interface {
 
 type State interface {
   Validator
-
-  Orders() map[Province]Adjudicator
-  Units() map[Province]Unit
-  Dislodgeds() map[Province]Unit
 
   Move(Province, Province)
   Retreat(Province, Province)

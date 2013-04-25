@@ -12,6 +12,10 @@ import (
   "testing"
 )
 
+func init() {
+  dip.Debug = true
+}
+
 func assertOrderValidity(t *testing.T, validator dip.Validator, order dip.Order, err error) {
   if e := order.Validate(validator); e != err {
     t.Errorf("%v should validate to %v, but got %v", order, err, e)

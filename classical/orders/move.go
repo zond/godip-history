@@ -41,7 +41,7 @@ func (self *move) At() time.Time {
 
 func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
   _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    if o.Type() == cla.Support && len(o.Targets()) == 3 && o.Targets()[1].Contains(src) && o.Targets()[2].Contains(dst) {
+    if o != nil && u != nil && o.Type() == cla.Support && len(o.Targets()) == 3 && o.Targets()[1].Contains(src) && o.Targets()[2].Contains(dst) {
       if err := r.Resolve(p); err == nil {
         return true
       }
@@ -51,9 +51,9 @@ func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
   return len(supports)
 }
 
-func (self *move) calcHoldSupport(r dip.Resolver, p dip.Province) int {
+func (self *move) calcHoldSupport(r dip.Resolver, prov dip.Province) int {
   _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    if o.Type() == cla.Support && len(o.Targets()) == 2 && o.Targets()[1].Contains(p) {
+    if o != nil && u != nil && o.Type() == cla.Support && p.Super() != prov.Super() && len(o.Targets()) == 2 && o.Targets()[1].Super() == prov.Super() {
       if err := r.Resolve(p); err == nil {
         return true
       }
@@ -83,10 +83,11 @@ func (self *move) adjudicateRetreatPhase(r dip.Resolver) error {
 func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   // my power
   attackStrength := self.calcAttackSupport(r, self.targets[0], self.targets[1]) + 1
+  dip.Logf("%v: attackStrength: %v", self, attackStrength)
 
   // competing moves for the same destination
   _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    return o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
+    return o != nil && u != nil && o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
   })
   for _, competingOrder := range competingOrders {
     if self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1])+1 >= attackStrength {
@@ -111,15 +112,26 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 
   if atDest, _, ok := r.Order(self.targets[1]); ok {
     if !convoyed && atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
-      if self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1])+1 >= attackStrength {
+      as := self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1]) + 1
+      dip.Logf("%v: attackStrength: %v", atDest, as)
+      if as >= attackStrength {
         return cla.ErrBounce{self.targets[1]}
       }
-    } else if atDest.Type() == cla.Move {
-      if err := r.Resolve(self.targets[1]); err != nil && 1 >= attackStrength { // attack against something that moves away
+    } else if atDest.Type() == cla.Move { // attack against something that moves away
+      if err := r.Resolve(self.targets[1]); err != nil {
+        dip.Logf("%v: failed, holdStrength: 1", atDest)
+        if 1 >= attackStrength {
+          return cla.ErrBounce{self.targets[1]}
+        }
+      } else {
+        dip.Logf("%v: succeeded, not blocking", atDest)
+      }
+    } else { // simple attack
+      hs := self.calcHoldSupport(r, self.targets[1]) + 1
+      dip.Logf("%v: holdStrength: %v", atDest, hs)
+      if hs >= attackStrength {
         return cla.ErrBounce{self.targets[1]}
       }
-    } else if self.calcHoldSupport(r, self.targets[1])+1 >= attackStrength { // simple attack
-      return cla.ErrBounce{self.targets[1]}
     }
   }
   return nil

@@ -19,7 +19,7 @@ func Start() *state.State {
     SetSupplyCenters(start.SupplyCenters())
 }
 
-func DefaultOrderGenerator(prov dip.Province) dip.Order {
+func DefaultOrderGenerator(prov dip.Province) dip.Adjudicator {
   return orders.Hold(prov)
 }
 

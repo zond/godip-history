@@ -44,10 +44,11 @@ func (self *support) Adjudicate(r dip.Resolver) error {
     }
   }
   if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    if u != nil && // is a unit
+    if o != nil && // is an order
+      u != nil && // is a unit
       o.Type() == cla.Move && // move
-      o.Targets()[1] == self.targets[0] && // against us
-      (len(self.targets) == 2 || o.Targets()[0] != self.targets[2]) && // not from something we support attacking
+      o.Targets()[1].Super() == self.targets[0].Super() && // against us
+      (len(self.targets) == 2 || o.Targets()[0].Super() != self.targets[2].Super()) && // not from something we support attacking
       u.Nation != unit.Nation { // not from ourselves
 
       _, err := cla.AnyMovePossible(r, o.Targets()[0], o.Targets()[1], u.Type == cla.Army, true, true) // and legal move counting convoy success
@@ -55,6 +56,7 @@ func (self *support) Adjudicate(r dip.Resolver) error {
     }
     return false
   }); len(breaks) > 0 {
+    dip.Logf("%v: broken by: %v", self, breaks)
     return cla.ErrSupportBroken{breaks[0]}
   }
   return nil

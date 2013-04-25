@@ -57,6 +57,7 @@ type State struct {
   errors                map[common.Province]error
   dislodgers            map[common.Province]common.Province
   movements             []*movement
+  successes             map[common.Province]bool
 }
 
 func (self *State) String() string {
@@ -71,7 +72,7 @@ func (self *State) String() string {
   return string(buf.Bytes())
 }
 
-func (self *State) Resolver() *resolver {
+func (self *State) resolver() *resolver {
   return &resolver{
     State:   self,
     visited: make(map[common.Province]bool),
@@ -83,18 +84,19 @@ func (self *State) Graph() common.Graph {
   return self.graph
 }
 
-func (self *State) Find(filter common.StateFilter) (provinces []common.Province, orders []common.Order, units []common.Unit) {
+func (self *State) Find(filter common.StateFilter) (provinces []common.Province, orders []common.Order, units []*common.Unit) {
   visitedProvinces := make(map[common.Province]bool)
   for prov, unit := range self.units {
     visitedProvinces[prov] = true
-    order := self.defaultOrderGenerator(prov)
-    if ord, _, ok := self.Order(prov); ok {
-      order = ord
+    var order common.Order
+    var ok bool
+    if order, _, ok = self.Order(prov); !ok {
+      order = nil
     }
     if filter(prov, order, &unit) {
       provinces = append(provinces, prov)
       orders = append(orders, order)
-      units = append(units, unit)
+      units = append(units, &unit)
     }
   }
   for prov, order := range self.orders {
@@ -102,7 +104,7 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
       if filter(prov, order, nil) {
         provinces = append(provinces, prov)
         orders = append(orders, order)
-        units = append(units, common.Unit{})
+        units = append(units, nil)
       }
     }
   }
@@ -110,50 +112,50 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
 }
 
 func (self *State) Next() (err error) {
-  failed := make(map[common.Province]bool)
+  self.successes = make(map[common.Province]bool)
+
+  /*
+     Replace empty orders with default order.
+  */
+  for prov, _ := range self.units {
+    if _, _, ok := self.Order(prov); !ok {
+      self.orders[prov] = self.defaultOrderGenerator(prov)
+    }
+  }
+
   /*
      Validate orders
   */
   for prov, order := range self.orders {
     if err := order.Validate(self); err != nil {
       self.errors[prov] = err
-      failed[prov] = true
     }
   }
-
-  /*
-     Remove failed orders.
-  */
-  for prov, _ := range failed {
-    delete(self.orders, prov)
-  }
-  failed = make(map[common.Province]bool)
 
   /*
      Adjudicate orders.
   */
   for prov, _ := range self.orders {
-    err := self.Resolver().Resolve(prov)
-    if err != nil {
+    common.Logf("Adjudicating %v", prov)
+    if err := self.resolver().Resolve(prov); err == nil {
+      common.Logf("%v succeeded", prov)
+      self.successes[prov] = true
+    } else {
+      common.Logf("%v failed: %v", prov, err)
       self.errors[prov] = err
-      failed[prov] = true
     }
-  }
-
-  /*
-     Remove failed orders.
-  */
-  for prov, _ := range failed {
-    delete(self.orders, prov)
   }
 
   /*
      Execute orders.
   */
+  self.movements = nil
   for prov, order := range self.orders {
-    order.Execute(self)
-    delete(self.orders, prov)
+    if _, ok := self.errors[prov]; !ok {
+      order.Execute(self)
+    }
   }
+  self.orders = make(map[common.Province]common.Adjudicator)
 
   /*
      Execute movements.
@@ -164,7 +166,6 @@ func (self *State) Next() (err error) {
   for _, movement := range self.movements {
     movement.execute(self)
   }
-  self.movements = nil
 
   /*
      Change phase.
@@ -242,7 +243,7 @@ func (self *State) SetUnit(prov common.Province, unit common.Unit) {
 }
 
 func (self *State) SetOrder(prov common.Province, order common.Adjudicator) {
-  if found, _, ok := self.findOrder(prov); ok {
+  if found, _, ok := self.Order(prov); ok {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.orders[prov] = order
@@ -355,7 +356,7 @@ func (self *State) SupplyCenter(prov common.Province) (n common.Nation, p common
   return
 }
 
-func (self *State) findOrder(prov common.Province) (o common.Order, p common.Province, ok bool) {
+func (self *State) Order(prov common.Province) (o common.Order, p common.Province, ok bool) {
   if o, ok = self.orders[prov]; ok {
     p = prov
     return
@@ -369,16 +370,6 @@ func (self *State) findOrder(prov common.Province) (o common.Order, p common.Pro
     if o, ok = self.orders[name]; ok {
       p = name
       return
-    }
-  }
-  return
-}
-
-func (self *State) Order(prov common.Province) (o common.Order, p common.Province, ok bool) {
-  o, p, ok = self.findOrder(prov)
-  if !ok {
-    if _, p, ok = self.Unit(prov); ok {
-      o = self.defaultOrderGenerator(prov)
     }
   }
   return
