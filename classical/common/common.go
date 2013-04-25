@@ -96,21 +96,6 @@ func (self ErrBounce) Error() string {
   return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
-func Dislodgers(r Resolver, prov Province, nat Nation) []Province {
-  dislodgers, _, _ := r.Find(func(p Province, o Order, u *Unit) bool {
-    Logf("Dis(%v)", p)
-    res := o != nil && // is an order
-      u != nil && // is a unit
-      o.Type() == Move && // move
-      o.Targets()[1].Super() == prov.Super() && // against us
-      u.Nation != nat && // not from ourselves
-      r.Resolve(p) == nil // and it succeeded
-    Logf("%v", res)
-    return res
-  })
-  return dislodgers
-}
-
 func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
   unit, _, ok := v.Unit(src)
   if !ok {
@@ -130,9 +115,9 @@ func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
       if !checkOrders {
         return true
       }
-      if order, _, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
+      if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
         if r, ok := v.(Resolver); ok {
-          if err := r.Resolve(name); err == nil {
+          if err := r.Resolve(prov); err == nil {
             return true
           }
         } else {

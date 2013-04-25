@@ -131,7 +131,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
     }
   }
 
-  if atDest, _, ok := r.Order(self.targets[1]); ok {
+  if atDest, prov, ok := r.Order(self.targets[1]); ok {
     if !convoyed && atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
       as := self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1]) + 1
       dip.Logf("%v: attackStrength: %v", atDest, as)
@@ -139,7 +139,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
         return cla.ErrBounce{self.targets[1]}
       }
     } else if atDest.Type() == cla.Move { // attack against something that moves away
-      if err := r.Resolve(self.targets[1]); err != nil {
+      if err := r.Resolve(prov); err != nil {
         dip.Logf("%v: failed, holdStrength: 1", atDest)
         if 1 >= attackStrength {
           return cla.ErrBounce{self.targets[1]}
