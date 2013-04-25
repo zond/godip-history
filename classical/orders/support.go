@@ -40,7 +40,11 @@ func (self *support) Adjudicate(r dip.Resolver) error {
   unit, _, _ := r.Unit(self.targets[0])
   if len(self.targets) == 3 {
     if victim, _, ok := r.Unit(self.targets[2]); ok && victim.Nation == unit.Nation {
-      return cla.ErrIllegalSupportDestinationNation
+      if order, _, ok := r.Order(self.targets[2]); !ok || order.Type() != cla.Move && r.Resolve(order.Targets()[0]) != nil {
+        return cla.ErrIllegalSupportDestinationNation
+      } else {
+        dip.Logf("%v, %v moves successfully", victim, order)
+      }
     }
   }
   if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
