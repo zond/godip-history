@@ -120,7 +120,7 @@ func (self *phase) PostProcess(s dip.State) {
       hasRetreat := false
       for _, edge := range s.Graph().Edges(prov) {
         if _, _, ok := s.Unit(edge); !ok && !s.IsDislodger(edge, prov) {
-          if _, err := cla.AnyMovePossible(s, prov, edge, false, false, false, false); err == nil {
+          if _, err := cla.AnyMovePossible(s, prov, edge, false, false, false); err == nil {
             hasRetreat = true
             break
           }

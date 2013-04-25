@@ -99,7 +99,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   if unit, _, ok := r.Unit(self.targets[0]); ok && unit.Type == cla.Army {
     steps := r.Graph().Path(self.targets[0], self.targets[1], nil)
     if self.viaConvoy || len(steps) > 1 {
-      err := cla.AnyConvoyPossible(r, self.targets[0], self.targets[1], true, true)
+      err := cla.AnyConvoyPossible(r, self.targets[0], self.targets[1], true)
       if err != nil {
         if len(steps) > 1 {
           return err
@@ -111,6 +111,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   }
 
   if atDest, _, ok := r.Order(self.targets[1]); ok {
+    dip.Logf("found %v at dest", atDest)
     if !convoyed && atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
       as := self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1]) + 1
       dip.Logf("%v: attackStrength: %v", atDest, as)
@@ -137,7 +138,16 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   return nil
 }
 
-func (self *move) sanitizeRetreatPhase(v dip.Validator) error {
+func (self *move) Validate(v dip.Validator) error {
+  if v.Phase().Type() == cla.Movement {
+    return self.validateMovementPhase(v)
+  } else if v.Phase().Type() == cla.Retreat {
+    return self.validateRetreatPhase(v)
+  }
+  return cla.ErrInvalidPhase
+}
+
+func (self *move) validateRetreatPhase(v dip.Validator) error {
   if !v.Graph().Has(self.targets[0]) {
     return cla.ErrInvalidSource
   }
@@ -150,13 +160,16 @@ func (self *move) sanitizeRetreatPhase(v dip.Validator) error {
     return cla.ErrMissingUnit
   }
   var err error
-  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, false, false, false); err != nil {
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, false, false); err != nil {
     return err
+  }
+  if v.IsDislodger(self.targets[1], self.targets[0]) {
+    return cla.ErrIllegalRetreat
   }
   return nil
 }
 
-func (self *move) sanitizeMovementPhase(v dip.Validator) error {
+func (self *move) validateMovementPhase(v dip.Validator) error {
   if !v.Graph().Has(self.targets[0]) {
     return cla.ErrInvalidSource
   }
@@ -169,39 +182,7 @@ func (self *move) sanitizeMovementPhase(v dip.Validator) error {
     return cla.ErrMissingUnit
   }
   var err error
-  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true, false, false); err != nil {
-    return err
-  }
-  return nil
-}
-
-func (self *move) Sanitize(v dip.Validator) error {
-  if v.Phase().Type() == cla.Movement {
-    return self.sanitizeMovementPhase(v)
-  } else if v.Phase().Type() == cla.Retreat {
-    return self.sanitizeRetreatPhase(v)
-  }
-  return cla.ErrInvalidPhase
-}
-
-func (self *move) Validate(v dip.Validator) error {
-  if v.Phase().Type() == cla.Movement {
-    return self.validateMovementPhase(v)
-  }
-  return self.validateRetreatPhase(v)
-}
-
-func (self *move) validateRetreatPhase(v dip.Validator) error {
-  if v.IsDislodger(self.targets[1], self.targets[0]) {
-    return cla.ErrIllegalRetreat
-  }
-  return nil
-}
-
-func (self *move) validateMovementPhase(v dip.Validator) error {
-  unit, _, _ := v.Dislodged(self.targets[0])
-  var err error
-  if _, err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true, true, false); err != nil {
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true, false); err != nil {
     return err
   }
   return nil

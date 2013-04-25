@@ -147,7 +147,6 @@ func (self Orders) Len() int {
 type Order interface {
   Type() OrderType
   Targets() []Province
-  Sanitize(Validator) error
   Validate(Validator) error
   Execute(State)
   At() time.Time

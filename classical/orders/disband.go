@@ -52,15 +52,23 @@ func (self *disband) Adjudicate(r dip.Resolver) error {
 }
 
 func (self *disband) validateRetreatPhase(v dip.Validator) error {
-  if _, _, ok := v.Dislodged(self.targets[0]); !ok {
+  if !v.Graph().Has(self.targets[0]) {
+    return cla.ErrInvalidTarget
+  }
+  var ok bool
+  if _, self.targets[0], ok = v.Dislodged(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
   return nil
 }
 
 func (self *disband) validateBuildPhase(v dip.Validator) error {
-  unit, _, ok := v.Unit(self.targets[0])
-  if !ok {
+  if !v.Graph().Has(self.targets[0]) {
+    return cla.ErrInvalidTarget
+  }
+  var unit dip.Unit
+  var ok bool
+  if unit, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
   if _, _, balance := cla.AdjustmentStatus(v, unit.Nation); balance > -1 {
@@ -69,34 +77,13 @@ func (self *disband) validateBuildPhase(v dip.Validator) error {
   return nil
 }
 
-func (self *disband) sanitizeBuildPhase(v dip.Validator) error {
-  if !v.Graph().Has(self.targets[0]) {
-    return cla.ErrInvalidTarget
-  }
-  return nil
-}
-
-func (self *disband) sanitizeRetreatPhase(v dip.Validator) error {
-  if !v.Graph().Has(self.targets[0]) {
-    return cla.ErrInvalidTarget
-  }
-  return nil
-}
-
-func (self *disband) Sanitize(v dip.Validator) error {
-  if v.Phase().Type() == cla.Adjustment {
-    return self.sanitizeBuildPhase(v)
-  } else if v.Phase().Type() == cla.Retreat {
-    return self.sanitizeRetreatPhase(v)
-  }
-  return cla.ErrInvalidPhase
-}
-
 func (self *disband) Validate(v dip.Validator) error {
   if v.Phase().Type() == cla.Adjustment {
     return self.validateBuildPhase(v)
+  } else if v.Phase().Type() == cla.Retreat {
+    return self.validateRetreatPhase(v)
   }
-  return self.validateRetreatPhase(v)
+  return cla.ErrInvalidPhase
 }
 
 func (self *disband) Execute(state dip.State) {

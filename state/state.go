@@ -115,9 +115,10 @@ func (self *State) Next() (err error) {
   */
   self.errors = make(map[common.Province]error)
   for prov, order := range self.orders {
-    if err := order.Sanitize(self); err != nil {
+    if err := order.Validate(self); err != nil {
       self.errors[prov] = err
       delete(self.orders, prov)
+      common.Logf("deleted %v due to %v", prov, err)
     }
   }
 
@@ -129,15 +130,6 @@ func (self *State) Next() (err error) {
       if def := self.phase.DefaultOrder(prov); def != nil {
         self.orders[prov] = def
       }
-    }
-  }
-
-  /*
-     Validate orders.
-  */
-  for prov, order := range self.orders {
-    if err := order.Validate(self); err != nil {
-      self.errors[prov] = err
     }
   }
 
