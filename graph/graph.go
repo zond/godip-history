@@ -64,6 +64,7 @@ func (self *Graph) Edges(n common.Province) (result []common.Province) {
   for p, _ := range self.edges(n) {
     result = append(result, p)
   }
+  return
 }
 
 func (self *Graph) edges(n common.Province) (result map[common.Province]*edge) {

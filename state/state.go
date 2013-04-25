@@ -136,14 +136,16 @@ func (self *State) Next() (err error) {
      Adjudicate orders.
   */
   for prov, _ := range self.orders {
-    common.Logf("Adjudicating %v", prov)
+    common.Indent(fmt.Sprintf("%v: ", prov))
+    common.Logf("resolving")
     if err := self.resolver().Resolve(prov); err == nil {
-      common.Logf("%v succeeded", prov)
+      common.Logf("succeeded")
       self.successes[prov] = true
     } else {
-      common.Logf("%v failed: %v", prov, err)
+      common.Logf("failed: %v", err)
       self.errors[prov] = err
     }
+    common.DeIndent()
   }
 
   /*
@@ -165,22 +167,6 @@ func (self *State) Next() (err error) {
   }
   for _, movement := range self.movements {
     movement.execute(self)
-  }
-
-  /*
-     Destroy dislodgeds without retreat.
-  */
-  for prov, dislodged := range self.dislodgeds {
-    hasRetreat := false
-    for _, edge := range self.graph.Edges(prov) {
-      if _, _, ok := self.Unit(edge); !ok && !self.IsDislodger(edge, prov) {
-        hasRetreat = true
-        break
-      }
-    }
-    if !hasRetreat {
-      self.RemoveDislodged(prov)
-    }
   }
 
   /*

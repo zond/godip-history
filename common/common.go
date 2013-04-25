@@ -8,16 +8,19 @@ import (
 )
 
 var Debug = false
+var LogIndent = []string{}
 
-func Log(s string) {
-  if Debug {
-    fmt.Println(s)
-  }
+func Indent(s string) {
+  LogIndent = append(LogIndent, s)
+}
+
+func DeIndent() {
+  LogIndent = LogIndent[:len(LogIndent)-1]
 }
 
 func Logf(s string, o ...interface{}) {
   if Debug {
-    fmt.Printf(fmt.Sprintf("%v\n", s), o...)
+    fmt.Printf(fmt.Sprintf("%v%v\n", strings.Join(LogIndent, ""), s), o...)
   }
 }
 
