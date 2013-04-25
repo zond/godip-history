@@ -90,10 +90,11 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
     if order, _, ok = self.Order(prov); !ok {
       order = nil
     }
+    unitCopy := unit
     if filter(prov, order, &unit) {
       provinces = append(provinces, prov)
       orders = append(orders, order)
-      units = append(units, &unit)
+      units = append(units, &unitCopy)
     }
   }
   for prov, order := range self.orders {

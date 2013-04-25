@@ -60,7 +60,14 @@ func (self *support) Adjudicate(r dip.Resolver) error {
     return cla.ErrSupportBroken{breaks[0]}
   }
 
-  if dislodgers := cla.Dislodgers(r, self.targets[0], unit.Nation); len(dislodgers) > 0 {
+  if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+    return o != nil && // is an order
+      u != nil && // is a unit
+      o.Type() == cla.Move && // move
+      o.Targets()[1].Super() == self.targets[0].Super() && // against us
+      u.Nation != unit.Nation && // not from ourselves
+      r.Resolve(p) == nil // and it succeeded
+  }); len(dislodgers) > 0 {
     dip.Logf("%v: dislodged by: %v", self, dislodgers)
     return cla.ErrSupportBroken{dislodgers[0]}
   }

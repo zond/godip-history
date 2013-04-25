@@ -98,12 +98,15 @@ func (self ErrBounce) Error() string {
 
 func Dislodgers(r Resolver, prov Province, nat Nation) []Province {
   dislodgers, _, _ := r.Find(func(p Province, o Order, u *Unit) bool {
-    return o != nil && // is an order
+    Logf("Dis(%v)", p)
+    res := o != nil && // is an order
       u != nil && // is a unit
       o.Type() == Move && // move
       o.Targets()[1].Super() == prov.Super() && // against us
       u.Nation != nat && // not from ourselves
       r.Resolve(p) == nil // and it succeeded
+    Logf("%v", res)
+    return res
   })
   return dislodgers
 }

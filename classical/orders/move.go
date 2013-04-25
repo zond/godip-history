@@ -91,18 +91,22 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   })
   for index, competingOrder := range competingOrders {
     if as := self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1]) + 1; as >= attackStrength {
-      if as > attackStrength {
+      dip.Indent(fmt.Sprintf("D(%v):", competingOrder.Targets()[0]))
+      if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+        res := o != nil && // is an order
+          u != nil && // is a unit
+          o.Type() == cla.Move && // move
+          o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
+          o.Targets()[0].Super() == self.targets[1].Super() && // is from our destination
+          u.Nation != competingUnits[index].Nation && // not from themselves
+          r.Resolve(p) == nil // and it succeeded
+        return res
+      }); len(dislodgers) == 0 {
+        dip.DeIndent()
+        dip.Logf("%v: attackStrength: %v", competingOrder, as)
         return cla.ErrBounce{competingOrder.Targets()[0]}
-      } else if as == attackStrength {
-        dip.Indent(fmt.Sprintf("D(%v):", competingOrder.Targets()[0]))
-        if dislodgers := cla.Dislodgers(r, competingOrder.Targets()[0], competingUnits[index].Nation); len(dislodgers) == 0 {
-          dip.Logf("F")
-          dip.DeIndent()
-          return cla.ErrBounce{competingOrder.Targets()[0]}
-        } else {
-          dip.Logf("%v", dislodgers)
-          dip.DeIndent()
-        }
+      } else {
+        dip.DeIndent()
       }
     }
   }

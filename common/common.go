@@ -105,6 +105,10 @@ func (self Unit) Equal(o Unit) bool {
   return self.Type == o.Type && self.Nation == o.Nation
 }
 
+func (self *Unit) String() string {
+  return fmt.Sprint(*self)
+}
+
 type Phase interface {
   Year() int
   Season() Season
