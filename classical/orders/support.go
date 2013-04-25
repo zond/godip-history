@@ -65,7 +65,8 @@ func (self *support) Adjudicate(r dip.Resolver) error {
       u != nil && // is a unit
       o.Type() == cla.Move && // move
       o.Targets()[1].Super() == self.targets[0].Super() && // against us
-      r.Resolve(p) == nil
+      u.Nation != unit.Nation && // not from ourselves
+      r.Resolve(p) == nil // and it succeeded
   }); len(dislodgers) > 0 {
     dip.Logf("%v: dislodged by: %v", self, dislodgers)
     return cla.ErrSupportBroken{dislodgers[0]}
