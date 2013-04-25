@@ -44,6 +44,10 @@ type NationalizedOrder struct {
   Nation common.Nation
 }
 
+func (self NationalizedOrder) String() string {
+  return fmt.Sprintf("'%v: %v'", self.Nation, self.Order)
+}
+
 type State struct {
   SCs        map[common.Province]common.Nation
   Units      map[common.Province]common.Unit

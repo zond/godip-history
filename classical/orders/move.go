@@ -1,6 +1,7 @@
 package orders
 
 import (
+  "fmt"
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
   "time"
@@ -15,6 +16,10 @@ func Move(source, dest dip.Province) *move {
 type move struct {
   targets   []dip.Province
   viaConvoy bool
+}
+
+func (self *move) String() string {
+  return fmt.Sprintf("%v %v %v", self.targets[0], cla.Move, self.targets[1])
 }
 
 func (self *move) ViaConvoy() *move {
@@ -36,7 +41,7 @@ func (self *move) At() time.Time {
 
 func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
   _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    if o.Type() == cla.Support && len(o.Targets()) == 3 && o.Targets()[1] == src && o.Targets()[2] == dst {
+    if o.Type() == cla.Support && len(o.Targets()) == 3 && o.Targets()[1].Contains(src) && o.Targets()[2].Contains(dst) {
       if err := r.Resolve(p); err == nil {
         return true
       }
@@ -48,7 +53,7 @@ func (self *move) calcAttackSupport(r dip.Resolver, src, dst dip.Province) int {
 
 func (self *move) calcHoldSupport(r dip.Resolver, p dip.Province) int {
   _, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    if o.Type() == cla.Support && len(o.Targets()) == 2 && o.Targets()[1] == p {
+    if o.Type() == cla.Support && len(o.Targets()) == 2 && o.Targets()[1].Contains(p) {
       if err := r.Resolve(p); err == nil {
         return true
       }
@@ -81,7 +86,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 
   // competing moves for the same destination
   _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    return p != self.targets[0] && o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
+    return o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
   })
   for _, competingOrder := range competingOrders {
     if self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1])+1 >= attackStrength {
@@ -90,7 +95,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   }
 
   convoyed := false
-  if unit := r.Unit(self.targets[0]); unit.Type == cla.Army {
+  if unit, _, ok := r.Unit(self.targets[0]); ok && unit.Type == cla.Army {
     steps := r.Graph().Path(self.targets[0], self.targets[1], nil)
     if self.viaConvoy || len(steps) > 1 {
       err := cla.ConvoyPossible(r, self.targets[0], self.targets[1], true)
@@ -104,7 +109,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
     }
   }
 
-  if atDest := r.Order(self.targets[1]); atDest != nil {
+  if atDest, _, ok := r.Order(self.targets[1]); ok {
     if !convoyed && atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
       if self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1])+1 >= attackStrength {
         return cla.ErrBounce{self.targets[1]}
@@ -129,37 +134,25 @@ func (self *move) Validate(v dip.Validator) error {
   return cla.ErrInvalidPhase
 }
 
-func (self *move) validateMovePossible(v dip.Validator, useConvoys bool) (err error) {
-  if err = cla.MovePossible(v, self.targets[0], self.targets[1], useConvoys, false); err == nil {
-    return
-  }
-  var possibilities []dip.Province
-  for _, coast := range v.Graph().Coasts(self.targets[1]) {
-    if err2 := cla.MovePossible(v, self.targets[0], coast, useConvoys, false); err2 == nil {
-      possibilities = append(possibilities, coast)
-    }
-  }
-  if len(possibilities) == 1 {
-    self.targets[1] = possibilities[0]
-    err = nil
-  }
-  return
-}
-
 func (self *move) validateRetreatPhase(v dip.Validator) error {
   if v.Phase().Type() != cla.Retreat {
     return cla.ErrInvalidPhase
   }
-  if v.Dislodged(self.targets[0]) == nil {
+  var ok bool
+  if _, self.targets[0], ok = v.Dislodged(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
-  if v.Unit(self.targets[1]) != nil {
+  if _, _, ok = v.Unit(self.targets[1]); ok {
     return cla.ErrOccupiedDestination
   }
   if v.IsDislodger(self.targets[1], self.targets[0]) {
     return cla.ErrIllegalRetreat
   }
-  return self.validateMovePossible(v, false)
+  var err error
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], false, false); err != nil {
+    return err
+  }
+  return nil
 }
 
 func (self *move) validateMovementPhase(v dip.Validator) error {
@@ -169,7 +162,15 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
   if !v.Graph().Has(self.targets[1]) {
     return cla.ErrInvalidDestination
   }
-  return self.validateMovePossible(v, true)
+  var ok bool
+  if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
+    return cla.ErrMissingUnit
+  }
+  var err error
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], false, true); err != nil {
+    return err
+  }
+  return nil
 }
 
 func (self *move) Execute(state dip.State) {

@@ -63,7 +63,7 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
   for prov, unit := range self.units {
     visitedProvinces[prov] = true
     order := self.defaultOrderGenerator(prov)
-    if ord := self.Order(prov); ord != nil {
+    if ord, _, ok := self.Order(prov); ok {
       order = ord
     }
     if filter(prov, order, &unit) {
@@ -85,15 +85,25 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
 }
 
 func (self *State) Next() (err error) {
+  failed := make(map[common.Province]bool)
   /*
      Validate orders
   */
   for prov, order := range self.orders {
     if err := order.Validate(self); err != nil {
       self.errors[prov] = err
-      delete(self.orders, prov)
+      failed[prov] = true
     }
   }
+
+  /*
+     Remove failed orders.
+  */
+  for prov, _ := range failed {
+    delete(self.orders, prov)
+  }
+  failed = make(map[common.Province]bool)
+
   /*
      Adjudicate orders.
   */
@@ -101,9 +111,17 @@ func (self *State) Next() (err error) {
     err := self.Resolver().Resolve(prov)
     if err != nil {
       self.errors[prov] = err
-      delete(self.orders, prov)
+      failed[prov] = true
     }
   }
+
+  /*
+     Remove failed orders.
+  */
+  for prov, _ := range failed {
+    delete(self.orders, prov)
+  }
+
   /*
      Execute orders.
   */
@@ -173,34 +191,34 @@ func (self *State) Errors() map[common.Province]error {
 }
 
 func (self *State) SetDislodged(prov common.Province, unit common.Unit) {
-  if found := self.Dislodged(prov); found != nil {
+  if found, _, ok := self.Dislodged(prov); ok {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.dislodgeds[prov] = unit
 }
 
 func (self *State) SetUnit(prov common.Province, unit common.Unit) {
-  if found := self.Unit(prov); found != nil {
+  if found, _, ok := self.Unit(prov); ok {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.units[prov] = unit
 }
 
 func (self *State) SetOrder(prov common.Province, order common.Adjudicator) {
-  if found := self.findOrder(prov); found != nil {
+  if found, _, ok := self.findOrder(prov); ok {
     panic(fmt.Errorf("%v is already at %v", found, prov))
   }
   self.orders[prov] = order
 }
 
 func (self *State) RemoveUnit(prov common.Province) {
-  if _, p, ok := self.findUnit(prov); ok {
+  if _, p, ok := self.Unit(prov); ok {
     delete(self.units, p)
   }
 }
 
 func (self *State) RemoveDislodged(prov common.Province) {
-  if _, p, ok := self.findDislodged(prov); ok {
+  if _, p, ok := self.Dislodged(prov); ok {
     delete(self.dislodgeds, p)
   }
 }
@@ -243,40 +261,7 @@ func (self *State) IsDislodger(attacker, victim common.Province) bool {
   return false
 }
 
-func (self *State) Dislodged(prov common.Province) *common.Unit {
-  if u, _, ok := self.findDislodged(prov); ok {
-    return &u
-  }
-  return nil
-}
-
-func (self *State) Unit(prov common.Province) *common.Unit {
-  if u, _, ok := self.findUnit(prov); ok {
-    return &u
-  }
-  return nil
-}
-
-func (self *State) SupplyCenter(prov common.Province) *common.Nation {
-  if n, _, ok := self.findSupplyCenter(prov); ok {
-    return &n
-  }
-  return nil
-}
-
-func (self *State) Order(prov common.Province) (result common.Order) {
-  result = self.findOrder(prov)
-  if result == nil {
-    if unit := self.Unit(prov); unit != nil {
-      result = self.defaultOrderGenerator(prov)
-    }
-  }
-  return
-}
-
-// Finders, used by singular getters and setters
-
-func (self *State) findDislodged(prov common.Province) (u common.Unit, p common.Province, ok bool) {
+func (self *State) Dislodged(prov common.Province) (u common.Unit, p common.Province, ok bool) {
   if u, ok = self.dislodgeds[prov]; ok {
     p = prov
     return
@@ -295,23 +280,7 @@ func (self *State) findDislodged(prov common.Province) (u common.Unit, p common.
   return
 }
 
-func (self *State) findDislodger(prov common.Province) (p common.Province, ok bool) {
-  if p, ok = self.dislodgers[prov]; ok {
-    return
-  }
-  sup, _ := prov.Split()
-  if p, ok = self.dislodgers[sup]; ok {
-    return
-  }
-  for _, name := range self.graph.Coasts(prov) {
-    if p, ok = self.dislodgers[name]; ok {
-      return
-    }
-  }
-  return
-}
-
-func (self *State) findUnit(prov common.Province) (u common.Unit, p common.Province, ok bool) {
+func (self *State) Unit(prov common.Province) (u common.Unit, p common.Province, ok bool) {
   if u, ok = self.units[prov]; ok {
     p = prov
     return
@@ -330,7 +299,7 @@ func (self *State) findUnit(prov common.Province) (u common.Unit, p common.Provi
   return
 }
 
-func (self *State) findSupplyCenter(prov common.Province) (n common.Nation, p common.Province, ok bool) {
+func (self *State) SupplyCenter(prov common.Province) (n common.Nation, p common.Province, ok bool) {
   if n, ok = self.supplyCenters[prov]; ok {
     p = prov
     return
@@ -349,17 +318,47 @@ func (self *State) findSupplyCenter(prov common.Province) (n common.Nation, p co
   return
 }
 
-func (self *State) findOrder(prov common.Province) (result common.Order) {
-  var ok bool
-  if result, ok = self.orders[prov]; ok {
+func (self *State) findOrder(prov common.Province) (o common.Order, p common.Province, ok bool) {
+  if o, ok = self.orders[prov]; ok {
+    p = prov
     return
   }
   sup, _ := prov.Split()
-  if result, ok = self.orders[sup]; ok {
+  if o, ok = self.orders[sup]; ok {
+    p = sup
     return
   }
   for _, name := range self.graph.Coasts(prov) {
-    if result, ok = self.orders[name]; ok {
+    if o, ok = self.orders[name]; ok {
+      p = name
+      return
+    }
+  }
+  return
+}
+
+func (self *State) Order(prov common.Province) (o common.Order, p common.Province, ok bool) {
+  o, p, ok = self.findOrder(prov)
+  if !ok {
+    if _, p, ok = self.Unit(prov); ok {
+      o = self.defaultOrderGenerator(prov)
+    }
+  }
+  return
+}
+
+// Finders, used by singular getters and setters
+
+func (self *State) findDislodger(prov common.Province) (p common.Province, ok bool) {
+  if p, ok = self.dislodgers[prov]; ok {
+    return
+  }
+  sup, _ := prov.Split()
+  if p, ok = self.dislodgers[sup]; ok {
+    return
+  }
+  for _, name := range self.graph.Coasts(prov) {
+    if p, ok = self.dislodgers[name]; ok {
       return
     }
   }
@@ -369,10 +368,10 @@ func (self *State) findOrder(prov common.Province) (result common.Order) {
 // Mutators
 
 func (self *State) Move(src, dst common.Province) {
-  if unit, prov, ok := self.findUnit(src); !ok {
+  if unit, prov, ok := self.Unit(src); !ok {
     panic(fmt.Errorf("No unit at %v?", src))
   } else {
-    if d, p, ok := self.findUnit(dst); ok {
+    if d, p, ok := self.Unit(dst); ok {
       self.RemoveUnit(p)
       self.SetDislodged(p, d)
       self.dislodgers[dst] = prov
@@ -383,7 +382,7 @@ func (self *State) Move(src, dst common.Province) {
 }
 
 func (self *State) Retreat(src, dst common.Province) {
-  if unit, prov, ok := self.findDislodged(src); !ok {
+  if unit, prov, ok := self.Dislodged(src); !ok {
     panic(fmt.Errorf("No dislodged at %v?", src))
   } else {
     self.RemoveDislodged(prov)

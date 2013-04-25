@@ -65,6 +65,20 @@ func (self Province) Join(n Province) (result Province) {
   return
 }
 
+func (self Province) Super() (result Province) {
+  result, _ = self.Split()
+  return
+}
+
+func (self Province) Sub() (result Province) {
+  _, result = self.Split()
+  return
+}
+
+func (self Province) Contains(p Province) bool {
+  return self == p || (self.Super() == self && self == p.Super())
+}
+
 type Unit struct {
   Type   UnitType
   Nation Nation
@@ -135,10 +149,10 @@ type StateFilter func(n Province, o Order, u *Unit) bool
 type OrderGenerator func(prov Province) Order
 
 type Validator interface {
-  Order(Province) Order
-  Unit(Province) *Unit
-  Dislodged(Province) *Unit
-  SupplyCenter(Province) *Nation
+  Order(Province) (Order, Province, bool)
+  Unit(Province) (Unit, Province, bool)
+  Dislodged(Province) (Unit, Province, bool)
+  SupplyCenter(Province) (Nation, Province, bool)
 
   SupplyCenters() map[Province]Nation
 

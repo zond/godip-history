@@ -31,7 +31,7 @@ func BackupRule(resolver dip.Resolver, prov dip.Province, deps map[dip.Province]
   only_moves := true
   convoys := false
   for prov, _ := range deps {
-    if order := resolver.Order(prov); order != nil {
+    if order, _, ok := resolver.Order(prov); ok {
       if order.Type() != cla.Move {
         only_moves = false
       }

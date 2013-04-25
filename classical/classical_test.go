@@ -20,8 +20,8 @@ func assertOrderValidity(t *testing.T, validator dip.Validator, order dip.Order,
 
 func assertMove(t *testing.T, j *state.State, src, dst dip.Province, success bool) {
   if success {
-    unit := j.Unit(src)
-    if unit == nil {
+    unit, _, ok := j.Unit(src)
+    if !ok {
       t.Errorf("Should be a unit at %v", src)
     }
     j.SetOrder(src, orders.Move(src, dst))
@@ -29,20 +29,20 @@ func assertMove(t *testing.T, j *state.State, src, dst dip.Province, success boo
     if err, ok := j.Errors()[src]; ok {
       t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
     }
-    if now := j.Unit(src); now != nil && reflect.DeepEqual(now, unit) {
+    if now, _, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
       t.Errorf("%v should have moved from %v", now, src)
     }
-    if now := j.Unit(dst); now == nil || !reflect.DeepEqual(now, unit) {
+    if now, _, _ := j.Unit(dst); !reflect.DeepEqual(now, unit) {
       t.Errorf("%v should be at %v now", unit, dst)
     }
   } else {
-    unit := j.Unit(src)
+    unit, _, _ := j.Unit(src)
     j.SetOrder(src, orders.Move(src, dst))
     j.Next()
     if _, ok := j.Errors()[src]; !ok {
       t.Errorf("Move from %v to %v should not have worked", src, dst)
     }
-    if now := j.Unit(src); now == nil && !reflect.DeepEqual(now, unit) {
+    if now, _, _ := j.Unit(src); !reflect.DeepEqual(now, unit) {
       t.Errorf("%v should not have moved from %v", now, src)
     }
   }
@@ -66,6 +66,8 @@ func TestSupportValidation(t *testing.T) {
   // Illegal support
   assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalSupportPosition)
   assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalSupportDestination)
+  judge.RemoveUnit("spa/sc")
+  judge.SetUnit("spa/nc", dip.Unit{cla.Fleet, cla.France})
   assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalSupportDestination)
   // Illegal moves
   assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrInvalidSupportMove)
@@ -112,8 +114,8 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
   s.SetDislodgeds(statePair.Before.Dislodgeds)
   s.SetSupplyCenters(statePair.Before.SCs)
   for prov, order := range statePair.Before.Orders {
-    u := s.Unit(prov)
-    if u != nil && u.Nation == order.Nation {
+    u, _, ok := s.Unit(prov)
+    if ok && u.Nation == order.Nation {
       s.SetOrder(prov, order.Order)
     }
   }
@@ -154,8 +156,11 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
     }
   }
   if err {
+    t.Errorf("%v: Orders: %v", statePair.Case, statePair.Before.Orders)
     t.Errorf("%v: Units: %v", statePair.Case, s.Units())
     t.Errorf("%v: Dislodgeds: %v", statePair.Case, s.Dislodgeds())
+    t.Errorf("%v: Errors: %v", statePair.Case, s.Errors())
+    t.Fatalf("%v failed", statePair.Case)
   }
 }
 

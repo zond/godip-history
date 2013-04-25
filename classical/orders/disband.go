@@ -1,6 +1,7 @@
 package orders
 
 import (
+  "fmt"
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
   "time"
@@ -18,6 +19,10 @@ type disband struct {
   at      time.Time
 }
 
+func (self *disband) String() string {
+  return fmt.Sprintf("%v %v", self.targets[0], cla.Disband)
+}
+
 func (self *disband) Type() dip.OrderType {
   return cla.Disband
 }
@@ -27,7 +32,7 @@ func (self *disband) Targets() []dip.Province {
 }
 
 func (self *disband) adjudicateBuildPhase(r dip.Resolver) error {
-  unit := r.Unit(self.targets[0])
+  unit, _, _ := r.Unit(self.targets[0])
   _, disbands, _ := cla.AdjustmentStatus(r, unit.Nation)
   if self.at.After(disbands[len(disbands)-1].At()) {
     return cla.ErrIllegalDisband
@@ -47,15 +52,15 @@ func (self *disband) Adjudicate(r dip.Resolver) error {
 }
 
 func (self *disband) validateRetreatPhase(v dip.Validator) error {
-  if v.Dislodged(self.targets[0]) == nil {
+  if _, _, ok := v.Dislodged(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
   return nil
 }
 
 func (self *disband) validateBuildPhase(v dip.Validator) error {
-  unit := v.Unit(self.targets[0])
-  if unit == nil {
+  unit, _, ok := v.Unit(self.targets[0])
+  if !ok {
     return cla.ErrMissingUnit
   }
   if _, _, balance := cla.AdjustmentStatus(v, unit.Nation); balance > -1 {

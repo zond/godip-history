@@ -1,6 +1,7 @@
 package orders
 
 import (
+  "fmt"
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
   "time"
@@ -14,6 +15,10 @@ func Hold(source dip.Province) *hold {
 
 type hold struct {
   targets []dip.Province
+}
+
+func (self *hold) String() string {
+  return fmt.Sprintf("%v %v", self.targets[0], cla.Hold)
 }
 
 func (self *hold) Type() dip.OrderType {
@@ -35,6 +40,10 @@ func (self *hold) Adjudicate(r dip.Resolver) error {
 func (self *hold) Validate(v dip.Validator) error {
   if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
+  }
+  var ok bool
+  if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
+    return cla.ErrMissingUnit
   }
   return nil
 }

@@ -20,6 +20,10 @@ type support struct {
   targets []dip.Province
 }
 
+func (self *support) String() string {
+  return fmt.Sprintf("%v %v %v", self.targets[0], cla.Support, self.targets[1:])
+}
+
 func (self *support) At() time.Time {
   return time.Now()
 }
@@ -33,9 +37,9 @@ func (self *support) Targets() []dip.Province {
 }
 
 func (self *support) Adjudicate(r dip.Resolver) error {
-  unit := r.Unit(self.targets[0])
+  unit, _, _ := r.Unit(self.targets[0])
   if len(self.targets) == 3 {
-    if victim := r.Unit(self.targets[2]); victim != nil && victim.Nation == unit.Nation {
+    if victim, _, ok := r.Unit(self.targets[2]); ok && victim.Nation == unit.Nation {
       return cla.ErrIllegalSupportDestinationNation
     }
   }
@@ -61,24 +65,25 @@ func (self *support) Validate(v dip.Validator) error {
   if !v.Graph().Has(self.targets[1]) {
     return cla.ErrInvalidTarget
   }
-  if v.Unit(self.targets[0]) == nil {
+  var ok bool
+  if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
-  if v.Unit(self.targets[1]) == nil {
+  if _, _, ok := v.Unit(self.targets[1]); !ok {
     return cla.ErrMissingSupportUnit
   }
   if len(self.targets) == 2 {
-    if cla.AnyMovePossible(v, self.targets[0], self.targets[1]) != nil {
+    if err := cla.AnySupportPossible(v, self.targets[0], self.targets[1]); err != nil {
       return cla.ErrIllegalSupportPosition
     }
   } else {
     if !v.Graph().Has(self.targets[2]) {
       return cla.ErrInvalidTarget
     }
-    if cla.AnyMovePossible(v, self.targets[0], self.targets[2]) != nil {
+    if err := cla.AnySupportPossible(v, self.targets[0], self.targets[2]); err != nil {
       return cla.ErrIllegalSupportDestination
     }
-    if cla.AnyMovePossible(v, self.targets[1], self.targets[2]) != nil {
+    if _, err := cla.AnyMovePossible(v, self.targets[1], self.targets[2], true, true); err != nil {
       return cla.ErrInvalidSupportMove
     }
   }

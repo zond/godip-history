@@ -45,8 +45,7 @@ func (self *Graph) Flags(n common.Province) (result map[common.Flag]bool) {
 }
 
 func (self *Graph) SC(n common.Province) (result *common.Nation) {
-  p, _ := n.Split()
-  if node, ok := self.nodes[p]; ok {
+  if node, ok := self.nodes[n.Super()]; ok {
     result = node.sc
   }
   return
@@ -112,8 +111,7 @@ func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) []co
 }
 
 func (self *Graph) Coasts(prov common.Province) (result []common.Province) {
-  p, _ := prov.Split()
-  if node, ok := self.nodes[p]; ok {
+  if node, ok := self.nodes[prov.Super()]; ok {
     for _, sub := range node.subs {
       result = append(result, sub.getName())
     }

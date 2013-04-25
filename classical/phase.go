@@ -14,8 +14,10 @@ type phase struct {
 }
 
 func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int) {
-  unit := s.Unit(src)
-  if unit == nil {
+  var unit dip.Unit
+  var ok bool
+  unit, src, ok = s.Unit(src)
+  if !ok {
     panic(fmt.Errorf("No unit at %v", src))
   }
   var filter dip.PathFilter
@@ -25,8 +27,8 @@ func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Pro
     }
   } else {
     filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
-      u := s.Unit(p)
-      return (edgeFlags[cla.Land] && nodeFlags[cla.Land]) || (u != nil && u.Nation == unit.Nation && u.Type == cla.Fleet)
+      u, _, ok := s.Unit(p)
+      return (edgeFlags[cla.Land] && nodeFlags[cla.Land]) || (ok && u.Nation == unit.Nation && u.Type == cla.Fleet)
     }
   }
   found := false
@@ -78,7 +80,7 @@ func (self *phase) sortedUnits(s dip.State, n dip.Nation) []dip.Province {
 func (self *phase) PostProcess(s dip.State) {
   if self.typ == cla.Retreat {
     s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-      if s.Dislodged(p) != nil {
+      if _, _, ok := s.Dislodged(p); ok {
         s.RemoveDislodged(p)
         s.SetError(p, cla.ErrForcedDisband)
       }

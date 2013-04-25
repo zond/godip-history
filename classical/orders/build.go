@@ -1,6 +1,7 @@
 package orders
 
 import (
+  "fmt"
   cla "github.com/zond/godip/classical/common"
   dip "github.com/zond/godip/common"
   "time"
@@ -24,6 +25,10 @@ func (self *build) Type() dip.OrderType {
   return cla.Build
 }
 
+func (self *build) String() string {
+  return fmt.Sprintf("%v %v %v", self.targets[0], cla.Build, self.typ)
+}
+
 func (self *build) Targets() []dip.Province {
   return self.targets
 }
@@ -45,17 +50,20 @@ func (self *build) Validate(v dip.Validator) error {
   if v.Phase().Type() != cla.Adjustment {
     return cla.ErrInvalidPhase
   }
-  if v.Unit(self.targets[0]) != nil {
+  if _, _, ok := v.Unit(self.targets[0]); ok {
     return cla.ErrOccupiedSupplyCenter
   }
-  me := v.Graph().SC(self.targets[0])
-  if me == nil {
+  var me dip.Nation
+  var ok bool
+  if me, self.targets[0], ok = v.SupplyCenter(self.targets[0]); !ok {
     return cla.ErrMissingSupplyCenter
   }
-  if owner := v.SupplyCenter(self.targets[0]); owner == nil || *owner != *me {
+  if owner := v.Graph().SC(self.targets[0]); owner == nil {
+    return cla.ErrMissingSupplyCenter
+  } else if *owner != me {
     return cla.ErrHostileSupplyCenter
   }
-  if _, _, balance := cla.AdjustmentStatus(v, *me); balance < 1 {
+  if _, _, balance := cla.AdjustmentStatus(v, me); balance < 1 {
     return cla.ErrMissingSurplus
   }
   if self.typ == cla.Army && !v.Graph().Flags(self.targets[0])[cla.Land] {
