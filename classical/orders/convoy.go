@@ -46,7 +46,7 @@ func (self *convoy) Adjudicate(r dip.Resolver) error {
   return nil
 }
 
-func (self *convoy) Validate(v dip.Validator) error {
+func (self *convoy) Sanitize(v dip.Validator) error {
   if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
   }
@@ -59,6 +59,13 @@ func (self *convoy) Validate(v dip.Validator) error {
   if !v.Graph().Has(self.targets[2]) {
     return cla.ErrInvalidTarget
   }
+  if err := cla.AnyConvoyPossible(v, self.targets[1], self.targets[2], false, false); err != nil {
+    return cla.ErrIllegalConvoyMove
+  }
+  return nil
+}
+
+func (self *convoy) Validate(v dip.Validator) error {
   var ok bool
   if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
     return cla.ErrMissingUnit
@@ -66,7 +73,7 @@ func (self *convoy) Validate(v dip.Validator) error {
   if _, _, ok := v.Unit(self.targets[1]); !ok {
     return cla.ErrMissingConvoyee
   }
-  if err := cla.AnyConvoyPossible(v, self.targets[1], self.targets[2], false); err != nil {
+  if err := cla.AnyConvoyPossible(v, self.targets[1], self.targets[2], true, false); err != nil {
     return cla.ErrIllegalConvoyMove
   }
   return nil

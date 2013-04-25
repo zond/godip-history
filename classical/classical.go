@@ -3,24 +3,19 @@ package classical
 import (
   "fmt"
   cla "github.com/zond/godip/classical/common"
-  "github.com/zond/godip/classical/orders"
   "github.com/zond/godip/classical/start"
   dip "github.com/zond/godip/common"
   "github.com/zond/godip/state"
 )
 
 func Blank(phase dip.Phase) *state.State {
-  return state.New(start.Graph(), phase, BackupRule, DefaultOrderGenerator)
+  return state.New(start.Graph(), phase, BackupRule)
 }
 
 func Start() *state.State {
-  return state.New(start.Graph(), &phase{1901, cla.Spring, cla.Movement}, BackupRule, DefaultOrderGenerator).
+  return state.New(start.Graph(), &phase{1901, cla.Spring, cla.Movement}, BackupRule).
     SetUnits(start.Units()).
     SetSupplyCenters(start.SupplyCenters())
-}
-
-func DefaultOrderGenerator(prov dip.Province) dip.Adjudicator {
-  return orders.Hold(prov)
 }
 
 /*

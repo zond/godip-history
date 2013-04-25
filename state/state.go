@@ -6,18 +6,16 @@ import (
   "github.com/zond/godip/common"
 )
 
-func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule, defaultOrderGenerator common.OrderGenerator) *State {
+func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule) *State {
   return &State{
-    graph:                 graph,
-    phase:                 phase,
-    backupRule:            backupRule,
-    defaultOrderGenerator: defaultOrderGenerator,
-    orders:                make(map[common.Province]common.Adjudicator),
-    units:                 make(map[common.Province]common.Unit),
-    dislodgeds:            make(map[common.Province]common.Unit),
-    supplyCenters:         make(map[common.Province]common.Nation),
-    errors:                make(map[common.Province]error),
-    dislodgers:            make(map[common.Province]common.Province),
+    graph:         graph,
+    phase:         phase,
+    backupRule:    backupRule,
+    orders:        make(map[common.Province]common.Adjudicator),
+    units:         make(map[common.Province]common.Unit),
+    dislodgeds:    make(map[common.Province]common.Unit),
+    supplyCenters: make(map[common.Province]common.Nation),
+    dislodgers:    make(map[common.Province]common.Province),
   }
 }
 
@@ -46,18 +44,17 @@ func (self *movement) execute(s *State) {
 }
 
 type State struct {
-  orders                map[common.Province]common.Adjudicator
-  units                 map[common.Province]common.Unit
-  dislodgeds            map[common.Province]common.Unit
-  supplyCenters         map[common.Province]common.Nation
-  graph                 common.Graph
-  phase                 common.Phase
-  backupRule            common.BackupRule
-  defaultOrderGenerator common.OrderGenerator
-  errors                map[common.Province]error
-  dislodgers            map[common.Province]common.Province
-  movements             []*movement
-  successes             map[common.Province]bool
+  orders        map[common.Province]common.Adjudicator
+  units         map[common.Province]common.Unit
+  dislodgeds    map[common.Province]common.Unit
+  supplyCenters map[common.Province]common.Nation
+  graph         common.Graph
+  phase         common.Phase
+  backupRule    common.BackupRule
+  errors        map[common.Province]error
+  dislodgers    map[common.Province]common.Province
+  movements     []*movement
+  successes     map[common.Province]bool
 }
 
 func (self *State) String() string {
@@ -112,19 +109,31 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
 }
 
 func (self *State) Next() (err error) {
-  self.successes = make(map[common.Province]bool)
+
+  /*
+     Sanitize orders.
+  */
+  self.errors = make(map[common.Province]error)
+  for prov, order := range self.orders {
+    if err := order.Sanitize(self); err != nil {
+      self.errors[prov] = err
+      delete(self.orders, prov)
+    }
+  }
 
   /*
      Replace empty orders with default order.
   */
   for prov, _ := range self.units {
     if _, _, ok := self.Order(prov); !ok {
-      self.orders[prov] = self.defaultOrderGenerator(prov)
+      if def := self.phase.DefaultOrder(prov); def != nil {
+        self.orders[prov] = def
+      }
     }
   }
 
   /*
-     Validate orders
+     Validate orders.
   */
   for prov, order := range self.orders {
     if err := order.Validate(self); err != nil {
@@ -135,6 +144,7 @@ func (self *State) Next() (err error) {
   /*
      Adjudicate orders.
   */
+  self.successes = make(map[common.Province]bool)
   for prov, _ := range self.orders {
     common.Indent(fmt.Sprintf("%v: ", prov))
     common.Logf("resolving")

@@ -96,7 +96,7 @@ func (self ErrBounce) Error() string {
   return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
-func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
+func convoyPossible(v Validator, src, dst Province, checkFleets, checkOrders bool) error {
   unit, _, ok := v.Unit(src)
   if !ok {
     return ErrMissingUnit
@@ -110,6 +110,9 @@ func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
     }
     if edgeFlags[Land] || nodeFlags[Land] {
       return false
+    }
+    if !checkFleets {
+      return true
     }
     if u, _, ok := v.Unit(name); ok && u.Type == Fleet {
       if !checkOrders {
@@ -132,13 +135,13 @@ func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
   return nil
 }
 
-func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool) (err error) {
-  if err = convoyPossible(v, src, dst, checkConvoyOrders); err == nil {
+func AnyConvoyPossible(v Validator, src, dst Province, checkFleets, checkConvoyOrders bool) (err error) {
+  if err = convoyPossible(v, src, dst, checkFleets, checkConvoyOrders); err == nil {
     return
   }
   for _, srcCoast := range v.Graph().Coasts(src) {
     for _, dstCoast := range v.Graph().Coasts(dst) {
-      if err = convoyPossible(v, srcCoast, dstCoast, checkConvoyOrders); err == nil {
+      if err = convoyPossible(v, srcCoast, dstCoast, checkFleets, checkConvoyOrders); err == nil {
         return
       }
     }
@@ -147,11 +150,11 @@ func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool) (
 }
 
 func AnySupportPossible(v Validator, src, dst Province) (err error) {
-  if err = movePossible(v, src, dst, false, false); err == nil {
+  if err = movePossible(v, src, dst, false, false, false); err == nil {
     return
   }
   for _, coast := range v.Graph().Coasts(dst) {
-    if err = movePossible(v, src, coast, false, false); err == nil {
+    if err = movePossible(v, src, coast, false, false, false); err == nil {
       return
     }
   }
@@ -161,15 +164,15 @@ func AnySupportPossible(v Validator, src, dst Province) (err error) {
 /*
 AnyMovePossible returns true if movePossible would return true for any movement between src and any coast of dst.
 */
-func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, checkConvoyOrders bool) (dstCoast Province, err error) {
+func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, checkFleets, checkConvoyOrders bool) (dstCoast Province, err error) {
   dstCoast = dst
-  if err = movePossible(v, src, dst, allowConvoy, checkConvoyOrders); err == nil {
+  if err = movePossible(v, src, dst, allowConvoy, checkFleets, checkConvoyOrders); err == nil {
     return
   }
   if lax || dst.Super() == dst {
     var options []Province
     for _, coast := range v.Graph().Coasts(dst) {
-      if err2 := movePossible(v, src, coast, allowConvoy, checkConvoyOrders); err2 == nil {
+      if err2 := movePossible(v, src, coast, allowConvoy, checkFleets, checkConvoyOrders); err2 == nil {
         options = append(options, coast)
       }
     }
@@ -191,7 +194,7 @@ It will (if allowConvoy and the need for convoying) validate the presence of fle
 
 It will (if allowConvoy, the need for convoying and resolveConvoy) validate presence of successful and relevant convoy orders along the path.
 */
-func movePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders bool) error {
+func movePossible(v Validator, src, dst Province, allowConvoy, checkFleets, checkConvoyOrders bool) error {
   if !v.Graph().Has(src) {
     return ErrInvalidSource
   }
@@ -222,7 +225,7 @@ func movePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders
   }
   if path := v.Graph().Path(src, dst, filter); path == nil || len(path) > 1 {
     if allowConvoy {
-      return AnyConvoyPossible(v, src, dst, checkConvoyOrders)
+      return AnyConvoyPossible(v, src, dst, checkFleets, checkConvoyOrders)
     }
     if path == nil {
       return ErrMissingPath

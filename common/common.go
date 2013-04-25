@@ -112,6 +112,7 @@ type Phase interface {
   Next() Phase
   Prev() Phase
   PostProcess(State)
+  DefaultOrder(Province) Adjudicator
 }
 
 type PathFilter func(n Province, edgeFlags, provFlags map[Flag]bool, sc *Nation) bool
@@ -146,6 +147,7 @@ func (self Orders) Len() int {
 type Order interface {
   Type() OrderType
   Targets() []Province
+  Sanitize(Validator) error
   Validate(Validator) error
   Execute(State)
   At() time.Time
@@ -163,8 +165,6 @@ and returns whether the Order provided Province ought to succeed.
 type BackupRule func(Resolver, Province, map[Province]bool) error
 
 type StateFilter func(n Province, o Order, u *Unit) bool
-
-type OrderGenerator func(prov Province) Adjudicator
 
 type Validator interface {
   Order(Province) (Order, Province, bool)

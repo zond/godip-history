@@ -46,26 +46,37 @@ func (self *build) Adjudicate(r dip.Resolver) error {
   return nil
 }
 
-func (self *build) Validate(v dip.Validator) error {
+func (self *build) Sanitize(v dip.Validator) error {
+  // right phase type
   if v.Phase().Type() != cla.Adjustment {
     return cla.ErrInvalidPhase
   }
+  // is there a home sc here
+  if owner := v.Graph().SC(self.targets[0]); owner == nil {
+    return cla.ErrMissingSupplyCenter
+  }
+  return nil
+}
+
+func (self *build) Validate(v dip.Validator) error {
+  me := v.Graph().SC(self.targets[0])
+  // is there an sc here, and is it mine
+  var owner dip.Nation
+  var ok bool
+  if owner, _, ok = v.SupplyCenter(self.targets[0]); !ok {
+    panic(fmt.Errorf("Should be SOME owner of %v", self.targets[0]))
+  } else if owner != *me {
+    return cla.ErrHostileSupplyCenter
+  }
+  // is there a unit here
   if _, _, ok := v.Unit(self.targets[0]); ok {
     return cla.ErrOccupiedSupplyCenter
   }
-  var me dip.Nation
-  var ok bool
-  if me, self.targets[0], ok = v.SupplyCenter(self.targets[0]); !ok {
-    return cla.ErrMissingSupplyCenter
-  }
-  if owner := v.Graph().SC(self.targets[0]); owner == nil {
-    return cla.ErrMissingSupplyCenter
-  } else if *owner != me {
-    return cla.ErrHostileSupplyCenter
-  }
-  if _, _, balance := cla.AdjustmentStatus(v, me); balance < 1 {
+  // can i build
+  if _, _, balance := cla.AdjustmentStatus(v, *me); balance < 1 {
     return cla.ErrMissingSurplus
   }
+  // can i build THIS here
   if self.typ == cla.Army && !v.Graph().Flags(self.targets[0])[cla.Land] {
     return cla.ErrIllegalUnitType
   }

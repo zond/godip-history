@@ -37,10 +37,17 @@ func (self *hold) Adjudicate(r dip.Resolver) error {
   return nil
 }
 
-func (self *hold) Validate(v dip.Validator) error {
+func (self *hold) Sanitize(v dip.Validator) error {
   if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
   }
+  if !v.Graph().Has(self.targets[0]) {
+    return cla.ErrInvalidTarget
+  }
+  return nil
+}
+
+func (self *hold) Validate(v dip.Validator) error {
   var ok bool
   if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
     return cla.ErrMissingUnit

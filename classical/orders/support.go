@@ -51,7 +51,7 @@ func (self *support) Adjudicate(r dip.Resolver) error {
       (len(self.targets) == 2 || o.Targets()[0].Super() != self.targets[2].Super()) && // not from something we support attacking
       u.Nation != unit.Nation { // not from ourselves
 
-      _, err := cla.AnyMovePossible(r, o.Targets()[0], o.Targets()[1], u.Type == cla.Army, true, true) // and legal move counting convoy success
+      _, err := cla.AnyMovePossible(r, o.Targets()[0], o.Targets()[1], u.Type == cla.Army, true, true, true) // and legal move counting convoy success
       return err == nil
     }
     return false
@@ -74,7 +74,7 @@ func (self *support) Adjudicate(r dip.Resolver) error {
   return nil
 }
 
-func (self *support) Validate(v dip.Validator) error {
+func (self *support) Sanitize(v dip.Validator) error {
   if v.Phase().Type() != cla.Movement {
     return cla.ErrInvalidPhase
   }
@@ -91,6 +91,10 @@ func (self *support) Validate(v dip.Validator) error {
   if _, self.targets[1], ok = v.Unit(self.targets[1]); !ok {
     return cla.ErrMissingSupportUnit
   }
+  return nil
+}
+
+func (self *support) Validate(v dip.Validator) error {
   if len(self.targets) == 2 {
     if err := cla.AnySupportPossible(v, self.targets[0], self.targets[1]); err != nil {
       return cla.ErrIllegalSupportPosition
@@ -102,7 +106,7 @@ func (self *support) Validate(v dip.Validator) error {
     if err := cla.AnySupportPossible(v, self.targets[0], self.targets[2]); err != nil {
       return cla.ErrIllegalSupportDestination
     }
-    if _, err := cla.AnyMovePossible(v, self.targets[1], self.targets[2], true, true, true); err != nil {
+    if _, err := cla.AnyMovePossible(v, self.targets[1], self.targets[2], true, true, true, false); err != nil {
       return cla.ErrInvalidSupportMove
     }
   }

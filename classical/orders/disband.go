@@ -69,15 +69,34 @@ func (self *disband) validateBuildPhase(v dip.Validator) error {
   return nil
 }
 
+func (self *disband) sanitizeBuildPhase(v dip.Validator) error {
+  if !v.Graph().Has(self.targets[0]) {
+    return cla.ErrInvalidTarget
+  }
+  return nil
+}
+
+func (self *disband) sanitizeRetreatPhase(v dip.Validator) error {
+  if !v.Graph().Has(self.targets[0]) {
+    return cla.ErrInvalidTarget
+  }
+  return nil
+}
+
+func (self *disband) Sanitize(v dip.Validator) error {
+  if v.Phase().Type() == cla.Adjustment {
+    return self.sanitizeBuildPhase(v)
+  } else if v.Phase().Type() == cla.Retreat {
+    return self.sanitizeRetreatPhase(v)
+  }
+  return cla.ErrInvalidPhase
+}
+
 func (self *disband) Validate(v dip.Validator) error {
   if v.Phase().Type() == cla.Adjustment {
     return self.validateBuildPhase(v)
-  } else if v.Phase().Type() == cla.Retreat {
-    return self.validateRetreatPhase(v)
-  } else {
-    return cla.ErrInvalidPhase
   }
-  return nil
+  return self.validateRetreatPhase(v)
 }
 
 func (self *disband) Execute(state dip.State) {
