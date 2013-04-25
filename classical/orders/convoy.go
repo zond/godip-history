@@ -33,7 +33,7 @@ func (self *convoy) Adjudicate(r dip.Resolver) error {
   if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return (o.Type() == cla.Move && // move
       o.Targets()[1] == self.targets[0] && // against us
-      u.Nationality != unit.Nationality && // not friendly
+      u.Nation != unit.Nation && // not friendly
       r.Resolve(p) == nil)
   }); len(breaks) > 0 {
     return cla.ErrConvoyDislodged{breaks[0]}

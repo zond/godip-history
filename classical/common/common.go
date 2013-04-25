@@ -13,14 +13,14 @@ const (
   Army  UnitType = "Army"
   Fleet UnitType = "Fleet"
 
-  England Nationality = "England"
-  France  Nationality = "France"
-  Germany Nationality = "Germany"
-  Russia  Nationality = "Russia"
-  Austria Nationality = "Austria"
-  Italy   Nationality = "Italy"
-  Turkey  Nationality = "Turkey"
-  Neutral Nationality = "Neutral"
+  England Nation = "England"
+  France  Nation = "France"
+  Germany Nation = "Germany"
+  Russia  Nation = "Russia"
+  Austria Nation = "Austria"
+  Italy   Nation = "Italy"
+  Turkey  Nation = "Turkey"
+  Neutral Nation = "Neutral"
 
   Spring Season = "Spring"
   Fall   Season = "Fall"
@@ -38,7 +38,7 @@ const (
 )
 
 var Coast = []Flag{Sea, Land}
-var Nations = []Nationality{Austria, England, France, Germany, Italy, Turkey, Russia}
+var Nations = []Nation{Austria, England, France, Germany, Italy, Turkey, Russia}
 
 var ErrInvalidSource = fmt.Errorf("ErrInvalidSource")
 var ErrInvalidDestination = fmt.Errorf("ErrInvalidDestination")
@@ -54,7 +54,7 @@ var ErrConvoyParadox = fmt.Errorf("ErrConvoyParadox")
 var ErrMissingConvoy = fmt.Errorf("ErrMissingConvoy")
 var ErrIllegalSupportPosition = fmt.Errorf("ErrIllegalSupportPosition")
 var ErrIllegalSupportDestination = fmt.Errorf("ErrIllegalSupportDestination")
-var ErrIllegalSupportDestinationNationality = fmt.Errorf("ErrIllegalSupportDestinationNationality")
+var ErrIllegalSupportDestinationNation = fmt.Errorf("ErrIllegalSupportDestinationNation")
 var ErrMissingSupportUnit = fmt.Errorf("ErrMissingSupportUnit")
 var ErrInvalidSupportMove = fmt.Errorf("ErrInvalidSupportMove")
 var ErrIllegalConvoyUnit = fmt.Errorf("ErrIllegalConvoyUnit")
@@ -104,7 +104,10 @@ func ConvoyPossible(v Validator, src, dst Province, checkOrders bool) error {
   if unit.Type != Army {
     return ErrIllegalConvoyUnit
   }
-  if path := v.Graph().Path(src, dst, func(name Province, flags map[Flag]bool, sc *Nationality) bool {
+  if path := v.Graph().Path(src, dst, func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
+    if name != src && name != dst && (edgeFlags[Land] || nodeFlags[Land]) {
+      return false
+    }
     if u := v.Unit(name); u != nil && u.Type == Fleet {
       if !checkOrders {
         return true
@@ -183,7 +186,7 @@ func MovePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders
   return nil
 }
 
-func AdjustmentStatus(v Validator, me Nationality) (builds Orders, disbands Orders, balance int) {
+func AdjustmentStatus(v Validator, me Nation) (builds Orders, disbands Orders, balance int) {
   scs := 0
   for _, nat := range v.SupplyCenters() {
     if nat == me {
@@ -193,7 +196,7 @@ func AdjustmentStatus(v Validator, me Nationality) (builds Orders, disbands Orde
 
   units := 0
   v.Find(func(p Province, o Order, u *Unit) bool {
-    if u != nil && u.Nationality == me {
+    if u != nil && u.Nation == me {
       if o.Type() == Disband {
         disbands = append(disbands, o)
       }

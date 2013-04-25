@@ -108,27 +108,54 @@ func TestMoveAdjudication(t *testing.T) {
 
 func testDATC(t *testing.T, statePair *datc.StatePair) {
   s := Blank(statePair.Before.Phase)
-  for prov, unit := range statePair.Before.Units {
-    s.SetUnit(prov, unit)
-  }
-  for prov, dislodged := range statePair.Before.Dislodgeds {
-    s.SetDislodged(prov, dislodged)
-  }
-  for prov, nation := range statePair.Before.SCs {
-    s.SetSC(prov, nation)
-  }
+  s.SetUnits(statePair.Before.Units)
+  s.SetDislodgeds(statePair.Before.Dislodgeds)
+  s.SetSupplyCenters(statePair.Before.SCs)
   for prov, order := range statePair.Before.Orders {
-    s.SetOrder(prov, order)
+    u := s.Unit(prov)
+    if u != nil && u.Nation == order.Nation {
+      s.SetOrder(prov, order.Order)
+    }
   }
   s.Next()
+  err := false
   for prov, unit := range statePair.After.Units {
     if found, ok := s.Units()[prov]; ok {
       if !found.Equal(unit) {
+        err = true
         t.Errorf("%v: Expected %v in %v, but found %v", statePair.Case, unit, prov, found)
       }
     } else {
+      err = true
       t.Errorf("%v: Expected %v in %v, but found nothing", statePair.Case, unit, prov)
     }
+  }
+  for prov, unit := range statePair.After.Dislodgeds {
+    if found, ok := s.Dislodgeds()[prov]; ok {
+      if !found.Equal(unit) {
+        err = true
+        t.Errorf("%v: Expected %v dislodged in %v, but found %v", statePair.Case, unit, prov, found)
+      }
+    } else {
+      err = true
+      t.Errorf("%v: Expected %v dislodged in %v, but found nothing", statePair.Case, unit, prov)
+    }
+  }
+  for prov, unit := range s.Units() {
+    if _, ok := statePair.After.Units[prov]; !ok {
+      err = true
+      t.Errorf("%v: Expected %v to be empty, but found %v", statePair.Case, prov, unit)
+    }
+  }
+  for prov, unit := range s.Dislodgeds() {
+    if _, ok := statePair.After.Dislodgeds[prov]; !ok {
+      err = true
+      t.Errorf("%v: Expected %v to be empty of dislodged units, but found %v", statePair.Case, prov, unit)
+    }
+  }
+  if err {
+    t.Errorf("%v: Units: %v", statePair.Case, s.Units())
+    t.Errorf("%v: Dislodgeds: %v", statePair.Case, s.Dislodgeds())
   }
 }
 
@@ -138,12 +165,12 @@ func assertDATC(t *testing.T, file string) {
     panic(err)
   }
   parser := datc.Parser{
-    Variant:           "Standard",
-    OrderParser:       DATCOrder,
-    PhaseParser:       DATCPhase,
-    NationalityParser: DATCNationality,
-    UnitTypeParser:    DATCUnitType,
-    ProvinceParser:    DATCProvince,
+    Variant:        "Standard",
+    OrderParser:    DATCOrder,
+    PhaseParser:    DATCPhase,
+    NationParser:   DATCNation,
+    UnitTypeParser: DATCUnitType,
+    ProvinceParser: DATCProvince,
   }
   parser.Parse(in, func(statePair *datc.StatePair) {
     fmt.Printf("Running %v\n", statePair.Case)

@@ -15,7 +15,7 @@ func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule, d
     orders:                make(map[common.Province]common.Adjudicator),
     units:                 make(map[common.Province]common.Unit),
     dislodgeds:            make(map[common.Province]common.Unit),
-    supplyCenters:         make(map[common.Province]common.Nationality),
+    supplyCenters:         make(map[common.Province]common.Nation),
     errors:                make(map[common.Province]error),
     dislodgers:            make(map[common.Province]common.Province),
   }
@@ -25,7 +25,7 @@ type State struct {
   orders                map[common.Province]common.Adjudicator
   units                 map[common.Province]common.Unit
   dislodgeds            map[common.Province]common.Unit
-  supplyCenters         map[common.Province]common.Nationality
+  supplyCenters         map[common.Province]common.Nation
   graph                 common.Graph
   phase                 common.Phase
   backupRule            common.BackupRule
@@ -149,7 +149,7 @@ func (self *State) SetDislodgeds(dislodgeds map[common.Province]common.Unit) *St
   return self
 }
 
-func (self *State) SetSupplyCenters(supplyCenters map[common.Province]common.Nationality) *State {
+func (self *State) SetSupplyCenters(supplyCenters map[common.Province]common.Nation) *State {
   self.supplyCenters = supplyCenters
   return self
 }
@@ -164,7 +164,7 @@ func (self *State) SetError(p common.Province, e error) {
   self.errors[p] = e
 }
 
-func (self *State) SetSC(p common.Province, n common.Nationality) {
+func (self *State) SetSC(p common.Province, n common.Nation) {
   self.supplyCenters[p] = n
 }
 
@@ -207,7 +207,7 @@ func (self *State) RemoveDislodged(prov common.Province) {
 
 // Bulk getters
 
-func (self *State) SupplyCenters() map[common.Province]common.Nationality {
+func (self *State) SupplyCenters() map[common.Province]common.Nation {
   return self.supplyCenters
 }
 
@@ -257,7 +257,7 @@ func (self *State) Unit(prov common.Province) *common.Unit {
   return nil
 }
 
-func (self *State) SupplyCenter(prov common.Province) *common.Nationality {
+func (self *State) SupplyCenter(prov common.Province) *common.Nation {
   if n, _, ok := self.findSupplyCenter(prov); ok {
     return &n
   }
@@ -330,7 +330,7 @@ func (self *State) findUnit(prov common.Province) (u common.Unit, p common.Provi
   return
 }
 
-func (self *State) findSupplyCenter(prov common.Province) (n common.Nationality, p common.Province, ok bool) {
+func (self *State) findSupplyCenter(prov common.Province) (n common.Nation, p common.Province, ok bool) {
   if n, ok = self.supplyCenters[prov]; ok {
     p = prov
     return

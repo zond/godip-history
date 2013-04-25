@@ -15,9 +15,9 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 * Each Province has one or more SubProvinces.
  * Each SubProvince has attributes, such as Sea, Land or Coast.
  * Each SubProvince has connections to other SubProvinces.
-* There are Units with UnitType and Nationality.
+* There are Units with UnitType and Nation.
  * Each unit is in one SubProvince.
-* There are SupplyCenters with Nationality.
+* There are SupplyCenters with Nation.
  * Each SupplyCenter is in one Province.
 * There are Phases with Year, Season and PhaseType.
 * Orders can vary greatly:

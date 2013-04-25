@@ -35,15 +35,15 @@ func (self *support) Targets() []dip.Province {
 func (self *support) Adjudicate(r dip.Resolver) error {
   unit := r.Unit(self.targets[0])
   if len(self.targets) == 3 {
-    if victim := r.Unit(self.targets[2]); victim != nil && victim.Nationality == unit.Nationality {
-      return cla.ErrIllegalSupportDestinationNationality
+    if victim := r.Unit(self.targets[2]); victim != nil && victim.Nation == unit.Nation {
+      return cla.ErrIllegalSupportDestinationNation
     }
   }
   if breaks, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return (o.Type() == cla.Move && // move
       o.Targets()[1] == self.targets[0] && // against us
       (len(self.targets) == 2 || o.Targets()[0] != self.targets[2]) && // not from something we support attacking
-      u.Nationality != unit.Nationality && // not friendly
+      u.Nation != unit.Nation && // not friendly
       cla.MovePossible(r, o.Targets()[0], o.Targets()[1], true, true) == nil) // and legal move counting convoy success
   }); len(breaks) > 0 {
     return cla.ErrSupportBroken{breaks[0]}

@@ -35,7 +35,7 @@ func Min(is ...int) (result int) {
 
 type UnitType string
 
-type Nationality string
+type Nation string
 
 type OrderType string
 
@@ -66,12 +66,12 @@ func (self Province) Join(n Province) (result Province) {
 }
 
 type Unit struct {
-  Type        UnitType
-  Nationality Nationality
+  Type   UnitType
+  Nation Nation
 }
 
 func (self Unit) Equal(o Unit) bool {
-  return self.Type == o.Type && self.Nationality == o.Nationality
+  return self.Type == o.Type && self.Nation == o.Nation
 }
 
 type Phase interface {
@@ -83,17 +83,17 @@ type Phase interface {
   PostProcess(State)
 }
 
-type PathFilter func(n Province, flags map[Flag]bool, sc *Nationality) bool
+type PathFilter func(n Province, edgeFlags, provFlags map[Flag]bool, sc *Nation) bool
 
 type Flag string
 
 type Graph interface {
   Has(Province) bool
   Flags(Province) map[Flag]bool
-  SC(Province) *Nationality
+  SC(Province) *Nation
   Path(src, dst Province, filter PathFilter) []Province
   Coasts(Province) []Province
-  SCs(Nationality) []Province
+  SCs(Nation) []Province
   Provinces() []Province
 }
 
@@ -138,9 +138,9 @@ type Validator interface {
   Order(Province) Order
   Unit(Province) *Unit
   Dislodged(Province) *Unit
-  SupplyCenter(Province) *Nationality
+  SupplyCenter(Province) *Nation
 
-  SupplyCenters() map[Province]Nationality
+  SupplyCenters() map[Province]Nation
 
   IsDislodger(attacker Province, victim Province) bool
   Graph() Graph
@@ -167,7 +167,7 @@ type State interface {
   RemoveUnit(Province)
 
   SetError(Province, error)
-  SetSC(Province, Nationality)
+  SetSC(Province, Nation)
   SetOrder(Province, Adjudicator)
   SetUnit(Province, Unit)
 

@@ -20,13 +20,13 @@ func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Pro
   }
   var filter dip.PathFilter
   if unit.Type == cla.Fleet {
-    filter = func(p dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
-      return flags[cla.Sea]
+    filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
+      return edgeFlags[cla.Sea] && nodeFlags[cla.Sea]
     }
   } else {
-    filter = func(p dip.Province, flags map[dip.Flag]bool, sc *dip.Nationality) bool {
+    filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
       u := s.Unit(p)
-      return flags[cla.Land] || (u != nil && u.Nationality == unit.Nationality && u.Type == cla.Fleet)
+      return (edgeFlags[cla.Land] && nodeFlags[cla.Land]) || (u != nil && u.Nation == unit.Nation && u.Type == cla.Fleet)
     }
   }
   found := false
@@ -60,12 +60,12 @@ func (self remoteUnitSlice) Less(i, j int) bool {
   return self.distances[self.provinces[i]] > self.distances[self.provinces[j]]
 }
 
-func (self *phase) sortedUnits(s dip.State, n dip.Nationality) []dip.Province {
+func (self *phase) sortedUnits(s dip.State, n dip.Nation) []dip.Province {
   provs := remoteUnitSlice{
     distances: make(map[dip.Province]int),
   }
   provs.provinces, _, _ = s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-    if u != nil && u.Nationality == n {
+    if u != nil && u.Nation == n {
       provs.distances[p] = self.shortestDistance(s, p, s.Graph().SCs(n))
       return true
     }
@@ -99,7 +99,7 @@ func (self *phase) PostProcess(s dip.State) {
     s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
       if u != nil {
         if s.Graph().SC(p) != nil {
-          s.SetSC(p, u.Nationality)
+          s.SetSC(p, u.Nation)
         }
       }
       return false

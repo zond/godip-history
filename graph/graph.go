@@ -6,14 +6,6 @@ import (
   "github.com/zond/godip/common"
 )
 
-type Connectable interface {
-  Prov(common.Province) Connectable
-  Conn(common.Province, ...common.Flag) Connectable
-  Flag([]common.Flag) Connectable
-  SC(common.Nation) Connectable
-  Done() *Graph
-}
-
 func New() *Graph {
   return &Graph{
     nodes: make(map[common.Province]*node),

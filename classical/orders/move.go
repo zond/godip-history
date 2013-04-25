@@ -13,7 +13,13 @@ func Move(source, dest dip.Province) *move {
 }
 
 type move struct {
-  targets []dip.Province
+  targets   []dip.Province
+  viaConvoy bool
+}
+
+func (self *move) ViaConvoy() *move {
+  self.viaConvoy = true
+  return self
 }
 
 func (self *move) Type() dip.OrderType {
@@ -85,10 +91,15 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 
   convoyed := false
   if unit := r.Unit(self.targets[0]); unit.Type == cla.Army {
-    if steps := r.Graph().Path(self.targets[0], self.targets[1], nil); len(steps) > 1 {
-      convoyed = true
-      if err := cla.ConvoyPossible(r, self.targets[0], self.targets[1], true); err != nil {
-        return err
+    steps := r.Graph().Path(self.targets[0], self.targets[1], nil)
+    if self.viaConvoy || len(steps) > 1 {
+      err := cla.ConvoyPossible(r, self.targets[0], self.targets[1], true)
+      if err != nil {
+        if len(steps) > 1 {
+          return err
+        }
+      } else {
+        convoyed = true
       }
     }
   }

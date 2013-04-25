@@ -5,8 +5,8 @@ import (
   "github.com/zond/godip/common"
 )
 
-func SupplyCenters() map[common.Province]common.Nationality {
-  return map[common.Province]common.Nationality{
+func SupplyCenters() map[common.Province]common.Nation {
+  return map[common.Province]common.Nation{
     "edi": England,
     "lvp": England,
     "lon": England,

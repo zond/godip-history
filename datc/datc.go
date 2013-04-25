@@ -32,30 +32,35 @@ const (
 
 func newState() *State {
   return &State{
-    SCs:        make(map[common.Province]common.Nationality),
+    SCs:        make(map[common.Province]common.Nation),
     Units:      make(map[common.Province]common.Unit),
     Dislodgeds: make(map[common.Province]common.Unit),
-    Orders:     make(map[common.Province]common.Adjudicator),
+    Orders:     make(map[common.Province]NationalizedOrder),
   }
 }
 
+type NationalizedOrder struct {
+  Order  common.Adjudicator
+  Nation common.Nation
+}
+
 type State struct {
-  SCs        map[common.Province]common.Nationality
+  SCs        map[common.Province]common.Nation
   Units      map[common.Province]common.Unit
   Dislodgeds map[common.Province]common.Unit
-  Orders     map[common.Province]common.Adjudicator
+  Orders     map[common.Province]NationalizedOrder
   Phase      common.Phase
 }
 
 func (self *State) copyFrom(o *State) {
-  for prov, unit := range self.Units {
-    o.Units[prov] = unit
+  for prov, unit := range o.Units {
+    self.Units[prov] = unit
   }
-  for prov, dislodged := range self.Dislodgeds {
-    o.Dislodgeds[prov] = dislodged
+  for prov, dislodged := range o.Dislodgeds {
+    self.Dislodgeds[prov] = dislodged
   }
-  for prov, nation := range self.SCs {
-    o.SCs[prov] = nation
+  for prov, nation := range o.SCs {
+    self.SCs[prov] = nation
   }
 }
 
@@ -78,23 +83,23 @@ func (self *StatePair) copyBeforeToAfter() {
 
 type StatePairHandler func(states *StatePair)
 
-type OrderParser func(nation common.Nationality, text string) (province common.Province, order common.Adjudicator)
+type OrderParser func(text string) (province common.Province, order common.Adjudicator)
 
 type PhaseParser func(season string, year int, typ string) common.Phase
 
-type NationalityParser func(nation string) common.Nationality
+type NationParser func(nation string) common.Nation
 
 type UnitTypeParser func(typ string) common.UnitType
 
 type ProvinceParser func(prov string) common.Province
 
 type Parser struct {
-  Variant           string
-  OrderParser       OrderParser
-  PhaseParser       PhaseParser
-  NationalityParser NationalityParser
-  UnitTypeParser    UnitTypeParser
-  ProvinceParser    ProvinceParser
+  Variant        string
+  OrderParser    OrderParser
+  PhaseParser    PhaseParser
+  NationParser   NationParser
+  UnitTypeParser UnitTypeParser
+  ProvinceParser ProvinceParser
 }
 
 const (
@@ -129,7 +134,7 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
         }
       case inPrestateSupplycenterOwners:
         if match = stateReg.FindStringSubmatch(line); match != nil {
-          statePair.Before.SCs[self.ProvinceParser(match[3])] = self.NationalityParser(match[1])
+          statePair.Before.SCs[self.ProvinceParser(match[3])] = self.NationParser(match[1])
         } else if line == prestate {
           state = inPrestate
         } else {
@@ -149,7 +154,7 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
         if match = stateReg.FindStringSubmatch(line); match != nil {
           statePair.Before.Units[self.ProvinceParser(match[3])] = common.Unit{
             self.UnitTypeParser(match[2]),
-            self.NationalityParser(match[1]),
+            self.NationParser(match[1]),
           }
         } else if line == orders {
           state = inOrders
@@ -160,7 +165,7 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
         if match = stateReg.FindStringSubmatch(line); match != nil {
           statePair.After.Units[self.ProvinceParser(match[3])] = common.Unit{
             self.UnitTypeParser(match[2]),
-            self.NationalityParser(match[1]),
+            self.NationParser(match[1]),
           }
         } else if line == end {
           handler(statePair)
@@ -175,7 +180,7 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
         if match = stateReg.FindStringSubmatch(line); match != nil {
           statePair.After.Dislodgeds[self.ProvinceParser(match[3])] = common.Unit{
             self.UnitTypeParser(match[2]),
-            self.NationalityParser(match[1]),
+            self.NationParser(match[1]),
           }
         } else if line == end {
           handler(statePair)
@@ -186,8 +191,11 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
         }
       case inOrders:
         if match = ordersReg.FindStringSubmatch(line); match != nil {
-          prov, order := self.OrderParser(self.NationalityParser(match[1]), match[2])
-          statePair.Before.Orders[prov] = order
+          prov, order := self.OrderParser(match[2])
+          statePair.Before.Orders[prov] = NationalizedOrder{
+            Order:  order,
+            Nation: self.NationParser(match[1]),
+          }
         } else if line == poststateSame {
           statePair.copyBeforeToAfter()
         } else if line == poststate {

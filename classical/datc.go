@@ -28,7 +28,7 @@ var datcSeasons = map[string]dip.Season{
   "fall":   cla.Fall,
 }
 
-var datcNationalities = map[string]dip.Nationality{
+var datcNationalities = map[string]dip.Nation{
   "england": cla.England,
   "france":  cla.France,
   "germany": cla.Germany,
@@ -76,6 +76,10 @@ var datcProvinces = map[string]dip.Province{
   "gob":            "bot",
   "ech":            "eng",
   "bul(sc)":        "bul/sc",
+  "norway":         "nwy",
+  "nwg":            "nrg",
+  "nor":            "nwy",
+  "holland":        "hol",
 }
 
 func DATCPhase(season string, year int, typ string) dip.Phase {
@@ -104,9 +108,13 @@ func DATCProvince(n string) (result dip.Province) {
 }
 
 var datcOrderTypes = map[*regexp.Regexp]func([]string) (dip.Province, dip.Adjudicator){
-  regexp.MustCompile("(?i)^(A|F)\\s+(\\S+)\\s*-\\s*(\\S+)$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
+  regexp.MustCompile("(?i)^(A|F)\\s+(\\S+)\\s*-\\s*(\\S+)(\\s+via\\s+convoy)?$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
     prov = DATCProvince(m[2])
-    order = orders.Move(DATCProvince(m[2]), DATCProvince(m[3]))
+    if m[4] == "" {
+      order = orders.Move(DATCProvince(m[2]), DATCProvince(m[3]))
+    } else {
+      order = orders.Move(DATCProvince(m[2]), DATCProvince(m[3])).ViaConvoy()
+    }
     return
   },
   regexp.MustCompile("^(?i)(A|F)\\s+(\\S+)\\s+S(UPPORTS)?\\s+(A|F)\\s+([^-\\s]+)$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
@@ -136,7 +144,7 @@ var datcOrderTypes = map[*regexp.Regexp]func([]string) (dip.Province, dip.Adjudi
   },
 }
 
-func DATCOrder(nation dip.Nationality, text string) (province dip.Province, order dip.Adjudicator) {
+func DATCOrder(text string) (province dip.Province, order dip.Adjudicator) {
   var match []string
   for reg, gen := range datcOrderTypes {
     if match = reg.FindStringSubmatch(text); match != nil {
@@ -146,7 +154,7 @@ func DATCOrder(nation dip.Nationality, text string) (province dip.Province, orde
   panic(fmt.Errorf("Unknown order text: %#v", text))
 }
 
-func DATCNationality(typ string) (result dip.Nationality) {
+func DATCNation(typ string) (result dip.Nation) {
   var ok bool
   result, ok = datcNationalities[strings.ToLower(typ)]
   if !ok {

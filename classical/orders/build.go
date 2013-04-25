@@ -68,7 +68,7 @@ func (self *build) Validate(v dip.Validator) error {
 }
 
 func (self *build) Execute(state dip.State) {
-  var me dip.Nationality
+  var me dip.Nation
   for prov, nat := range state.SupplyCenters() {
     if prov == self.targets[0] {
       me = nat

@@ -1,173 +1,173 @@
 package start
 
 import (
-  "github.com/zond/godip/classical/common"
+  c "github.com/zond/godip/classical/common"
   "github.com/zond/godip/graph"
 )
 
 func Graph() *graph.Graph {
   return graph.New().
     // nat
-    Prov("nat").Conn("nrg").Conn("cly").Conn("lvp").Conn("iri").Conn("mid").Flag(common.Sea).
+    Prov("nat").Conn("nrg", c.Sea).Conn("cly", c.Sea).Conn("lvp", c.Sea).Conn("iri", c.Sea).Conn("mid", c.Sea).Flag(c.Sea).
     // nrg
-    Prov("nrg").Conn("nat").Conn("bar").Conn("nwy").Conn("nth").Conn("edi").Conn("cly").Flag(common.Sea).
+    Prov("nrg").Conn("nat", c.Sea).Conn("bar", c.Sea).Conn("nwy", c.Sea).Conn("nth", c.Sea).Conn("edi", c.Sea).Conn("cly", c.Sea).Flag(c.Sea).
     // bar
-    Prov("bar").Conn("nrg").Conn("stp/nc").Conn("nwy").Flag(common.Sea).
+    Prov("bar").Conn("nrg", c.Sea).Conn("stp/nc", c.Sea).Conn("nwy", c.Sea).Flag(c.Sea).
     // stp/nc
-    Prov("stp/nc").Conn("nrg").Conn("bar").Conn("nwy").Flag(common.Sea).
+    Prov("stp/nc").Conn("nrg", c.Sea).Conn("bar", c.Sea).Conn("nwy", c.Sea).Flag(c.Sea).
     // stp
-    Prov("stp").Conn("fin").Conn("nwy").Conn("mos").Conn("lvn").Flag(common.Land).SC(common.Russia).
+    Prov("stp").Conn("fin", c.Land).Conn("nwy", c.Land).Conn("mos", c.Land).Conn("lvn", c.Land).Flag(c.Land).SC(c.Russia).
     // mos
-    Prov("mos").Conn("stp").Conn("sev").Conn("ukr").Conn("war").Conn("lvn").Flag(common.Land).SC(common.Russia).
+    Prov("mos").Conn("stp", c.Land).Conn("sev", c.Land).Conn("ukr", c.Land).Conn("war", c.Land).Conn("lvn", c.Land).Flag(c.Land).SC(c.Russia).
     // sev
-    Prov("sev").Conn("ukr").Conn("mos").Conn("arm").Conn("bla").Conn("rum").Flag(common.Coast...).SC(common.Russia).
+    Prov("sev").Conn("ukr", c.Land).Conn("mos", c.Land).Conn("arm", c.Coast...).Conn("bla", c.Sea).Conn("rum", c.Coast...).Flag(c.Coast...).SC(c.Russia).
     // arm
-    Prov("arm").Conn("ank").Conn("bla").Conn("sev").Conn("syr").Conn("smy").Flag(common.Coast...).
+    Prov("arm").Conn("ank", c.Coast...).Conn("bla", c.Sea).Conn("sev", c.Coast...).Conn("syr", c.Land).Conn("smy", c.Land).Flag(c.Coast...).
     // syr
-    Prov("syr").Conn("eas").Conn("smy").Conn("arm").Flag(common.Coast...).
+    Prov("syr").Conn("eas", c.Sea).Conn("smy", c.Coast...).Conn("arm", c.Land).Flag(c.Coast...).
     // eas
-    Prov("eas").Conn("ion").Conn("aeg").Conn("smy").Conn("syr").Flag(common.Sea).
+    Prov("eas").Conn("ion", c.Sea).Conn("aeg", c.Sea).Conn("smy", c.Sea).Conn("syr", c.Sea).Flag(c.Sea).
     // ion
-    Prov("ion").Conn("tun").Conn("tys").Conn("nap").Conn("alb").Conn("gre").Conn("aeg").Conn("eas").Flag(common.Sea).
+    Prov("ion").Conn("tun", c.Sea).Conn("tys", c.Sea).Conn("nap", c.Sea).Conn("alb", c.Sea).Conn("gre", c.Sea).Conn("aeg", c.Sea).Conn("eas", c.Sea).Flag(c.Sea).
     // tun
-    Prov("tun").Conn("naf").Conn("wes").Conn("tys").Conn("ion").Flag(common.Coast...).SC(common.Neutral).
+    Prov("tun").Conn("naf", c.Coast...).Conn("wes", c.Sea).Conn("tys", c.Sea).Conn("ion", c.Sea).Flag(c.Coast...).SC(c.Neutral).
     // naf
-    Prov("naf").Conn("mid").Conn("wes").Conn("tun").Flag(common.Coast...).
+    Prov("naf").Conn("mid", c.Sea).Conn("wes", c.Sea).Conn("tun", c.Sea).Flag(c.Coast...).
     // mid
-    Prov("mid").Conn("nat").Conn("iri").Conn("eng").Conn("bre").Conn("gas").Conn("spa/nc").Conn("por").Conn("spa/sc").Conn("naf").Flag(common.Sea).
+    Prov("mid").Conn("nat", c.Sea).Conn("iri", c.Sea).Conn("eng", c.Sea).Conn("bre", c.Sea).Conn("gas", c.Sea).Conn("spa/nc", c.Sea).Conn("por", c.Sea).Conn("spa/sc", c.Sea).Conn("naf", c.Sea).Flag(c.Sea).
     // iri
-    Prov("iri").Conn("nat").Conn("lvp").Conn("wal").Conn("eng").Conn("mid").Flag(common.Sea).
+    Prov("iri").Conn("nat", c.Sea).Conn("lvp", c.Sea).Conn("wal", c.Sea).Conn("eng", c.Sea).Conn("mid", c.Sea).Flag(c.Sea).
     // lvp
-    Prov("lvp").Conn("iri").Conn("nat").Conn("cly").Conn("edi").Conn("yor").Conn("wal").Flag(common.Coast...).SC(common.England).
+    Prov("lvp").Conn("iri", c.Sea).Conn("nat", c.Sea).Conn("cly", c.Coast...).Conn("edi", c.Land).Conn("yor", c.Land).Conn("wal", c.Coast...).Flag(c.Coast...).SC(c.England).
     // cly
-    Prov("cly").Conn("nat").Conn("nrg").Conn("edi").Conn("lvp").Flag(common.Coast...).
+    Prov("cly").Conn("nat", c.Sea).Conn("nrg", c.Sea).Conn("edi", c.Coast...).Conn("lvp", c.Coast...).Flag(c.Coast...).
     // edi
-    Prov("edi").Conn("cly").Conn("nrg").Conn("nth").Conn("yor").Conn("lvp").Flag(common.Coast...).SC(common.England).
+    Prov("edi").Conn("cly", c.Coast...).Conn("nrg", c.Sea).Conn("nth", c.Sea).Conn("yor", c.Coast...).Conn("lvp", c.Land).Flag(c.Coast...).SC(c.England).
     // nth
-    Prov("nth").Conn("edi").Conn("nrg").Conn("nwy").Conn("ska").Conn("den").Conn("hel").Conn("hel").Conn("hol").Conn("bel").Conn("lon").Conn("yor").Flag(common.Sea).
+    Prov("nth").Conn("edi", c.Sea).Conn("nrg", c.Sea).Conn("nwy", c.Sea).Conn("ska", c.Sea).Conn("den", c.Sea).Conn("hel", c.Sea).Conn("hel", c.Sea).Conn("hol", c.Sea).Conn("bel", c.Sea).Conn("lon", c.Sea).Conn("yor", c.Sea).Flag(c.Sea).
     // nwy
-    Prov("nwy").Conn("nth").Conn("nrg").Conn("bar").Conn("stp/nc").Conn("stp").Conn("fin").Conn("swe").Conn("ska").Flag(common.Coast...).SC(common.Neutral).
+    Prov("nwy").Conn("nth", c.Sea).Conn("nrg", c.Sea).Conn("bar", c.Sea).Conn("stp/nc", c.Coast...).Conn("stp", c.Land).Conn("fin", c.Land).Conn("swe", c.Coast...).Conn("ska", c.Sea).Flag(c.Coast...).SC(c.Neutral).
     // stp/sc
-    Prov("stp/sc").Conn("bot").Conn("fin").Conn("lvn").Flag(common.Sea).
+    Prov("stp/sc").Conn("bot", c.Sea).Conn("fin", c.Sea).Conn("lvn", c.Sea).Flag(c.Sea).
     // lvn
-    Prov("lvn").Conn("bal").Conn("bot").Conn("stp/sc").Conn("mos").Conn("war").Conn("pru").Flag(common.Coast...).
+    Prov("lvn").Conn("bal", c.Sea).Conn("bot", c.Sea).Conn("stp/sc", c.Coast...).Conn("mos", c.Land).Conn("war", c.Land).Conn("pru", c.Land).Flag(c.Coast...).
     // war
-    Prov("war").Conn("sil").Conn("pru").Conn("lvn").Conn("mos").Conn("ukr").Conn("gal").Flag(common.Land).SC(common.Russia).
+    Prov("war").Conn("sil", c.Land).Conn("pru", c.Land).Conn("lvn", c.Land).Conn("mos", c.Land).Conn("ukr", c.Land).Conn("gal", c.Land).Flag(c.Land).SC(c.Russia).
     // ukr
-    Prov("ukr").Conn("war").Conn("mos").Conn("sev").Conn("rum").Conn("gal").Flag(common.Land).
+    Prov("ukr").Conn("war", c.Land).Conn("mos", c.Land).Conn("sev", c.Land).Conn("rum", c.Land).Conn("gal", c.Land).Flag(c.Land).
     // bla
-    Prov("bla").Conn("bul/ec").Conn("rum").Conn("sev").Conn("arm").Conn("ank").Conn("con").Flag(common.Sea).
+    Prov("bla").Conn("bul/ec", c.Sea).Conn("rum", c.Sea).Conn("sev", c.Sea).Conn("arm", c.Sea).Conn("ank", c.Sea).Conn("con").Flag(c.Sea).
     // ank
-    Prov("ank").Conn("con").Conn("bla").Conn("arm").Conn("smy").Flag(common.Coast...).SC(common.Turkey).
+    Prov("ank").Conn("con", c.Coast...).Conn("bla", c.Sea).Conn("arm", c.Coast...).Conn("smy", c.Land).Flag(c.Coast...).SC(c.Turkey).
     // smy
-    Prov("smy").Conn("aeg").Conn("con").Conn("ank").Conn("arm").Conn("syr").Conn("eas").Flag(common.Coast...).SC(common.Turkey).
+    Prov("smy").Conn("aeg", c.Sea).Conn("con", c.Coast...).Conn("ank", c.Land).Conn("arm", c.Land).Conn("syr", c.Coast...).Conn("eas", c.Sea).Flag(c.Coast...).SC(c.Turkey).
     // aeg
-    Prov("aeg").Conn("ion").Conn("gre").Conn("bul/sc").Conn("con").Conn("smy").Flag(common.Sea).
+    Prov("aeg").Conn("ion", c.Sea).Conn("gre", c.Sea).Conn("bul/sc", c.Sea).Conn("con", c.Sea).Conn("smy", c.Sea).Flag(c.Sea).
     // gre
-    Prov("gre").Conn("ion").Conn("alb").Conn("ser").Conn("bul").Conn("bul/sc").Conn("aeg").Flag(common.Coast...).SC(common.Neutral).
+    Prov("gre").Conn("ion", c.Coast...).Conn("alb", c.Coast...).Conn("ser", c.Land).Conn("bul", c.Land).Conn("bul/sc", c.Sea).Conn("aeg", c.Sea).Flag(c.Coast...).SC(c.Neutral).
     // nap
-    Prov("nap").Conn("tys").Conn("rom").Conn("apu").Conn("ion").Flag(common.Coast...).SC(common.Italy).
+    Prov("nap").Conn("tys", c.Sea).Conn("rom", c.Coast...).Conn("apu", c.Coast...).Conn("ion", c.Sea).Flag(c.Coast...).SC(c.Italy).
     // tys
-    Prov("tys").Conn("wes").Conn("gol").Conn("tus").Conn("rom").Conn("nap").Conn("ion").Conn("tun").Flag(common.Sea).
+    Prov("tys").Conn("wes", c.Sea).Conn("gol", c.Sea).Conn("tus", c.Sea).Conn("rom", c.Sea).Conn("nap", c.Sea).Conn("ion", c.Sea).Conn("tun", c.Sea).Flag(c.Sea).
     // wes
-    Prov("wes").Conn("mid").Conn("spa/sc").Conn("gol").Conn("tys").Conn("tun").Conn("naf").Flag(common.Sea).
+    Prov("wes").Conn("mid", c.Sea).Conn("spa/sc", c.Sea).Conn("gol", c.Sea).Conn("tys", c.Sea).Conn("tun", c.Sea).Conn("naf", c.Sea).Flag(c.Sea).
     // spa/sc
-    Prov("spa/sc").Conn("mid").Conn("por").Conn("mar").Conn("gol").Conn("wes").Flag(common.Sea).
+    Prov("spa/sc").Conn("mid", c.Sea).Conn("por", c.Sea).Conn("mar", c.Sea).Conn("gol", c.Sea).Conn("wes", c.Sea).Flag(c.Sea).
     // spa
-    Prov("spa").Conn("por").Conn("gas").Conn("mar").Flag(common.Land).SC(common.Neutral).
+    Prov("spa").Conn("por", c.Land).Conn("gas", c.Land).Conn("mar", c.Land).Flag(c.Land).SC(c.Neutral).
     // spa/nc
-    Prov("spa/nc").Conn("por").Conn("mid").Conn("gas").Flag(common.Sea).
+    Prov("spa/nc").Conn("por", c.Sea).Conn("mid", c.Sea).Conn("gas", c.Sea).Flag(c.Sea).
     // por
-    Prov("por").Conn("mid").Conn("spa/nc").Conn("spa").Conn("spa/sc").Flag(common.Coast...).SC(common.Neutral).
+    Prov("por").Conn("mid", c.Sea).Conn("spa/nc", c.Sea).Conn("spa", c.Land).Conn("spa/sc", c.Sea).Flag(c.Coast...).SC(c.Neutral).
     // gas
-    Prov("gas").Conn("mid").Conn("bre").Conn("par").Conn("bur").Conn("mar").Conn("spa").Conn("spa/nc").Flag(common.Coast...).
+    Prov("gas").Conn("mid", c.Sea).Conn("bre", c.Coast...).Conn("par", c.Land).Conn("bur", c.Land).Conn("mar", c.Land).Conn("spa", c.Land).Conn("spa/nc", c.Sea).Flag(c.Coast...).
     // bre
-    Prov("bre").Conn("mid").Conn("eng").Conn("pic").Conn("par").Conn("gas").Flag(common.Coast...).SC(common.France).
+    Prov("bre").Conn("mid", c.Sea).Conn("eng", c.Sea).Conn("pic", c.Coast...).Conn("par", c.Land).Conn("gas", c.Coast...).Flag(c.Coast...).SC(c.France).
     // eng
-    Prov("eng").Conn("mid").Conn("iri").Conn("wal").Conn("lon").Conn("nth").Conn("bel").Conn("pic").Conn("bre").Flag(common.Sea).
+    Prov("eng").Conn("mid", c.Sea).Conn("iri", c.Sea).Conn("wal", c.Sea).Conn("lon", c.Sea).Conn("nth", c.Sea).Conn("bel", c.Sea).Conn("pic", c.Sea).Conn("bre", c.Sea).Flag(c.Sea).
     // wal
-    Prov("wal").Conn("iri").Conn("lvp").Conn("yor").Conn("lon").Conn("eng").Flag(common.Coast...).
+    Prov("wal").Conn("iri", c.Sea).Conn("lvp", c.Coast...).Conn("yor", c.Land).Conn("lon", c.Coast...).Conn("eng", c.Sea).Flag(c.Coast...).
     // yor
-    Prov("yor").Conn("lvp").Conn("edi").Conn("nth").Conn("lon").Conn("wal").Flag(common.Coast...).
+    Prov("yor").Conn("lvp", c.Land).Conn("edi", c.Coast...).Conn("nth", c.Sea).Conn("lon", c.Coast...).Conn("wal", c.Land).Flag(c.Coast...).
     // ska
-    Prov("ska").Conn("nth").Conn("nwy").Conn("swe").Conn("den").Flag(common.Sea).
+    Prov("ska").Conn("nth", c.Sea).Conn("nwy", c.Sea).Conn("swe", c.Sea).Conn("den", c.Sea).Flag(c.Sea).
     // swe
-    Prov("swe").Conn("ska").Conn("nwy").Conn("fin").Conn("bot").Conn("bal").Conn("den").Flag(common.Coast...).SC(common.Neutral).
+    Prov("swe").Conn("ska", c.Sea).Conn("nwy", c.Coast...).Conn("fin", c.Coast...).Conn("bot", c.Sea).Conn("bal", c.Sea).Conn("den", c.Coast...).Flag(c.Coast...).SC(c.Neutral).
     // fin
-    Prov("fin").Conn("bot").Conn("swe").Conn("stp").Conn("stp/sc").Flag(common.Coast...).
+    Prov("fin").Conn("bot", c.Sea).Conn("swe", c.Coast...).Conn("stp", c.Land).Conn("stp/sc", c.Sea).Flag(c.Coast...).
     // bot
-    Prov("bot").Conn("swe").Conn("fin").Conn("stp/sc").Conn("lvn").Conn("bal").Flag(common.Sea).
+    Prov("bot").Conn("swe", c.Sea).Conn("fin", c.Sea).Conn("stp/sc", c.Sea).Conn("lvn", c.Sea).Conn("bal", c.Sea).Flag(c.Sea).
     // bal
-    Prov("bal").Conn("den").Conn("swe").Conn("bot").Conn("lvn").Conn("pru").Conn("ber").Conn("kie").Flag(common.Sea).
+    Prov("bal").Conn("den", c.Sea).Conn("swe", c.Sea).Conn("bot", c.Sea).Conn("lvn", c.Sea).Conn("pru", c.Sea).Conn("ber", c.Sea).Conn("kie", c.Sea).Flag(c.Sea).
     // pru
-    Prov("pru").Conn("ber").Conn("bal").Conn("lvn").Conn("war").Conn("sil").Flag(common.Coast...).
+    Prov("pru").Conn("ber", c.Land).Conn("bal", c.Land).Conn("lvn", c.Land).Conn("war", c.Land).Conn("sil", c.Land).Flag(c.Coast...).
     // sil
-    Prov("sil").Conn("mun").Conn("ber").Conn("pru").Conn("war").Conn("gal").Conn("boh").Flag(common.Land).
+    Prov("sil").Conn("mun", c.Land).Conn("ber", c.Land).Conn("pru", c.Land).Conn("war", c.Land).Conn("gal", c.Land).Conn("boh", c.Land).Flag(c.Land).
     // gal
-    Prov("gal").Conn("boh").Conn("sil").Conn("war").Conn("ukr").Conn("rum").Conn("bud").Conn("vie").Flag(common.Land).
+    Prov("gal").Conn("boh", c.Land).Conn("sil", c.Land).Conn("war", c.Land).Conn("ukr", c.Land).Conn("rum", c.Land).Conn("bud", c.Land).Conn("vie", c.Land).Flag(c.Land).
     // rum
-    Prov("rum").Conn("bud").Conn("gal").Conn("ukr").Conn("sev").Conn("bul/ec").Conn("bul").Conn("ser").Flag(common.Coast...).SC(common.Neutral).
+    Prov("rum").Conn("bud", c.Land).Conn("gal", c.Land).Conn("ukr", c.Land).Conn("sev", c.Coast...).Conn("bul/ec", c.Sea).Conn("bul", c.Land).Conn("ser", c.Land).Flag(c.Coast...).SC(c.Neutral).
     // bul/ec
-    Prov("bul/ec").Conn("rum").Conn("bla").Conn("con").Flag(common.Sea).
+    Prov("bul/ec").Conn("rum", c.Sea).Conn("bla", c.Sea).Conn("con", c.Sea).Flag(c.Sea).
     // bul
-    Prov("bul").Conn("ser").Conn("rum").Conn("con").Conn("gre").Flag(common.Land).SC(common.Neutral).
+    Prov("bul").Conn("ser", c.Land).Conn("rum", c.Land).Conn("con", c.Land).Conn("gre", c.Land).Flag(c.Land).SC(c.Neutral).
     // con
-    Prov("con").Conn("bul/sc").Conn("bul").Conn("bul/ec").Conn("bla").Conn("ank").Conn("smy").Conn("aeg").Flag(common.Coast...).SC(common.Turkey).
+    Prov("con").Conn("bul/sc", c.Sea).Conn("bul", c.Land).Conn("bul/ec", c.Sea).Conn("bla", c.Sea).Conn("ank", c.Coast...).Conn("smy", c.Coast...).Conn("aeg", c.Sea).Flag(c.Coast...).SC(c.Turkey).
     // bul/sc
-    Prov("bul/sc").Conn("gre").Conn("con").Conn("aeg").Flag(common.Sea).
+    Prov("bul/sc").Conn("gre", c.Sea).Conn("con", c.Sea).Conn("aeg", c.Sea).Flag(c.Sea).
     // ser
-    Prov("ser").Conn("tri").Conn("bud").Conn("rum").Conn("bul").Conn("gre").Conn("alb").Flag(common.Land).SC(common.Neutral).
+    Prov("ser").Conn("tri", c.Land).Conn("bud", c.Land).Conn("rum", c.Land).Conn("bul", c.Land).Conn("gre", c.Land).Conn("alb", c.Land).Flag(c.Land).SC(c.Neutral).
     // alb
-    Prov("alb").Conn("adr").Conn("tri").Conn("ser").Conn("gre").Conn("ion").Flag(common.Coast...).
+    Prov("alb").Conn("adr", c.Sea).Conn("tri", c.Coast...).Conn("ser", c.Land).Conn("gre", c.Coast...).Conn("ion", c.Sea).Flag(c.Coast...).
     // adr
-    Prov("adr").Conn("ven").Conn("tri").Conn("alb").Conn("ion").Conn("apu").Flag(common.Sea).
+    Prov("adr").Conn("ven", c.Sea).Conn("tri", c.Sea).Conn("alb", c.Sea).Conn("ion", c.Sea).Conn("apu", c.Sea).Flag(c.Sea).
     // apu
-    Prov("apu").Conn("rom").Conn("ven").Conn("adr").Conn("ion").Conn("nap").Flag(common.Coast...).
+    Prov("apu").Conn("rom", c.Coast...).Conn("ven", c.Coast...).Conn("adr", c.Sea).Conn("ion", c.Sea).Conn("nap", c.Coast...).Flag(c.Coast...).
     // rom
-    Prov("rom").Conn("tys").Conn("tus").Conn("ven").Conn("apu").Conn("nap").Flag(common.Coast...).SC(common.Italy).
+    Prov("rom").Conn("tys", c.Sea).Conn("tus", c.Coast...).Conn("ven", c.Land).Conn("apu", c.Land).Conn("nap", c.Coast...).Flag(c.Coast...).SC(c.Italy).
     // tus
-    Prov("tus").Conn("gol").Conn("pie").Conn("ven").Conn("rom").Conn("tys").Flag(common.Coast...).
+    Prov("tus").Conn("gol", c.Sea).Conn("pie", c.Coast...).Conn("ven", c.Land).Conn("rom", c.Coast...).Conn("tys", c.Sea).Flag(c.Coast...).
     // gol
-    Prov("gol").Conn("spa/sc").Conn("mar").Conn("pie").Conn("tus").Conn("tys").Conn("wes").Flag(common.Sea).
+    Prov("gol").Conn("spa/sc", c.Sea).Conn("mar", c.Sea).Conn("pie", c.Sea).Conn("tus", c.Sea).Conn("tys", c.Sea).Conn("wes", c.Sea).Flag(c.Sea).
     // mar
-    Prov("mar").Conn("spa").Conn("gas").Conn("bur").Conn("pie").Conn("gol").Conn("spa/sc").Flag(common.Coast...).SC(common.France).
+    Prov("mar").Conn("spa", c.Land).Conn("gas", c.Land).Conn("bur", c.Land).Conn("pie", c.Coast...).Conn("gol", c.Sea).Conn("spa/sc", c.Sea).Flag(c.Coast...).SC(c.France).
     // bur
-    Prov("bur").Conn("par").Conn("pic").Conn("bel").Conn("ruh").Conn("mun").Conn("mar").Conn("gas").Flag(common.Land).
+    Prov("bur").Conn("par", c.Land).Conn("pic", c.Land).Conn("bel", c.Land).Conn("ruh", c.Land).Conn("mun", c.Land).Conn("mar", c.Land).Conn("gas", c.Land).Flag(c.Land).
     // par
-    Prov("par").Conn("bre").Conn("pic").Conn("bur").Conn("gas").Flag(common.Land).SC(common.France).
+    Prov("par").Conn("bre", c.Land).Conn("pic", c.Land).Conn("bur", c.Land).Conn("gas", c.Land).Flag(c.Land).SC(c.France).
     // pic
-    Prov("pic").Conn("bre").Conn("eng").Conn("bel").Conn("bur").Conn("par").Flag(common.Coast...).
+    Prov("pic").Conn("bre", c.Coast...).Conn("eng", c.Sea).Conn("bel", c.Coast...).Conn("bur", c.Land).Conn("par", c.Land).Flag(c.Coast...).
     // lon
-    Prov("lon").Conn("wal").Conn("yor").Conn("nth").Conn("eng").Flag(common.Coast...).SC(common.England).
+    Prov("lon").Conn("wal", c.Coast...).Conn("yor", c.Coast...).Conn("nth", c.Sea).Conn("eng", c.Sea).Flag(c.Coast...).SC(c.England).
     // bel
-    Prov("bel").Conn("pic").Conn("eng").Conn("nth").Conn("hol").Conn("ruh").Conn("bur").Flag(common.Coast...).SC(common.Neutral).
+    Prov("bel").Conn("pic", c.Coast...).Conn("eng", c.Sea).Conn("nth", c.Sea).Conn("hol", c.Coast...).Conn("ruh", c.Land).Conn("bur", c.Land).Flag(c.Coast...).SC(c.Neutral).
     // hol
-    Prov("hol").Conn("nth").Conn("hel").Conn("kie").Conn("ruh").Conn("bel").Flag(common.Coast...).SC(common.Neutral).
+    Prov("hol").Conn("nth", c.Sea).Conn("hel", c.Sea).Conn("kie", c.Coast...).Conn("ruh", c.Land).Conn("bel", c.Coast...).Flag(c.Coast...).SC(c.Neutral).
     // hel
-    Prov("hel").Conn("nth").Conn("den").Conn("kie").Conn("hol").Flag(common.Sea).
+    Prov("hel").Conn("nth", c.Sea).Conn("den", c.Sea).Conn("kie", c.Sea).Conn("hol", c.Sea).Flag(c.Sea).
     // den
-    Prov("den").Conn("hel").Conn("nth").Conn("ska").Conn("swe").Conn("bal").Conn("kie").Flag(common.Coast...).SC(common.Neutral).
+    Prov("den").Conn("hel", c.Sea).Conn("nth", c.Sea).Conn("ska", c.Sea).Conn("swe", c.Coast...).Conn("bal", c.Sea).Conn("kie", c.Coast...).Flag(c.Coast...).SC(c.Neutral).
     // ber
-    Prov("ber").Conn("kie").Conn("bal").Conn("pru").Conn("sil").Conn("mun").Flag(common.Coast...).SC(common.Germany).
+    Prov("ber").Conn("kie", c.Coast...).Conn("bal", c.Sea).Conn("pru", c.Coast...).Conn("sil", c.Land).Conn("mun", c.Land).Flag(c.Coast...).SC(c.Germany).
     // mun
-    Prov("mun").Conn("bur").Conn("ruh").Conn("kie").Conn("ber").Conn("sil").Conn("boh").Conn("tyr").Flag(common.Land).SC(common.Germany).
+    Prov("mun").Conn("bur", c.Land).Conn("ruh", c.Land).Conn("kie", c.Land).Conn("ber", c.Land).Conn("sil", c.Land).Conn("boh", c.Land).Conn("tyr", c.Land).Flag(c.Land).SC(c.Germany).
     // boh
-    Prov("boh").Conn("mun").Conn("sil").Conn("gal").Conn("vie").Conn("tyr").Flag(common.Land).
+    Prov("boh").Conn("mun", c.Land).Conn("sil", c.Land).Conn("gal", c.Land).Conn("vie", c.Land).Conn("tyr", c.Land).Flag(c.Land).
     // vie
-    Prov("vie").Conn("tyr").Conn("boh").Conn("gal").Conn("bud").Conn("tri").Flag(common.Land).SC(common.Austria).
+    Prov("vie").Conn("tyr", c.Land).Conn("boh", c.Land).Conn("gal", c.Land).Conn("bud", c.Land).Conn("tri", c.Land).Flag(c.Land).SC(c.Austria).
     // bud
-    Prov("bud").Conn("tri").Conn("vie").Conn("gal").Conn("rum").Conn("ser").Flag(common.Land).SC(common.Austria).
+    Prov("bud").Conn("tri", c.Land).Conn("vie", c.Land).Conn("gal", c.Land).Conn("rum", c.Land).Conn("ser", c.Land).Flag(c.Land).SC(c.Austria).
     // tri
-    Prov("tri").Conn("adr").Conn("ven").Conn("tyr").Conn("vie").Conn("bud").Conn("ser").Conn("alb").Flag(common.Coast...).SC(common.Austria).
+    Prov("tri").Conn("adr", c.Sea).Conn("ven", c.Coast...).Conn("tyr", c.Land).Conn("vie", c.Land).Conn("bud", c.Land).Conn("ser", c.Land).Conn("alb", c.Coast...).Flag(c.Coast...).SC(c.Austria).
     // ven
-    Prov("ven").Conn("tus").Conn("pie").Conn("tyr").Conn("tri").Conn("adr").Conn("apu").Conn("rom").Flag(common.Coast...).SC(common.Italy).
+    Prov("ven").Conn("tus", c.Land).Conn("pie", c.Land).Conn("tyr", c.Land).Conn("tri", c.Coast...).Conn("adr", c.Sea).Conn("apu", c.Coast...).Conn("rom", c.Land).Flag(c.Coast...).SC(c.Italy).
     // pie
-    Prov("pie").Conn("mar").Conn("tyr").Conn("ven").Conn("tus").Conn("gol").Flag(common.Coast...).
+    Prov("pie").Conn("mar", c.Coast...).Conn("tyr", c.Land).Conn("ven", c.Land).Conn("tus", c.Coast...).Conn("gol", c.Sea).Flag(c.Coast...).
     // ruh
-    Prov("ruh").Conn("bel").Conn("hol").Conn("kie").Conn("mun").Conn("bur").Flag(common.Land).
+    Prov("ruh").Conn("bel", c.Land).Conn("hol", c.Land).Conn("kie", c.Land).Conn("mun", c.Land).Conn("bur", c.Land).Flag(c.Land).
     // tyr
-    Prov("tyr").Conn("mun").Conn("boh").Conn("vie").Conn("tri").Conn("ven").Conn("pie").Flag(common.Land).
+    Prov("tyr").Conn("mun", c.Land).Conn("boh", c.Land).Conn("vie", c.Land).Conn("tri", c.Land).Conn("ven", c.Land).Conn("pie", c.Land).Flag(c.Land).
     // kie
-    Prov("kie").Conn("hol").Conn("hel").Conn("den").Conn("bal").Conn("ber").Conn("mun").Conn("ruh").Flag(common.Coast...).SC(common.Germany).
+    Prov("kie").Conn("hol", c.Coast...).Conn("hel", c.Sea).Conn("den", c.Coast...).Conn("bal", c.Sea).Conn("ber", c.Coast...).Conn("mun", c.Land).Conn("ruh", c.Land).Flag(c.Coast...).SC(c.Germany).
     Done()
 }
