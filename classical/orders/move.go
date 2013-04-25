@@ -98,7 +98,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   if unit, _, ok := r.Unit(self.targets[0]); ok && unit.Type == cla.Army {
     steps := r.Graph().Path(self.targets[0], self.targets[1], nil)
     if self.viaConvoy || len(steps) > 1 {
-      err := cla.ConvoyPossible(r, self.targets[0], self.targets[1], true)
+      err := cla.AnyConvoyPossible(r, self.targets[0], self.targets[1], true)
       if err != nil {
         if len(steps) > 1 {
           return err
@@ -139,7 +139,8 @@ func (self *move) validateRetreatPhase(v dip.Validator) error {
     return cla.ErrInvalidPhase
   }
   var ok bool
-  if _, self.targets[0], ok = v.Dislodged(self.targets[0]); !ok {
+  var unit dip.Unit
+  if unit, self.targets[0], ok = v.Dislodged(self.targets[0]); !ok {
     return cla.ErrMissingUnit
   }
   if _, _, ok = v.Unit(self.targets[1]); ok {
@@ -149,7 +150,7 @@ func (self *move) validateRetreatPhase(v dip.Validator) error {
     return cla.ErrIllegalRetreat
   }
   var err error
-  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], false, false); err != nil {
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, false, false); err != nil {
     return err
   }
   return nil
@@ -168,7 +169,7 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
     return cla.ErrMissingUnit
   }
   var err error
-  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true); err != nil {
+  if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true, false); err != nil {
     return err
   }
   return nil

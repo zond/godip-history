@@ -66,7 +66,7 @@ func (self *convoy) Validate(v dip.Validator) error {
   if _, _, ok := v.Unit(self.targets[1]); !ok {
     return cla.ErrMissingConvoyee
   }
-  if cla.MovePossible(v, self.targets[1], self.targets[2], true, false) != nil {
+  if err := cla.AnyConvoyPossible(v, self.targets[1], self.targets[2], false); err != nil {
     return cla.ErrIllegalConvoyMove
   }
   return nil

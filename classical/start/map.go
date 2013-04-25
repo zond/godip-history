@@ -28,7 +28,7 @@ func Graph() *graph.Graph {
     // eas
     Prov("eas").Conn("ion", c.Sea).Conn("aeg", c.Sea).Conn("smy", c.Sea).Conn("syr", c.Sea).Flag(c.Sea).
     // ion
-    Prov("ion").Conn("tun", c.Sea).Conn("tys", c.Sea).Conn("nap", c.Sea).Conn("alb", c.Sea).Conn("gre", c.Sea).Conn("aeg", c.Sea).Conn("eas", c.Sea).Flag(c.Sea).
+    Prov("ion").Conn("adr", c.Sea).Conn("tun", c.Sea).Conn("tys", c.Sea).Conn("nap", c.Sea).Conn("alb", c.Sea).Conn("gre", c.Sea).Conn("aeg", c.Sea).Conn("eas", c.Sea).Flag(c.Sea).
     // tun
     Prov("tun").Conn("naf", c.Coast...).Conn("wes", c.Sea).Conn("tys", c.Sea).Conn("ion", c.Sea).Flag(c.Coast...).SC(c.Neutral).
     // naf
