@@ -160,10 +160,26 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
     }
   }
   if err {
-    t.Errorf("%v: Orders: %v", statePair.Case, statePair.Before.Orders)
-    t.Errorf("%v: Units: %v", statePair.Case, s.Units())
-    t.Errorf("%v: Dislodgeds: %v", statePair.Case, s.Dislodgeds())
-    t.Errorf("%v: Errors: %v", statePair.Case, s.Errors())
+    t.Errorf("%v: ### Units:", statePair.Case)
+    for prov, unit := range statePair.Before.Units {
+      t.Errorf("%v: %v %v", statePair.Case, prov, unit)
+    }
+    t.Errorf("%v: ### Orders:", statePair.Case)
+    for _, order := range statePair.Before.Orders {
+      t.Errorf("%v: %v", statePair.Case, order.Order)
+    }
+    t.Errorf("%v: ### Units after:", statePair.Case)
+    for prov, unit := range s.Units() {
+      t.Errorf("%v: %v %v", statePair.Case, prov, unit)
+    }
+    t.Errorf("%v: ### Dislodged after:", statePair.Case)
+    for prov, unit := range s.Dislodgeds() {
+      t.Errorf("%v: %v %v", statePair.Case, prov, unit)
+    }
+    t.Errorf("%v: ### Errors:", statePair.Case)
+    for prov, err := range s.Errors() {
+      t.Errorf("%v: %v %v", statePair.Case, prov, err)
+    }
     t.Fatalf("%v failed", statePair.Case)
   }
 }

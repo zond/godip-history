@@ -86,12 +86,24 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   dip.Logf("%v: attackStrength: %v", self, attackStrength)
 
   // competing moves for the same destination
-  _, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+  _, competingOrders, competingUnits := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
     return o != nil && u != nil && o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
   })
-  for _, competingOrder := range competingOrders {
-    if self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1])+1 >= attackStrength {
-      return cla.ErrBounce{competingOrder.Targets()[0]}
+  for index, competingOrder := range competingOrders {
+    if as := self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1]) + 1; as >= attackStrength {
+      if as > attackStrength {
+        return cla.ErrBounce{competingOrder.Targets()[0]}
+      } else if as == attackStrength {
+        dip.Indent(fmt.Sprintf("D(%v):", competingOrder.Targets()[0]))
+        if dislodgers := cla.Dislodgers(r, competingOrder.Targets()[0], competingUnits[index].Nation); len(dislodgers) == 0 {
+          dip.Logf("F")
+          dip.DeIndent()
+          return cla.ErrBounce{competingOrder.Targets()[0]}
+        } else {
+          dip.Logf("%v", dislodgers)
+          dip.DeIndent()
+        }
+      }
     }
   }
 
@@ -99,19 +111,23 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
   if unit, _, ok := r.Unit(self.targets[0]); ok && unit.Type == cla.Army {
     steps := r.Graph().Path(self.targets[0], self.targets[1], nil)
     if self.viaConvoy || len(steps) > 1 {
+      dip.Indent(fmt.Sprintf("C(%v):", self.targets))
       err := cla.AnyConvoyPossible(r, self.targets[0], self.targets[1], true)
       if err != nil {
+        dip.Logf("%v", err)
+        dip.DeIndent()
         if len(steps) > 1 {
           return err
         }
       } else {
+        dip.Logf("T")
+        dip.DeIndent()
         convoyed = true
       }
     }
   }
 
   if atDest, _, ok := r.Order(self.targets[1]); ok {
-    dip.Logf("found %v at dest", atDest)
     if !convoyed && atDest.Type() == cla.Move && atDest.Targets()[1] == self.targets[0] { // head to head
       as := self.calcAttackSupport(r, atDest.Targets()[0], atDest.Targets()[1]) + 1
       dip.Logf("%v: attackStrength: %v", atDest, as)

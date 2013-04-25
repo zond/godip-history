@@ -21,6 +21,7 @@ otherwise a BackupRule will be invoced.
 Make sure never to call Order#Adjudicate from another Order! Only call Resolver#Resolve from Orders.
 */
 func (self *resolver) Resolve(prov common.Province) (err error) {
+  common.Indent(fmt.Sprintf("R(%v):", prov))
   var ok bool
   if !self.State.successes[prov] { // Already resolved
     if err, ok = self.State.errors[prov]; !ok { // Already found error
@@ -42,5 +43,11 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
       }
     }
   }
+  if err != nil {
+    common.Logf("%v", err)
+  } else {
+    common.Logf("T")
+  }
+  common.DeIndent()
   return
 }

@@ -138,16 +138,11 @@ func (self *State) Next() (err error) {
   */
   self.successes = make(map[common.Province]bool)
   for prov, _ := range self.orders {
-    common.Indent(fmt.Sprintf("%v: ", prov))
-    common.Logf("resolving")
     if err := self.resolver().Resolve(prov); err == nil {
-      common.Logf("succeeded")
       self.successes[prov] = true
     } else {
-      common.Logf("failed: %v", err)
       self.errors[prov] = err
     }
-    common.DeIndent()
   }
 
   /*

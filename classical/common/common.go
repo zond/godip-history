@@ -96,6 +96,18 @@ func (self ErrBounce) Error() string {
   return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
+func Dislodgers(r Resolver, prov Province, nat Nation) []Province {
+  dislodgers, _, _ := r.Find(func(p Province, o Order, u *Unit) bool {
+    return o != nil && // is an order
+      u != nil && // is a unit
+      o.Type() == Move && // move
+      o.Targets()[1].Super() == prov.Super() && // against us
+      u.Nation != nat && // not from ourselves
+      r.Resolve(p) == nil // and it succeeded
+  })
+  return dislodgers
+}
+
 func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
   unit, _, ok := v.Unit(src)
   if !ok {
