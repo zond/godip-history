@@ -23,6 +23,7 @@ BackupRule will make sets of only Move orders succeed, while orders with at leas
 Any other alternative will cause a panic.
 */
 func BackupRule(resolver dip.Resolver, prov dip.Province, deps map[dip.Province]bool) error {
+	dip.Logf("Calling backup rule for %v depending on %v", prov, deps)
 	only_moves := true
 	convoys := false
 	for prov, _ := range deps {

@@ -95,17 +95,18 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 	if unit.Type == cla.Army {
 		steps := r.Graph().Path(self.targets[0], self.targets[1], nil)
 		if self.viaConvoy || len(steps) > 1 {
-			dip.Indent(fmt.Sprintf("C(%v):", self.targets))
+			dip.Logf("Conv(%v)", self.targets)
+			dip.Indent("  ")
 			err := cla.AnyConvoyPossible(r, self.targets[0], self.targets[1], true)
 			if err != nil {
-				dip.Logf("%v", err)
 				dip.DeIndent()
+				dip.Logf("%v", err)
 				if len(steps) > 1 {
 					return err
 				}
 			} else {
-				dip.Logf("T")
 				dip.DeIndent()
+				dip.Logf("T")
 				convoyed = true
 			}
 		}
@@ -114,6 +115,39 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 	var myForbiddenSupporters []dip.Nation
 	opposingForbiddenSupporters := []dip.Nation{
 		unit.Nation,
+	}
+
+	// competing moves for the same destination
+	_, competingOrders, competingUnits := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+		return o != nil && u != nil && o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
+	})
+	for index, competingOrder := range competingOrders {
+		myForbiddenSupporters = append(myForbiddenSupporters, competingUnits[index].Nation)
+		attackStrength := self.calcAttackSupport(r, self.targets[0], self.targets[1], myForbiddenSupporters) + 1
+		myForbiddenSupporters = myForbiddenSupporters[:len(myForbiddenSupporters)-1]
+		dip.Logf("%v:vs %v: %v", self, competingOrder, attackStrength)
+		if as := self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], opposingForbiddenSupporters) + 1; as >= attackStrength {
+			dip.Logf("H2HDisl(%v)", self.targets[1])
+			dip.Indent("  ")
+			if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+				res := o != nil && // is an order
+					u != nil && // is a unit
+					o.Type() == cla.Move && // move
+					o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
+					o.Targets()[0].Super() == self.targets[1].Super() && // is from our destination
+					u.Nation != competingUnits[index].Nation && // not from themselves
+					r.Resolve(p) == nil // and it succeeded
+				return res
+			}); len(dislodgers) == 0 {
+				dip.DeIndent()
+				dip.Logf("F")
+				dip.Logf("%v:vs %v: %v", competingOrder, self, as)
+				return cla.ErrBounce{competingOrder.Targets()[0]}
+			} else {
+				dip.DeIndent()
+				dip.Logf("%v", dislodgers)
+			}
+		}
 	}
 
 	// at destination
@@ -130,9 +164,15 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 				return cla.ErrBounce{self.targets[1]}
 			}
 		} else if order.Type() == cla.Move { // attack against something that moves away
+			dip.Logf("Esc(%v)", order.Targets()[0])
+			dip.Indent("  ")
 			if err := r.Resolve(prov); err == nil {
+				dip.DeIndent()
+				dip.Logf("T")
 				myForbiddenSupporters = myForbiddenSupporters[:len(myForbiddenSupporters)-1]
 			} else {
+				dip.DeIndent()
+				dip.Logf("%v", err)
 				if victim.Nation == unit.Nation || 1 >= attackStrength {
 					return cla.ErrBounce{self.targets[1]}
 				}
@@ -146,17 +186,12 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 		}
 	}
 
-	// competing moves for the same destination
-	_, competingOrders, competingUnits := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-		return o != nil && u != nil && o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
-	})
 	for index, competingOrder := range competingOrders {
 		myForbiddenSupporters = append(myForbiddenSupporters, competingUnits[index].Nation)
 		attackStrength := self.calcAttackSupport(r, self.targets[0], self.targets[1], myForbiddenSupporters) + 1
 		myForbiddenSupporters = myForbiddenSupporters[:len(myForbiddenSupporters)-1]
 		dip.Logf("%v:vs %v: %v", self, competingOrder, attackStrength)
 		if as := self.calcAttackSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], opposingForbiddenSupporters) + 1; as >= attackStrength {
-			dip.Indent(fmt.Sprintf("D(%v):", competingOrder.Targets()[0]))
 			if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 				res := o != nil && // is an order
 					u != nil && // is a unit
@@ -167,11 +202,8 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 					r.Resolve(p) == nil // and it succeeded
 				return res
 			}); len(dislodgers) == 0 {
-				dip.DeIndent()
 				dip.Logf("%v:vs %v: %v", competingOrder, self, as)
 				return cla.ErrBounce{competingOrder.Targets()[0]}
-			} else {
-				dip.DeIndent()
 			}
 		}
 	}
