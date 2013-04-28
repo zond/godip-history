@@ -20,6 +20,10 @@ type support struct {
 	targets []dip.Province
 }
 
+func (self *support) Flags() map[dip.Flag]bool {
+	return nil
+}
+
 func (self *support) String() string {
 	return fmt.Sprintf("%v %v %v", self.targets[0], cla.Support, self.targets[1:])
 }

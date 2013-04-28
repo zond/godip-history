@@ -25,6 +25,10 @@ func (self *build) Type() dip.OrderType {
 	return cla.Build
 }
 
+func (self *build) Flags() map[dip.Flag]bool {
+	return nil
+}
+
 func (self *build) String() string {
 	return fmt.Sprintf("%v %v %v", self.targets[0], cla.Build, self.typ)
 }

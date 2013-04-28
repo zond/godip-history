@@ -21,6 +21,10 @@ func (self *convoy) String() string {
 	return fmt.Sprintf("%v %v %v", self.targets[0], cla.Convoy, self.targets[1:])
 }
 
+func (self *convoy) Flags() map[dip.Flag]bool {
+	return nil
+}
+
 func (self *convoy) At() time.Time {
 	return time.Now()
 }

@@ -27,6 +27,10 @@ func (self *disband) Type() dip.OrderType {
 	return cla.Disband
 }
 
+func (self *disband) Flags() map[dip.Flag]bool {
+	return nil
+}
+
 func (self *disband) Targets() []dip.Province {
 	return self.targets
 }

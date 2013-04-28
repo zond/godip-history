@@ -1,40 +1,42 @@
 package common
 
 import (
-  "fmt"
-  . "github.com/zond/godip/common"
-  "sort"
+	"fmt"
+	. "github.com/zond/godip/common"
+	"sort"
 )
 
 const (
-  Sea  Flag = "Sea"
-  Land Flag = "Land"
+	Sea  Flag = "Sea"
+	Land Flag = "Land"
 
-  Army  UnitType = "Army"
-  Fleet UnitType = "Fleet"
+	Army  UnitType = "Army"
+	Fleet UnitType = "Fleet"
 
-  England Nation = "England"
-  France  Nation = "France"
-  Germany Nation = "Germany"
-  Russia  Nation = "Russia"
-  Austria Nation = "Austria"
-  Italy   Nation = "Italy"
-  Turkey  Nation = "Turkey"
-  Neutral Nation = "Neutral"
+	England Nation = "England"
+	France  Nation = "France"
+	Germany Nation = "Germany"
+	Russia  Nation = "Russia"
+	Austria Nation = "Austria"
+	Italy   Nation = "Italy"
+	Turkey  Nation = "Turkey"
+	Neutral Nation = "Neutral"
 
-  Spring Season = "Spring"
-  Fall   Season = "Fall"
+	Spring Season = "Spring"
+	Fall   Season = "Fall"
 
-  Movement   PhaseType = "Movement"
-  Retreat    PhaseType = "Retreat"
-  Adjustment PhaseType = "Adjustment"
+	Movement   PhaseType = "Movement"
+	Retreat    PhaseType = "Retreat"
+	Adjustment PhaseType = "Adjustment"
 
-  Build   OrderType = "Build"
-  Move    OrderType = "Move"
-  Hold    OrderType = "Hold"
-  Convoy  OrderType = "Convoy"
-  Support OrderType = "Support"
-  Disband OrderType = "Disband"
+	Build   OrderType = "Build"
+	Move    OrderType = "Move"
+	Hold    OrderType = "Hold"
+	Convoy  OrderType = "Convoy"
+	Support OrderType = "Support"
+	Disband OrderType = "Disband"
+
+	ViaConvoy Flag = "C"
 )
 
 var Coast = []Flag{Sea, Land}
@@ -73,113 +75,113 @@ var ErrForcedDisband = fmt.Errorf("ErrForcedDisband")
 var ErrHostileSupplyCenter = fmt.Errorf("ErrHostileSupplyCenter")
 
 type ErrConvoyDislodged struct {
-  Province Province
+	Province Province
 }
 
 func (self ErrConvoyDislodged) Error() string {
-  return fmt.Sprintf("ErrConvoyDislodged:%v", self.Province)
+	return fmt.Sprintf("ErrConvoyDislodged:%v", self.Province)
 }
 
 type ErrSupportBroken struct {
-  Province Province
+	Province Province
 }
 
 func (self ErrSupportBroken) Error() string {
-  return fmt.Sprintf("ErrSupportBroken:%v", self.Province)
+	return fmt.Sprintf("ErrSupportBroken:%v", self.Province)
 }
 
 type ErrBounce struct {
-  Province Province
+	Province Province
 }
 
 func (self ErrBounce) Error() string {
-  return fmt.Sprintf("ErrBounce:%v", self.Province)
+	return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
 func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
-  unit, _, ok := v.Unit(src)
-  if !ok {
-    return ErrMissingUnit
-  }
-  if unit.Type != Army {
-    return ErrIllegalConvoyUnit
-  }
-  if path := v.Graph().Path(src, dst, func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
-    if name.Contains(src) || name.Contains(dst) {
-      return true
-    }
-    if nodeFlags[Land] {
-      return false
-    }
-    if u, _, ok := v.Unit(name); ok && u.Type == Fleet {
-      if !checkOrders {
-        return true
-      }
-      if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
-        if r, ok := v.(Resolver); ok {
-          if err := r.Resolve(prov); err == nil {
-            return true
-          }
-        } else {
-          return true
-        }
-      }
-    }
-    return false
-  }); path == nil {
-    return ErrMissingConvoyPath
-  }
-  return nil
+	unit, _, ok := v.Unit(src)
+	if !ok {
+		return ErrMissingUnit
+	}
+	if unit.Type != Army {
+		return ErrIllegalConvoyUnit
+	}
+	if path := v.Graph().Path(src, dst, func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
+		if name.Contains(src) || name.Contains(dst) {
+			return true
+		}
+		if nodeFlags[Land] {
+			return false
+		}
+		if u, _, ok := v.Unit(name); ok && u.Type == Fleet {
+			if !checkOrders {
+				return true
+			}
+			if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
+				if r, ok := v.(Resolver); ok {
+					if err := r.Resolve(prov); err == nil {
+						return true
+					}
+				} else {
+					return true
+				}
+			}
+		}
+		return false
+	}); path == nil {
+		return ErrMissingConvoyPath
+	}
+	return nil
 }
 
 func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool) (err error) {
-  if err = convoyPossible(v, src, dst, checkConvoyOrders); err == nil {
-    return
-  }
-  for _, srcCoast := range v.Graph().Coasts(src) {
-    for _, dstCoast := range v.Graph().Coasts(dst) {
-      if err = convoyPossible(v, srcCoast, dstCoast, checkConvoyOrders); err == nil {
-        return
-      }
-    }
-  }
-  return
+	if err = convoyPossible(v, src, dst, checkConvoyOrders); err == nil {
+		return
+	}
+	for _, srcCoast := range v.Graph().Coasts(src) {
+		for _, dstCoast := range v.Graph().Coasts(dst) {
+			if err = convoyPossible(v, srcCoast, dstCoast, checkConvoyOrders); err == nil {
+				return
+			}
+		}
+	}
+	return
 }
 
 func AnySupportPossible(v Validator, src, dst Province) (err error) {
-  if err = movePossible(v, src, dst, false, false); err == nil {
-    return
-  }
-  for _, coast := range v.Graph().Coasts(dst) {
-    if err = movePossible(v, src, coast, false, false); err == nil {
-      return
-    }
-  }
-  return
+	if err = movePossible(v, src, dst, false, false); err == nil {
+		return
+	}
+	for _, coast := range v.Graph().Coasts(dst) {
+		if err = movePossible(v, src, coast, false, false); err == nil {
+			return
+		}
+	}
+	return
 }
 
 /*
 AnyMovePossible returns true if movePossible would return true for any movement between src and any coast of dst.
 */
 func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, checkConvoyOrders bool) (dstCoast Province, err error) {
-  dstCoast = dst
-  if err = movePossible(v, src, dst, allowConvoy, checkConvoyOrders); err == nil {
-    return
-  }
-  if lax || dst.Super() == dst {
-    var options []Province
-    for _, coast := range v.Graph().Coasts(dst) {
-      if err2 := movePossible(v, src, coast, allowConvoy, checkConvoyOrders); err2 == nil {
-        options = append(options, coast)
-      }
-    }
-    if len(options) > 0 {
-      if lax || len(options) == 1 {
-        dstCoast, err = options[0], nil
-      }
-    }
-  }
-  return
+	dstCoast = dst
+	if err = movePossible(v, src, dst, allowConvoy, checkConvoyOrders); err == nil {
+		return
+	}
+	if lax || dst.Super() == dst {
+		var options []Province
+		for _, coast := range v.Graph().Coasts(dst) {
+			if err2 := movePossible(v, src, coast, allowConvoy, checkConvoyOrders); err2 == nil {
+				options = append(options, coast)
+			}
+		}
+		if len(options) > 0 {
+			if lax || len(options) == 1 {
+				dstCoast, err = options[0], nil
+			}
+		}
+	}
+	return
 }
 
 /*
@@ -192,82 +194,111 @@ It will (if allowConvoy and the need for convoying) validate the presence of fle
 It will (if allowConvoy, the need for convoying and resolveConvoy) validate presence of successful and relevant convoy orders along the path.
 */
 func movePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders bool) error {
-  if !v.Graph().Has(src) {
-    return ErrInvalidSource
-  }
-  if !v.Graph().Has(dst) {
-    return ErrInvalidDestination
-  }
-  unit, _, ok := v.Unit(src)
-  if !ok {
-    return ErrMissingUnit
-  }
-  var filter PathFilter
-  if unit.Type == Army {
-    if !v.Graph().Flags(dst)[Land] {
-      return ErrIllegalDestination
-    }
-    filter = func(p Province, ef, nf map[Flag]bool, sc *Nation) bool {
-      return ef[Land] && nf[Land]
-    }
-  } else if unit.Type == Fleet {
-    if !v.Graph().Flags(dst)[Sea] {
-      return ErrIllegalDestination
-    }
-    filter = func(p Province, ef, nf map[Flag]bool, sc *Nation) bool {
-      return ef[Sea] && nf[Sea]
-    }
-  } else {
-    panic(fmt.Errorf("Unknown unit type %v", unit.Type))
-  }
-  if path := v.Graph().Path(src, dst, filter); path == nil || len(path) > 1 {
-    if allowConvoy {
-      return AnyConvoyPossible(v, src, dst, checkConvoyOrders)
-    }
-    if path == nil {
-      return ErrMissingPath
-    } else {
-      return ErrIllegalDistance
-    }
-  }
-  return nil
+	if !v.Graph().Has(src) {
+		return ErrInvalidSource
+	}
+	if !v.Graph().Has(dst) {
+		return ErrInvalidDestination
+	}
+	unit, _, ok := v.Unit(src)
+	if !ok {
+		return ErrMissingUnit
+	}
+	var filter PathFilter
+	if unit.Type == Army {
+		if !v.Graph().Flags(dst)[Land] {
+			return ErrIllegalDestination
+		}
+		filter = func(p Province, ef, nf map[Flag]bool, sc *Nation) bool {
+			return ef[Land] && nf[Land]
+		}
+	} else if unit.Type == Fleet {
+		if !v.Graph().Flags(dst)[Sea] {
+			return ErrIllegalDestination
+		}
+		filter = func(p Province, ef, nf map[Flag]bool, sc *Nation) bool {
+			return ef[Sea] && nf[Sea]
+		}
+	} else {
+		panic(fmt.Errorf("Unknown unit type %v", unit.Type))
+	}
+	if path := v.Graph().Path(src, dst, filter); path == nil || len(path) > 1 {
+		if allowConvoy {
+			return AnyConvoyPossible(v, src, dst, checkConvoyOrders)
+		}
+		if path == nil {
+			return ErrMissingPath
+		} else {
+			return ErrIllegalDistance
+		}
+	}
+	return nil
 }
 
 func AdjustmentStatus(v Validator, me Nation) (builds Orders, disbands Orders, balance int) {
-  scs := 0
-  for prov, nat := range v.SupplyCenters() {
-    if nat == me {
-      scs += 1
-      if order, _, ok := v.Order(prov); ok && order.Type() == Build {
-        builds = append(builds, order)
-      }
-    }
-  }
+	scs := 0
+	for prov, nat := range v.SupplyCenters() {
+		if nat == me {
+			scs += 1
+			if order, _, ok := v.Order(prov); ok && order.Type() == Build {
+				builds = append(builds, order)
+			}
+		}
+	}
 
-  units := 0
-  for prov, unit := range v.Units() {
-    if unit.Nation == me {
-      units += 1
-      if order, _, ok := v.Order(prov); ok && order.Type() == Disband {
-        disbands = append(disbands, order)
-      }
-    }
-  }
+	units := 0
+	for prov, unit := range v.Units() {
+		if unit.Nation == me {
+			units += 1
+			if order, _, ok := v.Order(prov); ok && order.Type() == Disband {
+				disbands = append(disbands, order)
+			}
+		}
+	}
 
-  sort.Sort(builds)
-  sort.Sort(disbands)
+	sort.Sort(builds)
+	sort.Sort(disbands)
 
-  change := scs - units
-  if change > 0 {
-    disbands = nil
-    builds = builds[:Max(0, Min(len(builds)-1, change))]
-  } else if change < 0 {
-    builds = nil
-    disbands = disbands[:Max(0, Min(len(disbands)-1, change))]
-  } else {
-    builds = nil
-    disbands = nil
-  }
+	change := scs - units
+	if change > 0 {
+		disbands = nil
+		builds = builds[:Max(0, Min(len(builds)-1, change))]
+	} else if change < 0 {
+		builds = nil
+		disbands = disbands[:Max(0, Min(len(disbands)-1, change))]
+	} else {
+		builds = nil
+		disbands = nil
+	}
 
-  return
+	return
+}
+
+func IsConvoyed(r Resolver, order Order) (result bool, err error) {
+	if order.Type() != Move {
+		panic(fmt.Errorf("%v is not a Move order", order))
+	}
+
+	unit, _, _ := r.Unit(order.Targets()[0])
+	// is convoyed?
+	if unit.Type == Army {
+		steps := r.Graph().Path(order.Targets()[0], order.Targets()[1], nil)
+		if order.Flags()[ViaConvoy] || len(steps) > 1 {
+			Logf("Conv(%v)", order)
+			Indent("  ")
+			err = AnyConvoyPossible(r, order.Targets()[0], order.Targets()[1], true)
+			if err != nil {
+				DeIndent()
+				Logf("%v", err)
+				if len(steps) == 1 {
+					err = nil
+				}
+			} else {
+				DeIndent()
+				Logf("T")
+				result = true
+			}
+		}
+	}
+	return
 }

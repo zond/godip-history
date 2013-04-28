@@ -80,6 +80,12 @@ var datcProvinces = map[string]dip.Province{
 	"nwg":            "nrg",
 	"nor":            "nwy",
 	"holland":        "hol",
+	"ruhr":           "ruh",
+	"silesia":        "sil",
+	"berlin":         "ber",
+	"denmark":        "den",
+	"baltic":         "bal",
+	"prussia":        "pru",
 }
 
 func DATCPhase(season string, year int, typ string) dip.Phase {

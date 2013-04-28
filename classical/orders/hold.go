@@ -21,6 +21,10 @@ func (self *hold) String() string {
 	return fmt.Sprintf("%v %v", self.targets[0], cla.Hold)
 }
 
+func (self *hold) Flags() map[dip.Flag]bool {
+	return nil
+}
+
 func (self *hold) Type() dip.OrderType {
 	return cla.Hold
 }

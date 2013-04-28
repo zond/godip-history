@@ -32,6 +32,7 @@ func (self *movement) prepare(s *State) {
 	} else {
 		s.RemoveUnit(self.src)
 	}
+	common.Logf("Lifted %v from %v", self.unit, self.src)
 }
 
 func (self *movement) execute(s *State) {
@@ -39,8 +40,10 @@ func (self *movement) execute(s *State) {
 		s.RemoveUnit(prov)
 		s.SetDislodged(prov, dislodged)
 		s.dislodgers[prov] = self.src
+		common.Logf("Dislodged %v from %v", dislodged, self.dst)
 	}
 	s.SetUnit(self.dst, self.unit)
+	common.Logf("Dropped %v in %v", self.unit, self.dst)
 }
 
 type State struct {

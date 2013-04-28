@@ -128,6 +128,7 @@ func (self *phase) PostProcess(s dip.State) {
 			}
 			if !hasRetreat {
 				s.RemoveDislodged(prov)
+				dip.Logf("Removing %v since it has no retreat", prov)
 			}
 		}
 	}

@@ -163,13 +163,14 @@ type Order interface {
 	Type() OrderType
 	Targets() []Province
 	Validate(Validator) error
-	Execute(State)
 	At() time.Time
+	Flags() map[Flag]bool
 }
 
 type Adjudicator interface {
 	Order
 	Adjudicate(Resolver) error
+	Execute(State)
 }
 
 /*
