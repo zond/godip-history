@@ -1373,7 +1373,7 @@ POSTSTATE
 	Germany: F bal
 	Russia:  A war
 	Russia:  A lvn
-	# Italy: the Dislodged prussian unit has no retreats, and is destroyed
+	# Italy: the Dislodged prun unit has no retreats, and is destroyed
 END
 
 
@@ -1745,10 +1745,10 @@ PRESTATE
 	France:  A mun 
 	France:  A sil
 	Germany: A ber 
-	Germany: F Denmark
+	Germany: F den
 	Germany: F hel
-	Russia:  F Baltic 
-	Russia:  A Prussia
+	Russia:  F bal 
+	Russia:  A pru
 ORDERS
 	England: F hol Supports A ruh - kie
 	England: A ruh - kie
@@ -1756,10 +1756,10 @@ ORDERS
 	France:  A mun Supports A kie - ber
 	France:  A sil Supports A kie - ber
 	Germany: A ber - kie
-	Germany: F Denmark Supports A ber - kie
+	Germany: F den Supports A ber - kie
 	Germany: F hel Supports A ber - kie
-	Russia:  F Baltic Sea Supports A Prussia - ber
-	Russia:  A Prussia - ber
+	Russia:  F bal Supports A pru - ber
+	Russia:  A pru - ber
 POSTSTATE_SAME
 END
 
@@ -2885,7 +2885,7 @@ END
 CASE 6.G.14. TEST CASE, BOUNCE BY CONVOY TO ADJACENT PLACE
 PRESTATE
 	England: A nwy
-	England: F Denmark
+	England: F den
 	England: F Finland
 	France:  F nwywegian Sea
 	France:  F nth
@@ -2894,7 +2894,7 @@ PRESTATE
 	Russia:  F Barents Sea
 ORDERS
 	England: A nwy - Sweden
-	England: F Denmark Supports A nwy - Sweden
+	England: F den Supports A nwy - Sweden
 	England: F Finland Supports A nwy - Sweden
 	France:  F nwywegian Sea - nwy
 	France:  F nth Supports F nwywegian Sea - nwy
@@ -2903,7 +2903,7 @@ ORDERS
 	Russia:  F Barents Sea Supports A Sweden - nwy
 POSTSTATE
 	England: A Sweden
-	England: F Denmark
+	England: F den
 	England: F Finland
 	France:  F nwywegian Sea
 	France:  F nth
@@ -2941,24 +2941,24 @@ END
 CASE 6.G.16. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING BY CONVOY
 PRESTATE
 	England: A nwy
-	England: A Denmark
-	England: F Baltic Sea
+	England: A den
+	England: F bal
 	England: F nth
 	Russia:  A Sweden
 	Russia:  F Skagerrak
 	Russia:  F nwywegian Sea
 ORDERS
 	England: A nwy - Sweden
-	England: A Denmark Supports A nwy - Sweden
-	England: F Baltic Sea Supports A nwy - Sweden
+	England: A den Supports A nwy - Sweden
+	England: F bal Supports A nwy - Sweden
 	England: F nth - nwy
 	Russia:  A Sweden - nwy via Convoy
 	Russia:  F Skagerrak Convoys A Sweden - nwy
 	Russia:  F nwywegian Sea Supports A Sweden - nwy
 POSTSTATE
 	England: A Sweden
-	England: A Denmark
-	England: F Baltic Sea
+	England: A den
+	England: F bal
 	England: F nth
 	Russia:  A nwy
 	Russia:  F Skagerrak
@@ -2969,24 +2969,24 @@ END
 CASE 6.G.17. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING OVER LAND
 PRESTATE
 	England: A nwy
-	England: A Denmark
-	England: F Baltic Sea
+	England: A den
+	England: F bal
 	England: F Skagerrak
 	England: F nth
 	Russia:  A Sweden
 	Russia:  F nwywegian
 ORDERS
 	England: A nwy - Sweden via Convoy
-	England: A Denmark Supports A nwy - Sweden
-	England: F Baltic Sea Supports A nwy - Sweden
+	England: A den Supports A nwy - Sweden
+	England: F bal Supports A nwy - Sweden
 	England: F Skagerrak Convoys A nwy - Sweden
 	England: F nth - nwy
 	Russia:  A Sweden - nwy
 	Russia:  F nwywegian Sea Supports A Sweden - nwy
 POSTSTATE
 	England: A Sweden
-	England: A Denmark
-	England: F Baltic Sea
+	England: A den
+	England: F bal
 	England: F Skagerrak
 	England: F nth
 	Russia:  A nwy
