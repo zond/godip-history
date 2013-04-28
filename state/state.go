@@ -1,7 +1,6 @@
 package state
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/zond/godip/common"
 )
@@ -54,30 +53,15 @@ type State struct {
 	graph         common.Graph
 	phase         common.Phase
 	backupRule    common.BackupRule
-	errors        map[common.Province]error
+	resolutions   map[common.Province]error
 	dislodgers    map[common.Province]common.Province
 	movements     []*movement
-	successes     map[common.Province]bool
-}
-
-func (self *State) String() string {
-	buf := new(bytes.Buffer)
-	fmt.Fprintln(buf, self.graph)
-	fmt.Fprintln(buf, "SC", self.supplyCenters)
-	fmt.Fprintln(buf, "Units", self.units)
-	fmt.Fprintln(buf, "Dislodgeds", self.dislodgeds)
-	fmt.Fprintln(buf, "Phase", self.phase)
-	fmt.Fprintln(buf, "Orders", self.orders)
-	fmt.Fprintln(buf, "Errors", self.errors)
-	return string(buf.Bytes())
 }
 
 func (self *State) resolver() *resolver {
 	return &resolver{
-		State:     self,
-		resolving: make(map[common.Province]bool),
-		visited:   make(map[common.Province]bool),
-		guesses:   make(map[common.Province]error),
+		State:   self,
+		guesses: make(map[common.Province]error),
 	}
 }
 
@@ -118,20 +102,20 @@ func (self *State) Next() (err error) {
 	/*
 	   Sanitize orders.
 	*/
-	self.errors = make(map[common.Province]error)
+	self.resolutions = make(map[common.Province]error)
 	for prov, order := range self.orders {
 		if err := order.Validate(self); err != nil {
-			self.errors[prov] = err
+			self.resolutions[prov] = err
 			delete(self.orders, prov)
-			common.Logf("deleted %v due to %v", prov, err)
+			common.Logf("Deleted %v due to %v", prov, err)
 		}
 	}
 
 	/*
-	   Replace empty orders with default order.
+		Add hold to units missing orders.
 	*/
 	for prov, _ := range self.units {
-		if _, _, ok := self.Order(prov); !ok {
+		if _, ok := self.orders[prov]; !ok {
 			if def := self.phase.DefaultOrder(prov); def != nil {
 				self.orders[prov] = def
 			}
@@ -141,13 +125,9 @@ func (self *State) Next() (err error) {
 	/*
 	   Adjudicate orders.
 	*/
-	self.successes = make(map[common.Province]bool)
 	for prov, _ := range self.orders {
-		if err := self.resolver().Resolve(prov); err == nil {
-			self.successes[prov] = true
-		} else {
-			self.errors[prov] = err
-		}
+		err := self.resolver().Resolve(prov)
+		self.resolutions[prov] = err
 	}
 
 	/*
@@ -155,7 +135,7 @@ func (self *State) Next() (err error) {
 	*/
 	self.movements = nil
 	for prov, order := range self.orders {
-		if _, ok := self.errors[prov]; !ok {
+		if err, ok := self.resolutions[prov]; ok && err == nil {
 			order.Execute(self)
 		}
 	}
@@ -220,16 +200,12 @@ func (self *State) ClearDislodgers() {
 
 // Singular setters
 
-func (self *State) SetError(p common.Province, e error) {
-	self.errors[p] = e
+func (self *State) SetResolution(p common.Province, err error) {
+	self.resolutions[p] = err
 }
 
 func (self *State) SetSC(p common.Province, n common.Nation) {
 	self.supplyCenters[p] = n
-}
-
-func (self *State) Errors() map[common.Province]error {
-	return self.errors
 }
 
 func (self *State) SetDislodged(prov common.Province, unit common.Unit) {
@@ -266,6 +242,10 @@ func (self *State) RemoveDislodged(prov common.Province) {
 }
 
 // Bulk getters
+
+func (self *State) Resolutions() map[common.Province]error {
+	return self.resolutions
+}
 
 func (self *State) SupplyCenters() map[common.Province]common.Nation {
 	return self.supplyCenters

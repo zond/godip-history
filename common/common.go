@@ -162,11 +162,7 @@ type Adjudicator interface {
 	Execute(State)
 }
 
-/*
-The BackupRule takes a state, a Province causing an inconsistency and set of all Provinces visited while finding the inconsistency, 
-and returns whether the Order provided Province ought to succeed.
-*/
-type BackupRule func(Resolver, Province, map[Province]bool) error
+type BackupRule func(State, []Province)
 
 type StateFilter func(n Province, o Order, u *Unit) bool
 
@@ -201,7 +197,7 @@ type State interface {
 	RemoveDislodged(Province)
 	RemoveUnit(Province)
 
-	SetError(Province, error)
+	SetResolution(Province, error)
 	SetSC(Province, Nation)
 	SetOrder(Province, Adjudicator)
 	SetUnit(Province, Unit)

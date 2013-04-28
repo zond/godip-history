@@ -22,12 +22,12 @@ func Start() *state.State {
 BackupRule will make sets of only Move orders succeed, while orders with at least one Convoy all fail.
 Any other alternative will cause a panic.
 */
-func BackupRule(resolver dip.Resolver, prov dip.Province, deps map[dip.Province]bool) error {
-	dip.Logf("Calling backup rule for %v depending on %v", prov, deps)
+func BackupRule(state dip.State, deps []dip.Province) {
+	dip.Logf("Calling backup rule for %v", deps)
 	only_moves := true
 	convoys := false
-	for prov, _ := range deps {
-		if order, _, ok := resolver.Order(prov); ok {
+	for _, prov := range deps {
+		if order, _, ok := state.Order(prov); ok {
 			if order.Type() != cla.Move {
 				only_moves = false
 			}
@@ -38,10 +38,19 @@ func BackupRule(resolver dip.Resolver, prov dip.Province, deps map[dip.Province]
 	}
 
 	if only_moves {
-		return nil
+		for _, prov := range deps {
+			state.SetResolution(prov, nil)
+		}
+		return
 	}
 	if convoys {
-		return cla.ErrConvoyParadox
+		for _, prov := range deps {
+			if order, _, ok := state.Order(prov); ok && order.Type() == cla.Convoy {
+				state.SetResolution(prov, cla.ErrConvoyParadox)
+			}
+		}
+		return
 	}
+
 	panic(fmt.Errorf("Unknown circular dependency between %v", deps))
 }

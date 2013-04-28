@@ -90,7 +90,7 @@ func (self *phase) PostProcess(s dip.State) {
 		s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 			if _, _, ok := s.Dislodged(p); ok {
 				s.RemoveDislodged(p)
-				s.SetError(p, cla.ErrForcedDisband)
+				s.SetResolution(p, cla.ErrForcedDisband)
 			}
 			return false
 		})
@@ -111,7 +111,7 @@ func (self *phase) PostProcess(s dip.State) {
 			if balance < 0 {
 				for _, prov := range self.sortedUnits(s, nationality)[:-balance] {
 					s.RemoveUnit(prov)
-					s.SetError(prov, cla.ErrForcedDisband)
+					s.SetResolution(prov, cla.ErrForcedDisband)
 				}
 			}
 		}

@@ -7,79 +7,79 @@ import (
 
 type resolver struct {
 	*State
-	resolving map[common.Province]bool
-	visited   map[common.Province]bool
-	guesses   map[common.Province]error
+	path    []common.Province
+	guesses map[common.Province]error
 }
 
-/*
-Will recursively visit the Order dependency graph by calling adjudicate for its Order.
-
-If the recursion hits the same Order again, the result will be guessed twice, once for each outcome.
-If only one of the guesses was consistent with the Order#Adjudicate result, that result will be returned, 
-otherwise a BackupRule will be invoced.
-
-Make sure never to call Order#Adjudicate from another Order! Only call Resolver#Resolve from Orders.
-*/
 func (self *resolver) Resolve(prov common.Province) (err error) {
+
 	common.Logf("Res(%v)", prov)
 	common.Indent("  ")
-	var ok bool
-	if !self.State.successes[prov] { // Already resolved
-		if err, ok = self.State.errors[prov]; !ok { // Already found error
-			if err, ok = self.guesses[prov]; !ok { // Already guessed
-				if self.resolving[prov] { // Not yet guessed, but resolving before, introduce a negative guess and return it.
-					err = fmt.Errorf("Negative guess")
-					common.Logf("Resolving, guessing negative")
-					self.guesses[prov] = err
-				} else { // Not yet resolving, do a proper adjudication.
-					self.visited[prov] = true
-					self.resolving[prov] = true
-
-					common.Logf("Adj(%v)", prov)
-					common.Indent("  ")
-					err = self.State.orders[prov].Adjudicate(self) // Ask order to adjudicate itself.
-					common.DeIndent()
-					if err != nil {
-						common.Logf("%v", err)
-					} else {
-						common.Logf("T")
-					}
-					if _, ok := self.guesses[prov]; ok { // We were resolving again, and depend on our guess.
-						common.Logf("Guess made, switching to positive guess")
-						self.guesses[prov] = nil // Switch the guess to success.
-						common.Logf("Adj(%v)", prov)
-						common.Indent("  ")
-						second_err := self.State.orders[prov].Adjudicate(self) // Ask order to adjudicate itself with the new guess.
-						common.DeIndent()
-						if second_err != nil {
-							common.Logf("%v", second_err)
-						} else {
-							common.Logf("T")
-						}
-						if (err == nil && second_err != nil) || (err != nil && second_err == nil) { // If the results are the same (in regards to success), it means that exactly one of them were consistent (and any one of them could be returned). If not, none or both are consistent.
-							err = self.State.backupRule(self, prov, self.visited) // So, run the BackupRule on the orders we visited and let it decide.
-							if err != nil {
-								common.Logf("Backup:%v", err)
-							} else {
-								common.Logf("Backup:T")
-							}
-						}
-					}
-					delete(self.resolving, prov)
-				}
-			}
+	defer func() {
+		common.DeIndent()
+		if err == nil {
+			common.Logf("Success")
 		} else {
-			common.Logf("Cached")
+			common.Logf("Failure: %v", err)
 		}
-	} else {
-		common.Logf("Cached")
+	}()
+
+	var ok bool
+	if err, ok = self.State.resolutions[prov]; ok { // Already resolved
+		return
 	}
-	common.DeIndent()
-	if err != nil {
-		common.Logf("%v", err)
-	} else {
-		common.Logf("T")
+
+	if err, ok = self.guesses[prov]; ok { // Already guessed
+		for _, ancestor := range self.path { // Add to path if missing
+			if ancestor == prov {
+				return
+			}
+		}
+		self.path = append(self.path, prov)
+		return // Return old guess
 	}
-	return
+
+	pathLength := len(self.path) // Store old path length
+
+	self.guesses[prov] = fmt.Errorf("Negative guess") // Make negative guess
+
+	err = self.State.orders[prov].Adjudicate(self)
+
+	if len(self.path) == pathLength { // No new guesses made
+		self.State.resolutions[prov] = err // Resolve
+		return
+	}
+
+	if self.path[pathLength] != prov { // We are not the first new order added
+		self.path = append(self.path, prov) // Add us as dep
+		self.guesses[prov] = err            // Add the result as guess
+		return
+	}
+
+	for _, p := range self.path[pathLength:] { // Clear new path bits
+		delete(self.guesses, p)
+	}
+	self.path = self.path[:pathLength]
+
+	self.guesses[prov] = nil // Make successful guess
+
+	secondError := self.State.orders[prov].Adjudicate(self)
+
+	if (err == nil && secondError == nil) || (err != nil && secondError != nil) { // Results are the same, and thus only one is consistent
+		for _, p := range self.path[pathLength:] { // Clear new path bits
+			delete(self.guesses, p)
+		}
+		self.path = self.path[:pathLength]
+		self.State.resolutions[prov] = err // Resolve
+		return
+	}
+
+	self.State.backupRule(self, self.path[pathLength:]) // Backup rule
+
+	for _, p := range self.path[pathLength:] {
+		delete(self.guesses, p)
+	}
+	self.path = self.path[pathLength:]
+
+	return self.Resolve(prov)
 }

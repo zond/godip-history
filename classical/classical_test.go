@@ -29,7 +29,7 @@ func assertMove(t *testing.T, j *state.State, src, dst dip.Province, success boo
 		}
 		j.SetOrder(src, orders.Move(src, dst))
 		j.Next()
-		if err, ok := j.Errors()[src]; ok {
+		if err, ok := j.Resolutions()[src]; ok && err != nil {
 			t.Errorf("Move from %v to %v should have worked, got %v", src, dst, err)
 		}
 		if now, _, ok := j.Unit(src); ok && reflect.DeepEqual(now, unit) {
@@ -42,7 +42,7 @@ func assertMove(t *testing.T, j *state.State, src, dst dip.Province, success boo
 		unit, _, _ := j.Unit(src)
 		j.SetOrder(src, orders.Move(src, dst))
 		j.Next()
-		if _, ok := j.Errors()[src]; !ok {
+		if err, ok := j.Resolutions()[src]; !ok || err == nil {
 			t.Errorf("Move from %v to %v should not have worked", src, dst)
 		}
 		if now, _, _ := j.Unit(src); !reflect.DeepEqual(now, unit) {
@@ -176,7 +176,7 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 			t.Errorf("%v: %v %v", statePair.Case, prov, unit)
 		}
 		t.Errorf("%v: ### Errors:", statePair.Case)
-		for prov, err := range s.Errors() {
+		for prov, err := range s.Resolutions() {
 			t.Errorf("%v: %v %v", statePair.Case, prov, err)
 		}
 		t.Fatalf("%v failed", statePair.Case)
