@@ -1744,7 +1744,7 @@ PRESTATE
 	France:  A kie
 	France:  A mun 
 	France:  A sil
-	Germany: A Berlin 
+	Germany: A ber 
 	Germany: F Denmark
 	Germany: F hel
 	Russia:  F Baltic 
@@ -1752,14 +1752,14 @@ PRESTATE
 ORDERS
 	England: F hol Supports A ruh - kie
 	England: A ruh - kie
-	France:  A kie - Berlin
-	France:  A mun Supports A kie - Berlin
-	France:  A sil Supports A kie - Berlin
-	Germany: A Berlin - kie
-	Germany: F Denmark Supports A Berlin - kie
-	Germany: F hel Supports A Berlin - kie
-	Russia:  F Baltic Sea Supports A Prussia - Berlin
-	Russia:  A Prussia - Berlin
+	France:  A kie - ber
+	France:  A mun Supports A kie - ber
+	France:  A sil Supports A kie - ber
+	Germany: A ber - kie
+	Germany: F Denmark Supports A ber - kie
+	Germany: F hel Supports A ber - kie
+	Russia:  F Baltic Sea Supports A Prussia - ber
+	Russia:  A Prussia - ber
 POSTSTATE_SAME
 END
 
@@ -3362,7 +3362,7 @@ PRESTATE_RESULTS
 	SUCCESS: Russia: A war-pru
 	SUCCESS: Russia: A sil S A war-pru
 ORDERS
-	England: A kie-ber		# should fail; was attacked from berlin; will disband!
+	England: A kie-ber		# should fail; was attacked from ber; will disband!
 	Germany: A pru-ber		# this should succeed.
 POSTSTATE
 	Germany: A kie
