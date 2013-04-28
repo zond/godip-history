@@ -74,34 +74,35 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], forbiddenSupporters) + 1
 		dip.Logf("%v:vs %v: %v", self, competingOrder, attackStrength)
 		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], []dip.Nation{unit.Nation}) + 1; as >= attackStrength {
-			conv, _ := cla.IsConvoyed(r, competingOrder)
-			if conv {
-				dip.Logf("%v:vs %v: %v", competingOrder, self, as)
-				return cla.ErrBounce{competingOrder.Targets()[0]}
-			} else {
-				dip.Logf("H2HDisl(%v)", self.targets[1])
-				dip.Indent("  ")
-				if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-					res := o != nil && // is an order
-						u != nil && // is a unit
-						o.Type() == cla.Move && // move
-						o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
-						o.Targets()[0].Super() == competingOrder.Targets()[1].Super() && // from their destination
-						u.Nation != competingUnits[index].Nation // not from themselves
-					if res {
-						if conv, _ := cla.IsConvoyed(r, o); !conv && r.Resolve(p) == nil {
-							return true
-						}
-					}
-					return false
-				}); len(dislodgers) == 0 {
-					dip.DeIndent()
-					dip.Logf("F")
+			if conv, err := cla.IsConvoyed(r, competingOrder); err == nil {
+				if conv {
 					dip.Logf("%v:vs %v: %v", competingOrder, self, as)
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				} else {
-					dip.DeIndent()
-					dip.Logf("%v", dislodgers)
+					dip.Logf("H2HDisl(%v)", self.targets[1])
+					dip.Indent("  ")
+					if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+						res := o != nil && // is an order
+							u != nil && // is a unit
+							o.Type() == cla.Move && // move
+							o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
+							o.Targets()[0].Super() == competingOrder.Targets()[1].Super() && // from their destination
+							u.Nation != competingUnits[index].Nation // not from themselves
+						if res {
+							if conv, _ := cla.IsConvoyed(r, o); !conv && r.Resolve(p) == nil {
+								return true
+							}
+						}
+						return false
+					}); len(dislodgers) == 0 {
+						dip.DeIndent()
+						dip.Logf("F")
+						dip.Logf("%v:vs %v: %v", competingOrder, self, as)
+						return cla.ErrBounce{competingOrder.Targets()[0]}
+					} else {
+						dip.DeIndent()
+						dip.Logf("%v", dislodgers)
+					}
 				}
 			}
 		} else {

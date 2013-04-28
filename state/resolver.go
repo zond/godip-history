@@ -7,8 +7,9 @@ import (
 
 type resolver struct {
 	*State
-	visited map[common.Province]bool
-	guesses map[common.Province]error
+	resolving map[common.Province]bool
+	visited   map[common.Province]bool
+	guesses   map[common.Province]error
 }
 
 /*
@@ -27,12 +28,13 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 	if !self.State.successes[prov] { // Already resolved
 		if err, ok = self.State.errors[prov]; !ok { // Already found error
 			if err, ok = self.guesses[prov]; !ok { // Already guessed
-				if self.visited[prov] { // Not yet guessed, but visited before, introduce a negative guess and return it.
+				if self.resolving[prov] { // Not yet guessed, but resolving before, introduce a negative guess and return it.
 					err = fmt.Errorf("Negative guess")
-					common.Logf("Visited, guessing negative")
+					common.Logf("Resolving, guessing negative")
 					self.guesses[prov] = err
-				} else { // Not yet visited, do a proper adjudication.
+				} else { // Not yet resolving, do a proper adjudication.
 					self.visited[prov] = true
+					self.resolving[prov] = true
 
 					common.Logf("Adj(%v)", prov)
 					common.Indent("  ")
@@ -43,7 +45,7 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 					} else {
 						common.Logf("T")
 					}
-					if _, ok := self.guesses[prov]; ok { // We were visited again, and depend on our guess.
+					if _, ok := self.guesses[prov]; ok { // We were resolving again, and depend on our guess.
 						common.Logf("Guess made, switching to positive guess")
 						self.guesses[prov] = nil // Switch the guess to success.
 						common.Logf("Adj(%v)", prov)
@@ -64,7 +66,7 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 							}
 						}
 					}
-					delete(self.visited, prov)
+					delete(self.resolving, prov)
 				}
 			}
 		} else {

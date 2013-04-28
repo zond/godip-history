@@ -74,9 +74,10 @@ func (self *State) String() string {
 
 func (self *State) resolver() *resolver {
 	return &resolver{
-		State:   self,
-		visited: make(map[common.Province]bool),
-		guesses: make(map[common.Province]error),
+		State:     self,
+		resolving: make(map[common.Province]bool),
+		visited:   make(map[common.Province]bool),
+		guesses:   make(map[common.Province]error),
 	}
 }
 
