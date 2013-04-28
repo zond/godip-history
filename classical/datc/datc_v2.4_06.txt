@@ -50,9 +50,9 @@ END
 CASE 6.A.3
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Germany: F Kiel
+	Germany: F kie
 ORDERS
-	Germany: F Kiel-Munich
+	Germany: F kie-mun
 POSTSTATE_SAME
 END
 
@@ -60,21 +60,21 @@ END
 CASE 6.A.3.fleet.support.inland
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Austria: F Trieste
-	Austria: A Budapest
-	Russia: A Galacia
-	Russia: A Rumania
+	Austria: F tri
+	Austria: A bud
+	Russia: A gal
+	Russia: A rum
 ORDERS
-	Austria: F Trieste S A Budapest
-	Austria: A Budapest H
-	Russia: A Galacia-Budapest
-	Russia: A Rumania S A Galacia-Budapest
+	Austria: F tri S A bud
+	Austria: A bud H
+	Russia: A gal-bud
+	Russia: A rum S A gal-bud
 POSTSTATE
-	Austria: F Trieste
-	Russia: A Budapest	# succeeds unless illegal support actually worked
-	Russia: A Rumania
+	Austria: F tri
+	Russia: A bud	# succeeds unless illegal support actually worked
+	Russia: A rum
 POSTSTATE_DISLODGED
-	Austria: A Budapest
+	Austria: A bud
 END
 
 
@@ -82,9 +82,9 @@ END
 CASE 6.A.4
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Germany: F Kiel
+	Germany: F kie
 ORDERS
-	Germany: F Kiel-Kiel
+	Germany: F kie-kie
 POSTSTATE_SAME
 END
 
@@ -93,39 +93,39 @@ END
 CASE 6.A.5 (Move to own sector with convoy)
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: A liverpool
-	England: A Yorkshire
+	England: A lvp
+	England: A yor
 	England: F nth
 	Germany: F lon
-	Germany: A wales
+	Germany: A wal
 ORDERS
-	England: F nth convoys A Yorkshire - yorkshire
-	England: A Yorkshire-Yorkshire
-	England: A liverpool supports A Yorkshire-Yorkshire
-	Germany: F london-Yorkshire
-	Germnay: A Wales SUPPORTS F london-yorkshire
+	England: F nth convoys A yor - yor
+	England: A yor-yor
+	England: A lvp supports A yor-yor
+	Germany: F lon-yor
+	Germnay: A wal SUPPORTS F lon-yor
 POSTSTATE
-	England: A liverpool
+	England: A lvp
 	England: F nth
-	Germany: F Yorkshire
-	Germany: A wales
+	Germany: F yor
+	Germany: A wal
 POSTSTATE_DISLODGED
-	England: A Yorkshire
+	England: A yor
 END
 
 # move to same sector is illegal, even with convoy
 CASE 6.A.5.old (Nov-24-2001 DATC)
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F london
+	England: F lon
 	England: F nth
-	England: A Yorkshire
-	England: A liverpool
+	England: A yor
+	England: A lvp
 ORDERS
-	England: F london-Yorkshire
-	England: F nth convoys A Yorkshire - yorkshire
-	England: A Yorkshire-Yorkshire
-	England: A liverpool supports A Yorkshire-Yorkshire
+	England: F lon-yor
+	England: F nth convoys A yor - yor
+	England: A yor-yor
+	England: A lvp supports A yor-yor
 POSTSTATE_SAME
 END
 
@@ -133,9 +133,9 @@ END
 CASE 6.A.6
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F london
+	England: F lon
 ORDERS
-	Germany: F london-nth
+	Germany: F lon-nth
 POSTSTATE_SAME
 END
 
@@ -144,11 +144,11 @@ END
 CASE 6.A.7
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F london
+	England: F lon
 	England: F nth
 ORDERS
-	England: F london-belgium
-	England: F nth Convoys A london-Belgium
+	England: F lon-bel
+	England: F nth Convoys A lon-bel
 POSTSTATE_SAME
 END
 
@@ -158,31 +158,31 @@ END
 CASE 6.A.7.modified
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F london
+	England: F lon
 	England: F nth
 ORDERS
-	England: F london-belgium
-	England: F nth Convoys F london-Belgium
+	England: F lon-bel
+	England: F nth Convoys F lon-bel
 POSTSTATE_SAME
 END
 
 # army cannot get an additional hold power by supporting itself
-# fleet Trieste should be dislodged
+# fleet tri should be dislodged
 CASE 6.A.8
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Italy: A Venice
-	Italy: A Tyrolia
-	Austria: F Trieste
+	Italy: A ven
+	Italy: A tyr
+	Austria: F tri
 ORDERS
-	Italy: A venice-trieste
-	Italy: A tyrolia supports A venice-trieste
-	Austria: F trieste supports F trieste
+	Italy: A ven-tri
+	Italy: A tyr supports A ven-tri
+	Austria: F tri supports F tri
 POSTSTATE
-	Italy: A trieste
-	Italy: A Tyrolia
+	Italy: A tri
+	Italy: A tyr
 POSTSTATE_DISLODGED
-	Austria: F trieste
+	Austria: F tri
 END
 
 
@@ -190,9 +190,9 @@ END
 CASE 6.A.9
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Italy: F Rome
+	Italy: F rom
 ORDERS
-	Italy: F Rome-Venice
+	Italy: F rom-ven
 POSTSTATE_SAME
 END
 
@@ -201,13 +201,13 @@ END
 CASE 6.A.10
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Austria: A Venice
-	Italy: F Rome
-	Italy: A Apulia
+	Austria: A ven
+	Italy: F rom
+	Italy: A apu
 ORDERS
-	Austria: A Venice HOLD
-	Italy: F Rome Supports A Apulia-Venice
-	Italy: A Apulia-Venice
+	Austria: A ven HOLD
+	Italy: F rom Supports A apu-ven
+	Italy: A apu-ven
 POSTSTATE_SAME
 END
 
@@ -216,13 +216,13 @@ END
 CASE 6.A.10.old (Nov-24-2001 DATC)
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Austria: A Budapest
-	Austria: F Trieste
-	Italy: A Venice
+	Austria: A bud
+	Austria: F tri
+	Italy: A ven
 ORDERS
-	Austria: A budapest SUPPORTS F trieste-venice
-	Austria: F trieste-venice
-	Italy: A venice HOLD
+	Austria: A budapest SUPPORTS F tri-ven
+	Austria: F tri-ven
+	Italy: A ven HOLD
 POSTSTATE_SAME
 END
 
@@ -1739,10 +1739,10 @@ END
 CASE 6.E.15. TEST CASE, THE FRIENDLY HEAD TO HEAD BATTLE
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F Holland
-	England: A Ruhr
-	France:  A Kiel
-	France:  A Munich 
+	England: F hol
+	England: A ruh
+	France:  A kie
+	France:  A mun 
 	France:  A Silesia
 	Germany: A Berlin 
 	Germany: F Denmark
@@ -1750,14 +1750,14 @@ PRESTATE
 	Russia:  F Baltic 
 	Russia:  A Prussia
 ORDERS
-	England: F Holland Supports A Ruhr - Kiel
-	England: A Ruhr - Kiel
-	France:  A Kiel - Berlin
-	France:  A Munich Supports A Kiel - Berlin
-	France:  A Silesia Supports A Kiel - Berlin
-	Germany: A Berlin - Kiel
-	Germany: F Denmark Supports A Berlin - Kiel
-	Germany: F hel Supports A Berlin - Kiel
+	England: F hol Supports A ruh - kie
+	England: A ruh - kie
+	France:  A kie - Berlin
+	France:  A mun Supports A kie - Berlin
+	France:  A Silesia Supports A kie - Berlin
+	Germany: A Berlin - kie
+	Germany: F Denmark Supports A Berlin - kie
+	Germany: F hel Supports A Berlin - kie
 	Russia:  F Baltic Sea Supports A Prussia - Berlin
 	Russia:  A Prussia - Berlin
 POSTSTATE_SAME
@@ -2178,7 +2178,7 @@ ORDERS
 	Germany: F bel-eng
 POSTSTATE
 	# 2000 rules used
-	# support of london not cut, fleet in eng is NOT dislodged
+	# support of lon not cut, fleet in eng is NOT dislodged
 	England: F wal
 	France: A lon
 	France: F eng
@@ -2888,7 +2888,7 @@ PRESTATE
 	England: F Denmark
 	England: F Finland
 	France:  F Norwegian Sea
-	France:  F North Sea
+	France:  F nth
 	Germany: F Skagerrak
 	Russia:  A Sweden
 	Russia:  F Barents Sea
@@ -2897,7 +2897,7 @@ ORDERS
 	England: F Denmark Supports A Norway - Sweden
 	England: F Finland Supports A Norway - Sweden
 	France:  F Norwegian Sea - Norway
-	France:  F North Sea Supports F Norwegian Sea - Norway
+	France:  F nth Supports F Norwegian Sea - Norway
 	Germany: F Skagerrak Convoys A Sweden - Norway
 	Russia:  A Sweden - Norway via Convoy
 	Russia:  F Barents Sea Supports A Sweden - Norway
@@ -2906,7 +2906,7 @@ POSTSTATE
 	England: F Denmark
 	England: F Finland
 	France:  F Norwegian Sea
-	France:  F North Sea
+	France:  F nth
 	Germany: F Skagerrak
 	Russia:  F Barents Sea
 POSTSTATE_DISLODGED
@@ -2915,27 +2915,27 @@ END
 
 CASE 6.G.15. TEST CASE, BOUNCE AND DISLODGE WITH DOUBLE CONVOY
 PRESTATE
-	England: F North Sea 
-	England: A Holland
-	England: A Yorkshire 
-	England: A London
-	France:  F English Channel
-	France:  A Belgium
+	England: F nth 
+	England: A hol
+	England: A yor 
+	England: A lon
+	France:  F eng
+	France:  A bel
 ORDERS
-	England: F North Sea Convoys A London - Belgium
-	England: A Holland Supports A London - Belgium
-	England: A Yorkshire - London
-	England: A London - Belgium via Convoy
-	France:  F English Channel Convoys A Belgium - London
-	France:  A Belgium - London via Convoy
+	England: F nth Convoys A lon - bel
+	England: A hol Supports A lon - bel
+	England: A yor - lon
+	England: A lon - bel via Convoy
+	France:  F eng Convoys A bel - lon
+	France:  A bel - lon via Convoy
 POSTSTATE
-	England: F North Sea 
-	England: A Holland
-	England: A Yorkshire 
-	England: A Belgium
-	France:  F English Channel
+	England: F nth 
+	England: A hol
+	England: A yor 
+	England: A bel
+	France:  F eng
 POSTSTATE_DISLODGED
-	France:  A Belgium
+	France:  A bel
 END
 
 CASE 6.G.16. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING BY CONVOY
@@ -2943,7 +2943,7 @@ PRESTATE
 	England: A Norway
 	England: A Denmark
 	England: F Baltic Sea
-	England: F North Sea
+	England: F nth
 	Russia:  A Sweden
 	Russia:  F Skagerrak
 	Russia:  F Norwegian Sea
@@ -2951,7 +2951,7 @@ ORDERS
 	England: A Norway - Sweden
 	England: A Denmark Supports A Norway - Sweden
 	England: F Baltic Sea Supports A Norway - Sweden
-	England: F North Sea - Norway
+	England: F nth - Norway
 	Russia:  A Sweden - Norway via Convoy
 	Russia:  F Skagerrak Convoys A Sweden - Norway
 	Russia:  F Norwegian Sea Supports A Sweden - Norway
@@ -2959,7 +2959,7 @@ POSTSTATE
 	England: A Sweden
 	England: A Denmark
 	England: F Baltic Sea
-	England: F North Sea
+	England: F nth
 	Russia:  A Norway
 	Russia:  F Skagerrak
 	Russia:  F Norwegian Sea
@@ -2972,7 +2972,7 @@ PRESTATE
 	England: A Denmark
 	England: F Baltic Sea
 	England: F Skagerrak
-	England: F North Sea
+	England: F nth
 	Russia:  A Sweden
 	Russia:  F Norwegian
 ORDERS
@@ -2980,7 +2980,7 @@ ORDERS
 	England: A Denmark Supports A Norway - Sweden
 	England: F Baltic Sea Supports A Norway - Sweden
 	England: F Skagerrak Convoys A Norway - Sweden
-	England: F North Sea - Norway
+	England: F nth - Norway
 	Russia:  A Sweden - Norway
 	Russia:  F Norwegian Sea Supports A Sweden - Norway
 POSTSTATE
@@ -2988,7 +2988,7 @@ POSTSTATE
 	England: A Denmark
 	England: F Baltic Sea
 	England: F Skagerrak
-	England: F North Sea
+	England: F nth
 	Russia:  A Norway
 	Russia:  F Norwegian
 POSTSTATE_DISLODGED
@@ -2996,32 +2996,32 @@ END
 
 CASE 6.G.18. TEST CASE, THE TWO UNIT IN ONE AREA BUG, WITH DOUBLE CONVOY
 PRESTATE
-	England: F North Sea
-	England: A Holland
-	England: A Yorkshire
-	England: A London
-	England: A Ruhr
-	France:  F English Channel
-	France:  A Belgium
-	France:  A Wales
+	England: F nth
+	England: A hol
+	England: A yor
+	England: A lon
+	England: A ruh
+	France:  F eng
+	France:  A bel
+	France:  A wal
 ORDERS
-	England: F North Sea Convoys A London - Belgium
-	England: A Holland Supports A London - Belgium
-	England: A Yorkshire - London
-	England: A London - Belgium
-	England: A Ruhr Supports A London - Belgium
-	France:  F English Channel Convoys A Belgium - London
-	France:  A Belgium - London
-	France:  A Wales Supports A Belgium - London
+	England: F nth Convoys A lon - bel
+	England: A hol Supports A lon - bel
+	England: A yor - lon
+	England: A lon - bel
+	England: A ruh Supports A lon - bel
+	France:  F eng Convoys A bel - lon
+	France:  A bel - lon
+	France:  A wal Supports A bel - lon
 POSTSTATE
-	England: F North Sea
-	England: A Holland
-	England: A Yorkshire
-	England: A Belgium
-	England: A Ruhr
-	France:  F English Channel
-	France:  A London
-	France:  A Wales
+	England: F nth
+	England: A hol
+	England: A yor
+	England: A bel
+	England: A ruh
+	France:  F eng
+	France:  A lon
+	France:  A wal
 POSTSTATE_DISLODGED
 END
 
