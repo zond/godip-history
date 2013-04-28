@@ -40,18 +40,6 @@ func (self *move) At() time.Time {
 	return time.Now()
 }
 
-func (self *move) calcHoldSupport(r dip.Resolver, prov dip.Province) int {
-	_, supports, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-		if o != nil && u != nil && o.Type() == cla.Support && p.Super() != prov.Super() && len(o.Targets()) == 2 && o.Targets()[1].Super() == prov.Super() {
-			if err := r.Resolve(p); err == nil {
-				return true
-			}
-		}
-		return false
-	})
-	return len(supports)
-}
-
 func (self *move) Adjudicate(r dip.Resolver) error {
 	if r.Phase().Type() == cla.Movement {
 		return self.adjudicateMovementPhase(r)
@@ -73,29 +61,19 @@ func (self *move) Flags() map[dip.Flag]bool {
 	return self.flags
 }
 
-func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
+func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporter *dip.Nation) error {
 	unit, _, _ := r.Unit(self.targets[0])
-
-	convoyed, err := cla.IsConvoyed(r, self)
-	if err != nil {
-		return err
-	}
-
-	var myForbiddenSupporters []dip.Nation
-	opposingForbiddenSupporters := []dip.Nation{
-		unit.Nation,
-	}
-
-	// competing moves for the same destination
 	_, competingOrders, competingUnits := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 		return o != nil && u != nil && o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
 	})
 	for index, competingOrder := range competingOrders {
-		myForbiddenSupporters = append(myForbiddenSupporters, competingUnits[index].Nation)
-		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], myForbiddenSupporters) + 1
-		myForbiddenSupporters = myForbiddenSupporters[:len(myForbiddenSupporters)-1]
+		forbiddenSupporters := []dip.Nation{competingUnits[index].Nation}
+		if forbiddenSupporter != nil {
+			forbiddenSupporters = append(forbiddenSupporters, *forbiddenSupporter)
+		}
+		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], forbiddenSupporters) + 1
 		dip.Logf("%v:vs %v: %v", self, competingOrder, attackStrength)
-		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], opposingForbiddenSupporters) + 1; as >= attackStrength {
+		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], []dip.Nation{unit.Nation}) + 1; as >= attackStrength {
 			conv, _ := cla.IsConvoyed(r, competingOrder)
 			if conv {
 				dip.Logf("%v:vs %v: %v", competingOrder, self, as)
@@ -130,18 +108,32 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 			dip.Logf("%v:vs %v: %v", competingOrder, self, as)
 		}
 	}
+	return nil
+}
 
+func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
+	unit, _, _ := r.Unit(self.targets[0])
+
+	convoyed, err := cla.IsConvoyed(r, self)
+	if err != nil {
+		return err
+	}
+
+	if err := self.adjudicateAgainstCompetition(r, nil); err != nil {
+		return err
+	}
+
+	var forbiddenSupporter *dip.Nation
 	// at destination
-	victim, _, hasVictim := r.Unit(self.targets[1])
-	if hasVictim {
-		myForbiddenSupporters = append(myForbiddenSupporters, victim.Nation)
-		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], myForbiddenSupporters) + 1
+	if victim, _, hasVictim := r.Unit(self.targets[1]); hasVictim {
+		forbiddenSupporter = &victim.Nation
+		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], []dip.Nation{victim.Nation}) + 1
 		order, prov, _ := r.Order(self.targets[1])
 		dip.Logf("%v:vs %v: %v", self, order, attackStrength)
 		if order.Type() == cla.Move {
 			victimConvoyed, _ := cla.IsConvoyed(r, order)
 			if !convoyed && !victimConvoyed && order.Targets()[1] == self.targets[0] {
-				as := cla.MoveSupport(r, order.Targets()[0], order.Targets()[1], opposingForbiddenSupporters) + 1
+				as := cla.MoveSupport(r, order.Targets()[0], order.Targets()[1], []dip.Nation{unit.Nation}) + 1
 				dip.Logf("%v:vs %v: %v", order, self, as)
 				if victim.Nation == unit.Nation || as >= attackStrength {
 					return cla.ErrBounce{self.targets[1]}
@@ -152,7 +144,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 				if err := r.Resolve(prov); err == nil {
 					dip.DeIndent()
 					dip.Logf("T")
-					myForbiddenSupporters = myForbiddenSupporters[:len(myForbiddenSupporters)-1]
+					forbiddenSupporter = nil
 				} else {
 					dip.DeIndent()
 					dip.Logf("%v", err)
@@ -162,7 +154,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 				}
 			}
 		} else {
-			hs := self.calcHoldSupport(r, self.targets[1]) + 1
+			hs := cla.HoldSupport(r, self.targets[1]) + 1
 			dip.Logf("%v: %v", order, hs)
 			if victim.Nation == unit.Nation || hs >= attackStrength {
 				return cla.ErrBounce{self.targets[1]}
@@ -170,45 +162,8 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 		}
 	}
 
-	for index, competingOrder := range competingOrders {
-		myForbiddenSupporters = append(myForbiddenSupporters, competingUnits[index].Nation)
-		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], myForbiddenSupporters) + 1
-		myForbiddenSupporters = myForbiddenSupporters[:len(myForbiddenSupporters)-1]
-		dip.Logf("%v:vs %v: %v", self, competingOrder, attackStrength)
-		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], opposingForbiddenSupporters) + 1; as >= attackStrength {
-			conv, _ := cla.IsConvoyed(r, competingOrder)
-			if conv {
-				dip.Logf("%v:vs %v: %v", competingOrder, self, as)
-				return cla.ErrBounce{competingOrder.Targets()[0]}
-			} else {
-				dip.Logf("H2HDisl(%v)", self.targets[1])
-				dip.Indent("  ")
-				if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-					res := o != nil && // is an order
-						u != nil && // is a unit
-						o.Type() == cla.Move && // move
-						o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
-						o.Targets()[0].Super() == competingOrder.Targets()[1].Super() && // from their destination
-						u.Nation != competingUnits[index].Nation // not from themselves
-					if res {
-						if conv, _ := cla.IsConvoyed(r, o); !conv && r.Resolve(p) == nil {
-							return true
-						}
-					}
-					return false
-				}); len(dislodgers) == 0 {
-					dip.DeIndent()
-					dip.Logf("F")
-					dip.Logf("%v:vs %v: %v", competingOrder, self, as)
-					return cla.ErrBounce{competingOrder.Targets()[0]}
-				} else {
-					dip.DeIndent()
-					dip.Logf("%v", dislodgers)
-				}
-			}
-		} else {
-			dip.Logf("%v:vs %v: %v", competingOrder, self, as)
-		}
+	if err := self.adjudicateAgainstCompetition(r, forbiddenSupporter); err != nil {
+		return err
 	}
 
 	return nil

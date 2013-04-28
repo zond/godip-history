@@ -323,6 +323,21 @@ func IsConvoyed(r Resolver, order Order) (result bool, err error) {
 }
 
 /*
+HoldSupport returns successful supports of a hold in prov.
+*/
+func HoldSupport(r Resolver, prov Province) int {
+	_, supports, _ := r.Find(func(p Province, o Order, u *Unit) bool {
+		if o != nil && u != nil && o.Type() == Support && p.Super() != prov.Super() && len(o.Targets()) == 2 && o.Targets()[1].Super() == prov.Super() {
+			if err := r.Resolve(p); err == nil {
+				return true
+			}
+		}
+		return false
+	})
+	return len(supports)
+}
+
+/*
 MoveSupport returns the successful supports of movement from src to dst, discounting the nations in forbiddenSupports.
 */
 func MoveSupport(r Resolver, src, dst Province, forbiddenSupports []Nation) int {
