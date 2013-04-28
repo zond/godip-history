@@ -72,11 +72,11 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 			forbiddenSupporters = append(forbiddenSupporters, *forbiddenSupporter)
 		}
 		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], forbiddenSupporters) + 1
-		dip.Logf("%v:vs %v: %v", self, competingOrder, attackStrength)
+		dip.Logf("'%v' vs '%v': %v", self, competingOrder, attackStrength)
 		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], []dip.Nation{unit.Nation}) + 1; as >= attackStrength {
 			if conv, err := cla.IsConvoyed(r, competingOrder); err == nil {
 				if conv {
-					dip.Logf("%v:vs %v: %v", competingOrder, self, as)
+					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				} else {
 					dip.Logf("H2HDisl(%v)", self.targets[1])
@@ -96,17 +96,17 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 						return false
 					}); len(dislodgers) == 0 {
 						dip.DeIndent()
-						dip.Logf("F")
-						dip.Logf("%v:vs %v: %v", competingOrder, self, as)
+						dip.Logf("Not dislodged")
+						dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
 						return cla.ErrBounce{competingOrder.Targets()[0]}
 					} else {
 						dip.DeIndent()
-						dip.Logf("%v", dislodgers)
+						dip.Logf("Dislodged by %v", dislodgers)
 					}
 				}
 			}
 		} else {
-			dip.Logf("%v:vs %v: %v", competingOrder, self, as)
+			dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
 		}
 	}
 	return nil
@@ -130,12 +130,12 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 		forbiddenSupporter = &victim.Nation
 		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], []dip.Nation{victim.Nation}) + 1
 		order, prov, _ := r.Order(self.targets[1])
-		dip.Logf("%v:vs %v: %v", self, order, attackStrength)
+		dip.Logf("'%v' vs '%v': %v", self, order, attackStrength)
 		if order.Type() == cla.Move {
 			victimConvoyed, _ := cla.IsConvoyed(r, order)
 			if !convoyed && !victimConvoyed && order.Targets()[1] == self.targets[0] {
 				as := cla.MoveSupport(r, order.Targets()[0], order.Targets()[1], []dip.Nation{unit.Nation}) + 1
-				dip.Logf("%v:vs %v: %v", order, self, as)
+				dip.Logf("'%v' vs '%v': %v", order, self, as)
 				if victim.Nation == unit.Nation || as >= attackStrength {
 					return cla.ErrBounce{self.targets[1]}
 				}
@@ -144,11 +144,11 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 				dip.Indent("  ")
 				if err := r.Resolve(prov); err == nil {
 					dip.DeIndent()
-					dip.Logf("T")
+					dip.Logf("Success")
 					forbiddenSupporter = nil
 				} else {
 					dip.DeIndent()
-					dip.Logf("%v", err)
+					dip.Logf("Failure: %v", err)
 					if victim.Nation == unit.Nation || 1 >= attackStrength {
 						return cla.ErrBounce{self.targets[1]}
 					}
@@ -156,7 +156,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 			}
 		} else {
 			hs := cla.HoldSupport(r, self.targets[1]) + 1
-			dip.Logf("%v: %v", order, hs)
+			dip.Logf("'%v': %v", order, hs)
 			if victim.Nation == unit.Nation || hs >= attackStrength {
 				return cla.ErrBounce{self.targets[1]}
 			}

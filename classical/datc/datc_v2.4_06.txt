@@ -2158,6 +2158,8 @@ END
 # 2000 rules used, because, syzkman only is used by jdip
 # when 2000 rules break down.
 #
+# But this is not jDip, so I will use syzkman all I want...
+#
 CASE 6.F.17 (Pandin's extended paradox)
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
@@ -2176,15 +2178,15 @@ ORDERS
 	France: F yor S A bre-lon
 	Germany: F nth S F bel-eng
 	Germany: F bel-eng
-POSTSTATE
+POSTSTATE_SAME
 	# 2000 rules used
 	# support of lon not cut, fleet in eng is NOT dislodged
-	England: F wal
-	France: A lon
-	France: F eng
-	France: F yor
-	Germany: F nth
-	Germany: F bel
+	#England: F wal
+	#France: A lon
+	#France: F eng
+	#France: F yor
+	#Germany: F nth
+	#Germany: F bel
 	#
 	#
 	# syzkman used (preferred)
@@ -2232,19 +2234,19 @@ CASE 6.F.19
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	France: A tun
-	France: F tyn
+	France: F tys
 	France: F ion
 	Italy: F nap
 	Italy: F rom
 ORDERS
 	France: A tun-nap
-	France: F tyn C A tun-nap
+	France: F tys C A tun-nap
 	France: F ion C A tun-nap
-	Italy: F nap S F rom-tyn
-	Italy: F rom-tyn
+	Italy: F nap S F rom-tys
+	Italy: F rom-tys
 POSTSTATE
 	France: A tun
-	France: F tyn
+	France: F tys
 	France: F ion
 	Italy: F nap
 	Italy: F rom
@@ -2258,21 +2260,21 @@ CASE 6.F.20
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	France: A tun
-	France: F tyn
+	France: F tys
 	Italy: F nap
 	Italy: F ion
 	Turkey: F aeg
-	Turkey: F eme
+	Turkey: F eas
 ORDERS
 	France: A tun-nap
-	France: F tyn C A tun-nap
+	France: F tys C A tun-nap
 	Italy: F nap S F ion
 	Italy: F ion C A tun-nap
-	Turkey: F aeg S F eme-ion
-	Turkey: F eme-ion
+	Turkey: F aeg S F eas-ion
+	Turkey: F eas-ion
 POSTSTATE
 	France: A tun
-	France: F tyn
+	France: F tys
 	Italy: F nap
 	Turkey: F aeg
 	Turkey: F ion
@@ -2299,7 +2301,7 @@ ORDERS
 	Russia: A nwy-cly
 	France: F iri S F mid-nat
 	France: F mid-nat
-	England: A lvp-cly by convoy
+	England: A lvp-cly via convoy
 	England: F nat C A lvp-cly
 	England: F cly S F nat
 POSTSTATE
@@ -2583,17 +2585,17 @@ CASE 6.G.5
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Italy: A rom
-	Italy: F tyn
+	Italy: F tys
 	Turkey: A apu
 	Turkey: F ion
 ORDERS
 	Italy: A rom-apu
-	Italy: F tyn C A apu-rom
+	Italy: F tys C A apu-rom
 	Turkey: A apu-rom
 	Turkey: F ion C A apu-rom
 POSTSTATE
 	Italy: A apu
-	Italy: F tyn
+	Italy: F tys
 	Turkey: A rom
 	Turkey: F ion
 END
@@ -2651,7 +2653,7 @@ END
 
 
 # explicit convoy that isn't there
-# explicit 'by convoy' should be irrelevent if
+# explicit 'via convoy' should be irrelevent if
 # there is not both a land and convoy route.
 #
 CASE 6.G.8
@@ -2661,7 +2663,7 @@ PRESTATE
 	England: F nth
 	England: A hol
 ORDERS
-	France: A bel-hol by convoy		# explicit!
+	France: A bel-hol via convoy		# explicit!
 	England: F nth-hel
 	England: A hol-kie
 POSTSTATE
@@ -2705,7 +2707,7 @@ PRESTATE
 	France: F nrg
 	France: F nth
 ORDERS
-	England: A nwy-swe by convoy		# explicit!
+	England: A nwy-swe via convoy		# explicit!
 	England: F den S A nwy-swe
 	England: F fin S A nwy-swe
 	Germany: F ska C A nwy-swe
@@ -2727,7 +2729,7 @@ END
 
 # swapped or a head-to-head battle?
 #
-# we remove the "by convoy" here, just to do 
+# we remove the "via convoy" here, just to do 
 # a further test. 
 #
 CASE 6.G.10.mod
@@ -2797,7 +2799,7 @@ END
 
 # convoy to an adjacent place with a paradox
 #
-# Same as 6.G.11 but with an Explicit "by convoy".
+# Same as 6.G.11 but with an Explicit "via convoy".
 # This was to test the adjudicator before it could
 # detect 'intent' as per the rules.
 #
@@ -2842,10 +2844,10 @@ PRESTATE
 	Germany: F eng
 	Germany: F iri
 ORDERS
-	England: A lvp-edi by convoy
+	England: A lvp-edi via convoy
 	England: F nat C A lvp-edi
 	England: F nrg C A lvp-edi
-	Germany: A edi-lvp by convoy
+	Germany: A edi-lvp via convoy
 	Germany: F nth C A edi-lvp
 	Germany: F eng C A edi-lvp
 	Germany: F iri C A edi-lvp
@@ -2882,7 +2884,7 @@ POSTSTATE_DISLODGED
 END
 
 
-CASE 6.G.14. TEST CASE, BOUNCE BY CONVOY TO ADJACENT PLACE
+CASE 6.G.14. TEST CASE, BOUNCE via convoy TO ADJACENT PLACE
 PRESTATE
 	England: A nwy
 	England: F den
@@ -2938,7 +2940,7 @@ POSTSTATE_DISLODGED
 	France:  A bel
 END
 
-CASE 6.G.16. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING BY CONVOY
+CASE 6.G.16. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING via convoy
 PRESTATE
 	England: A nwy
 	England: A den
@@ -3385,7 +3387,7 @@ PRESTATE
 PRESTATE_DISLODGED
 	Italy: A mar
 PRESTATE_RESULTS
-	SUCCESS: France: A gas-mar by convoy	# explicit (per DATC)
+	SUCCESS: France: A gas-mar via convoy	# explicit (per DATC)
 	SUCCESS: France: A bur S A gas-mar
 	SUCCESS: France: F mid C A gas-mar
 	SUCCESS: France: F wes C A gas-mar
@@ -3421,7 +3423,7 @@ PRESTATE_DISLODGED
 	England: A lvp
 	England: F eng
 PRESTATE_RESULTS
-	FAILURE: England: A lvp-edi by convoy 	# "by convoy" required for TestSuite
+	FAILURE: England: A lvp-edi via convoy 	# "via convoy" required for TestSuite
 	SUCCESS: England: F iri C A lvp-edi
 	SUCCESS: England: F eng C A lvp-edi
 	SUCCESS: England: F nth C A lvp-edi
@@ -3429,7 +3431,7 @@ PRESTATE_RESULTS
 	SUCCESS: France: F bre-eng
 	SUCCESS: France: F mid S F bre-eng
 	#
-	SUCCESS: Russia: A edi-lvp by convoy
+	SUCCESS: Russia: A edi-lvp via convoy
 	SUCCESS: Russia: F nrg C A edi-lvp
 	SUCCESS: Russia: F nat C A edi-lvp
 	SUCCESS: Russia: A cly S A edi-lvp
