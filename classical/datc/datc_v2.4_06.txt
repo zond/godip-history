@@ -220,7 +220,7 @@ PRESTATE
 	Austria: F tri
 	Italy: A ven
 ORDERS
-	Austria: A budapest SUPPORTS F tri-ven
+	Austria: A bud SUPPORTS F tri-ven
 	Austria: F tri-ven
 	Italy: A ven HOLD
 POSTSTATE_SAME
@@ -269,9 +269,9 @@ END
 CASE 6.B.1
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F portugal
+	France: F por
 ORDERS
-	France: F portugal-spain
+	France: F por-spa
 POSTSTATE_SAME
 END
 
@@ -280,11 +280,11 @@ END
 CASE 6.B.2
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F gascony
+	France: F gas
 ORDERS
-	France: F gascony-spain
+	France: F gas-spa
 POSTSTATE
-	France: F spain/nc
+	France: F spa/nc
 END
 
 
@@ -293,91 +293,91 @@ END
 CASE 6.B.3
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F gascony
+	France: F gas
 ORDERS
-	France: F gascony-spain(sc)
+	France: F gas-spa/sc
 POSTSTATE_SAME
 END
 
 
 # support to unreachable coast allowed
-# although fleet in marseille cannot go to the n.c., it can target it.
+# although fleet in mar cannot go to the n.c., it can target it.
 CASE 6.B.4
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F gascony
-	France: F marseilles
+	France: F gas
+	France: F mar
 	Italy: F wes	
 ORDERS
-	France: F gascony-spain(nc)
-	France: F marseilles supports F gascony-spain(nc)
-	Italy: F wes-spain(sc)
+	France: F gas-spa/nc
+	France: F mar supports F gas-spa/nc
+	Italy: F wes-spa/sc
 POSTSTATE
-	France: F spain/nc
-	France: F marseilles
+	France: F spa/nc
+	France: F mar
 	Italy: F wes
 END
 
 
 # support from unreachable coast not allowed
-# coast of the fleet. gol cannot be reached from spain/nc
+# coast of the fleet. gol cannot be reached from spa/nc
 # thus spanish support is invalid, and gol is not dislodged 
 CASE 6.B.5
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F spain/nc
-	France: F marseilles
+	France: F spa/nc
+	France: F mar
 	Italy: F gol	
 ORDERS
-	France: F spain(nc) supports F marseilles-gol
-	France: F marseilles-gol
+	France: F spa/nc supports F mar-gol
+	France: F mar-gol
 	Italy: F gol hold
 POSTSTATE_SAME
 END
 
 
 # support can be cut with other coast
-# italian fleet should cut support in spain, so
+# italian fleet should cut support in spa, so
 # french fleet is dislodged by the english
 CASE 6.B.6
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: F iri
-	England: F nao
-	France: F spain/nc
-	France: F mao
+	England: F nat
+	France: F spa/nc
+	France: F mid
 	Italy: F gol
 ORDERS
-	England: F iri supports F nao-mao
-	England: F nao-mao
-	France: F spain/nc supports F mao
-	France: F mao hold
-	Italy: F gol-spain/sc
+	England: F iri supports F nat-mid
+	England: F nat-mid
+	France: F spa/nc supports F mid
+	France: F mid hold
+	Italy: F gol-spa/sc
 POSTSTATE
 	Italy F gol
-	France: F spain/nc
+	France: F spa/nc
 	England: F iri
-	England: F mao
+	England: F mid
 POSTSTATE_DISLODGED
-	France f mao
+	France f mid
 END
 
 
 # supporting with an unspecified coast
-# preferred: support of portugal is successful
+# preferred: support of por is successful
 # result is stalemate
 CASE 6.B.7
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F portugal
-	France: F mao
+	France: F por
+	France: F mid
 	Italy: F gol
 	Italy: F wes	
 ORDERS
-	France: F portugal supports f mao - spain
-	France: F mao - spain(nc)
-	Italy: F gol supports f wes-spain(sc)
-	Italy: F wes-spain(sc)
+	France: F por supports f mid - spa
+	France: F mid - spa/nc
+	Italy: F gol supports f wes-spa/sc
+	Italy: F wes-spa/sc
 POSTSTATE_SAME
 END
 
@@ -387,15 +387,15 @@ END
 CASE 6.B.8
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F portugal
-	France: F gascony
+	France: F por
+	France: F gas
 	Italy: F gol
 	Italy: F wes	
 ORDERS
-	France: F portugal supports f gascony-spain
-	France: F gascony-spain(nc)
-	Italy: F gol supports f wes-spain(sc)
-	Italy: F wes-spain(sc)
+	France: F por supports f gas-spa
+	France: F gas-spa/nc
+	Italy: F gol supports f wes-spa/sc
+	Italy: F wes-spa/sc
 POSTSTATE_SAME
 END
 
@@ -405,20 +405,20 @@ END
 CASE 6.B.9
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: F portugal
-	France: F mao
+	France: F por
+	France: F mid
 	Italy: F gol
 	Italy: F wes	
 ORDERS
-	France: F portugal supports f mao - spain(nc)
-	France: F mao - spain(sc)
-	Italy: F gol supports f wes-spain(sc)
-	Italy: F wes-spain(sc)
+	France: F por supports f mid - spa/nc
+	France: F mid - spa/sc
+	Italy: F gol supports f wes-spa/sc
+	Italy: F wes-spa/sc
 POSTSTATE
-	France: F portugal
-	France: F mao
+	France: F por
+	France: F mid
 	Italy: F gol
-	Italy: F spain/sc
+	Italy: F spa/sc
 END
 
 # unit ordered with wrong coast, but
@@ -450,11 +450,11 @@ END
 CASE 6.B.12
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	France: A gascony
+	France: A gas
 ORDERS
-	France: A gascony-spain(nc)
+	France: A gas-spa/nc
 POSTSTATE
-	France: A spain
+	France: A spa
 END
 
 
@@ -464,11 +464,11 @@ END
 CASE 6.B.13
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Turkey: F bulgaria(sc)
-	Turkey: F constantinople
+	Turkey: F bul/sc
+	Turkey: F con
 ORDERS
-	Turkey: F bulgaria(sc)-constantinople
-	Turkey: F constantinople-bulgaria(ec)
+	Turkey: F bul/sc-con
+	Turkey: F con-bul/ec
 POSTSTATE_SAME
 END
 
@@ -728,17 +728,17 @@ CASE 6.D.4
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Russia: F bal
 	Russia: A pru
 ORDERS
-	Germany: A ber S F kiel
-	Germany: F kiel S A ber
+	Germany: A ber S F kie
+	Germany: F kie S A ber
 	Russia: F bal S A pru-ber
 	Russia: A pru-ber
 POSTSTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Russia: F bal
 	Russia: A pru
 END
@@ -749,19 +749,19 @@ CASE 6.D.5
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A mun
 	Russia: F bal
 	Russia: A pru
 ORDERS
 	Germany: A ber S A mun-sil
-	Germany: F kiel S A ber
+	Germany: F kie S A ber
 	Germany: A mun-sil
 	Russia: F bal S A pru-ber
 	Russia: A pru-ber
 POSTSTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A sil
 	Russia: F bal
 	Russia: A pru
@@ -775,19 +775,19 @@ PRESTATE
 	Germany: F bal
 	Germany: F pru
 	Russia: F lvn
-	Russia: F gob
+	Russia: F bot
 ORDERS
 	Germany: A ber-swe
 	Germany: F bal C A ber-swe
 	Germany: F pru S F bal
 	Russia: F lvn-bal
-	Russia: F gob S F lvn-bal
+	Russia: F bot S F lvn-bal
 POSTSTATE
 	Germany: A swe
 	Germany: F bal
 	Germany: F pru
 	Russia: F lvn
-	Russia: F gob
+	Russia: F bot
 END
 
 
@@ -798,18 +798,18 @@ PRESTATE
 	Germany: F bal
 	Germany: F pru
 	Russia: F lvn
-	Russia: F gob
+	Russia: F bot
 	Russia: A fin
 ORDERS
 	Germany: F bal-swe
 	Germany: F pru S F bal
 	Russia: F lvn-bal
-	Russia: F gob S F lvn-bal
+	Russia: F bot S F lvn-bal
 	Russia: A fin-swe
 POSTSTATE
 	Germany: F pru
 	Russia: F bal
-	Russia: F gob
+	Russia: F bot
 	Russia: A fin
 POSTSTATE_DISLODGED
 	Germany: F bal
@@ -868,15 +868,15 @@ CASE 6.D.10
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A mun
 ORDERS
 	Germany: A ber H
-	Germany: F kiel-ber
-	Germany: A mun S F kiel-ber
+	Germany: F kie-ber
+	Germany: A mun S F kie-ber
 POSTSTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A mun
 END
 
@@ -886,17 +886,17 @@ CASE 6.D.11
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A mun
 	Russia: A war
 ORDERS
 	Germany: A ber-pru
-	Germany: F kiel-ber
-	Germany: A mun S F kiel-ber
+	Germany: F kie-ber
+	Germany: A mun S F kie-ber
 	Russia: A war-pru
 POSTSTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A mun
 	Russia: A war
 END
@@ -991,16 +991,16 @@ PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: A lon
 	England: F nth
-	France: F ech
+	France: F eng
 	France: A bel
 ORDERS
 	England: A lon H
 	England: F nth C A bel-lon
-	France: F ech S A bel-lon
+	France: F eng S A bel-lon
 	France: A bel-lon
 POSTSTATE
 	England: F nth
-	France: F ech
+	France: F eng
 	France: A lon
 POSTSTATE_DISLODGED
 	England: A lon
@@ -1279,7 +1279,7 @@ PRESTATE
 	Turkey: A bul
 ORDERS
 	Austria: A bud S F rum
-	Russia: F rum-bul(sc)		# impossible move
+	Russia: F rum-bul/sc		# impossible move
 	Turkey: F bla-rum
 	Turkey: A bul S F bla-rum
 POSTSTATE_SAME
@@ -1410,12 +1410,12 @@ CASE 6.E.2
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Germany: A ber
-	Germany: F kiel
+	Germany: F kie
 	Germany: A mun
 ORDERS
-	Germany: A ber-kiel
-	Germany: F kiel-ber
-	Germany: A mun S A ber-kiel
+	Germany: A ber-kie
+	Germany: F kie-ber
+	Germany: A mun S A ber-kie
 POSTSTATE_SAME
 END
 
@@ -1426,11 +1426,11 @@ PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Germany: A ber
 	Germany: A mun
-	England: F kiel
+	England: F kie
 ORDERS
-	Germany: A ber-kiel
-	Germany: A mun S F kiel-ber
-	England: F kiel-ber
+	Germany: A ber-kie
+	Germany: A mun S F kie-ber
+	England: F kie-ber
 POSTSTATE_SAME
 END
 
@@ -1556,14 +1556,14 @@ PRESTATE
 	Germany: F hol
 	Germany: F hel
 	Russia: F ska
-	Russia: F norway
+	Russia: F nwy
 ORDERS
 	England: F nth H
-	England: F yor S F norway-nth
+	England: F yor S F nwy-nth
 	Germany: F hol S F hel-nth
 	Germany: F hel-nth
-	Russia: F ska S F norway-nth
-	Russia: F norway-nth
+	Russia: F ska S F nwy-nth
+	Russia: F nwy-nth
 POSTSTATE_SAME
 END
 
@@ -1578,14 +1578,14 @@ PRESTATE
 	Germany: F hol
 	Germany: F hel
 	Russia: F ska
-	Russia: F norway
+	Russia: F nwy
 ORDERS
-	England: F nth-norway
-	England: F yor S F norway-nth
+	England: F nth-nwy
+	England: F yor S F nwy-nth
 	Germany: F hol S F hel-nth
 	Germany: F hel-nth
-	Russia: F ska S F norway-nth
-	Russia: F norway-nth
+	Russia: F ska S F nwy-nth
+	Russia: F nwy-nth
 POSTSTATE_SAME
 END
 
@@ -1600,21 +1600,21 @@ PRESTATE
 	Germany: F hol
 	Germany: F hel
 	Russia: F ska
-	Russia: F norway
+	Russia: F nwy
 ORDERS
-	England: F nth-nwg
-	England: F yor S F norway-nth
+	England: F nth-nrg
+	England: F yor S F nwy-nth
 	Germany: F hol S F hel-nth
 	Germany: F hel-nth
-	Russia: F ska S F norway-nth
-	Russia: F norway-nth
+	Russia: F ska S F nwy-nth
+	Russia: F nwy-nth
 POSTSTATE
-	England: F nwg		# nth-nwg successful
+	England: F nrg		# nth-nrg successful
 	England: F yor
 	Germany: F hol
 	Germany: F hel
 	Russia: F ska
-	Russia: F nth		# norway-nth successful
+	Russia: F nth		# nwy-nth successful
 END
 
 
@@ -1631,15 +1631,15 @@ PRESTATE
 	Germany: F hel
 	Germany: F den
 	Russia: F ska
-	Russia: F norway
+	Russia: F nwy
 ORDERS
 	England: F nth-den
-	England: F yor S F norway-nth
+	England: F yor S F nwy-nth
 	Germany: F hol S F hel-nth
 	Germany: F hel-nth
 	Germany: F den-hel
-	Russia: F ska S F norway-nth
-	Russia: F norway-nth
+	Russia: F ska S F nwy-nth
+	Russia: F nwy-nth
 POSTSTATE_SAME
 END
 
@@ -1652,7 +1652,7 @@ CASE 6.E.11
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	France: A spa
-	France: F mao
+	France: F mid
 	France: F gol
 	Germany: A mar
 	Germany: A gas
@@ -1660,7 +1660,7 @@ PRESTATE
 	Italy: F wes
 ORDERS
 	France: A spa - por via convoy
-	France: F mao C A spain-por
+	France: F mid C A spa-por
 	France: F gol S F por-spa/nc
 	Germany: A mar S A gas-spa
 	Germany: A gas-spa
@@ -1668,7 +1668,7 @@ ORDERS
 	Italy: F wes S F por-spa/nc
 POSTSTATE
 	France: A por		# swap
-	France: F mao
+	France: F mid
 	France: F gol
 	Germany: A mar
 	Germany: A gas
@@ -1707,7 +1707,7 @@ PRESTATE
 	France: F eng
 	Germany: F nth
 	Russia: F nrg
-	Russia: F nor
+	Russia: F nwy
 ORDERS
 	England: F edi S F yor-nth
 	England: F yor-nth
@@ -1715,7 +1715,7 @@ ORDERS
 	France: F eng S F bel-nth
 	Germany: F nth H
 	Russia: F nrg-nth
-	Russia: F nor S F nrg-nth
+	Russia: F nwy S F nrg-nth
 POSTSTATE_SAME
 END
 
@@ -1743,7 +1743,7 @@ PRESTATE
 	England: A ruh
 	France:  A kie
 	France:  A mun 
-	France:  A Silesia
+	France:  A sil
 	Germany: A Berlin 
 	Germany: F Denmark
 	Germany: F hel
@@ -1754,7 +1754,7 @@ ORDERS
 	England: A ruh - kie
 	France:  A kie - Berlin
 	France:  A mun Supports A kie - Berlin
-	France:  A Silesia Supports A kie - Berlin
+	France:  A sil Supports A kie - Berlin
 	Germany: A Berlin - kie
 	Germany: F Denmark Supports A Berlin - kie
 	Germany: F hel Supports A Berlin - kie
@@ -1788,7 +1788,7 @@ POSTSTATE_SAME
 END
 
 
-# an army being convoyed can bounce as normal
+# an army being convoyed can bounce as nwymal
 CASE 6.F.2
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
@@ -1809,17 +1809,17 @@ PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: F eng
 	England: A lon
-	England: F mao
+	England: F mid
 	France: A par
 ORDERS
 	England: F eng C A lon-bre
 	England: A lon-bre
-	England: F mao S A lon-bre
+	England: F mid S A lon-bre
 	France: A par-bre
 POSTSTATE
 	England: F eng
 	England: A bre
-	England: F mao
+	England: F mid
 	France: A par
 END
 
@@ -1847,21 +1847,21 @@ PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: F nth
 	England: A lon
-	France: F ech
+	France: F eng
 	France: F bel
 	Germany: F ska
 	Germany: F den
 ORDERS
 	England: F nth C A lon-hol
 	England: A lon-hol
-	France: F ech-nth
-	France: F bel S F ech-nth
+	France: F eng-nth
+	France: F bel S F eng-nth
 	Germany: F ska-nth
 	Germany: F den S F ska-nth
 POSTSTATE
 	England: F nth
 	England: A hol
-	France: F ech
+	France: F eng
 	France: F bel
 	Germany: F ska
 	Germany: F den
@@ -1959,13 +1959,13 @@ PRESTATE
 	England: F nth
 	England: A lon
 	France: F bre
-	France: F mao
+	France: F mid
 ORDERS
 	England: F eng C A lon-bel
 	England: F nth C A lon-bel
 	England: A lon-bel
-	France: F bre S F mao-eng
-	France: F mao-eng
+	France: F bre S F mid-eng
+	France: F mid-eng
 POSTSTATE
 	England: F nth
 	England: A bel
@@ -1984,13 +1984,13 @@ PRESTATE
 	England: A lon
 	Germany: F eng
 	France: F bre
-	France: F mao
+	France: F mid
 ORDERS
 	England: F nth C A lon-bel
 	England: A lon-bel
 	Germany: F eng C A lon-bel
-	France: F bre S F mao-eng
-	France: F mao-eng
+	France: F bre S F mid-eng
+	France: F mid-eng
 POSTSTATE
 	England: F nth
 	England: A bel
@@ -2010,13 +2010,13 @@ PRESTATE
 	Germany: F eng
 	Russia: F nth
 	France: F bre
-	France: F mao
+	France: F mid
 ORDERS
 	England: A lon-bel
 	Germany: F eng C A lon-bel
 	Russia: F nth C A lon-bel
-	France: F bre S F mao-eng
-	France: F mao-eng
+	France: F bre S F mid-eng
+	France: F mid-eng
 POSTSTATE
 	England: A bel
 	Russia: F nth
@@ -2034,18 +2034,18 @@ PRESTATE
 	England: F eng
 	England: A lon
 	England: F iri
-	France: F nao
-	France: F mao
+	France: F nat
+	France: F mid
 ORDERS
 	England: F eng C A lon-bel
 	England: A lon-bel
 	England: F iri C A lon-bel
-	France: F nao S F mao-iri
-	France: F mao-iri
+	France: F nat S F mid-iri
+	France: F mid-iri
 POSTSTATE
 	England: F eng
 	England: A bel
-	France: F nao
+	France: F nat
 	France: F iri
 POSTSTATE_DISLODGED
 	England: F iri
@@ -2058,18 +2058,18 @@ PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: A lon
 	England: F nth
-	France:  F ech
+	France:  F eng
 	Germany: F hol
 	Germany: F den
 ORDERS
 	England: A lon-bel
 	England: F nth C A lon-bel
-	France:  F ech C A lon-bel
+	France:  F eng C A lon-bel
 	Germany: F hol S F den-nth
 	Germany: F den-nth
 POSTSTATE
 	England: A bel	# convoy succeeds
-	France:  F ech
+	France:  F eng
 	Germany: F hol
 	Germany: F nth	# dislodges F nth
 POSTSTATE_DISLODGED
@@ -2107,27 +2107,27 @@ PRESTATE
 	England: F lon
 	England: F wal
 	France: A bre
-	France: F ech
+	France: F eng
 	Italy: F iri
-	Italy: F mao
+	Italy: F mid
 	Italy: F naf
 ORDERS
-	England: F lon S F wal-ech
-	England: F wal-ech
+	England: F lon S F wal-eng
+	England: F wal-eng
 	France: A bre-lon
-	France: F ech C A bre-lon
+	France: F eng C A bre-lon
 	Italy: F iri C A naf-wal
-	Italy: F mao C A naf-wal
+	Italy: F mid C A naf-wal
 	Italy: F naf-wal
 POSTSTATE
 	England: F lon
-	England: F ech	# wal-ech OK
+	England: F eng	# wal-eng OK
 	France: A bre
 	Italy: F iri
-	Italy: F mao
+	Italy: F mid
 	Italy: F naf	# naf-wal OK
 POSTSTATE_DISLODGED
-	France: F ech	
+	France: F eng	
 END
 
 
@@ -2287,30 +2287,30 @@ PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	Russia: A edi
 	Russia: F nrg
-	Russia: A nor
+	Russia: A nwy
 	France: F iri
-	France: F mao
+	France: F mid
 	England: A lvp
-	England: F nao
+	England: F nat
 	England: F cly
 ORDERS
-	Russia: A edi S A nor-cly
-	Russia: F nrg C A nor-cly
-	Russia: A nor-cly
-	France: F iri S F mao-nao
-	France: F mao-nao
+	Russia: A edi S A nwy-cly
+	Russia: F nrg C A nwy-cly
+	Russia: A nwy-cly
+	France: F iri S F mid-nat
+	France: F mid-nat
 	England: A lvp-cly by convoy
-	England: F nao C A lvp-cly
-	England: F cly S F nao
+	England: F nat C A lvp-cly
+	England: F cly S F nat
 POSTSTATE
 	Russia: A edi
 	Russia: F nrg
 	Russia: A cly
 	France: F iri
-	France: F nao
+	France: F nat
 	England: A lvp
 POSTSTATE_DISLODGED
-	# England: F nao	# DESTROYED
+	# England: F nat	# DESTROYED
 	# England: F cly	# DESTROYED
 END
 
@@ -2325,7 +2325,7 @@ PRESTATE
 	France: F eng
 	Germany: F bel
 	Germany: F pic
-	Russia: A nor
+	Russia: A nwy
 	Russia: F nth
 ORDERS
 	England: F edi-nth
@@ -2334,15 +2334,15 @@ ORDERS
 	France: F eng C A bre-lon
 	Germany: F bel S F pic-eng
 	Germany: F pic-eng
-	Russia: A nor-bel
-	Russia: F nth C A nor-bel
+	Russia: A nwy-bel
+	Russia: F nth C A nwy-bel
 POSTSTATE
 	England: F nth
 	England: F lon
 	France: A bre
 	Germany: F bel
 	Germany: F eng
-	Russia: A nor
+	Russia: A nwy
 POSTSTATE_DISLODGED
 	France: F eng
 	Russia: F nth
@@ -2366,9 +2366,9 @@ PRESTATE
 	France: F eng
 	Germany: F bel
 	Germany: F pic
-	Russia: A nor
+	Russia: A nwy
 	Russia: F nth
-	Russia: F nwg
+	Russia: F nrg
 	Russia: F bar
 	Russia: A stp
 ORDERS
@@ -2378,9 +2378,9 @@ ORDERS
 	France: F eng C A bre-lon		# part of paradox
 	Germany: F bel S F pic-eng
 	Germany: F pic-eng
-	Russia: A nor-bel			# part of paradox
-	Russia: F nth C A nor-bel		# part of paradox
-	Russia: F nwg C A stp-edi
+	Russia: A nwy-bel			# part of paradox
+	Russia: F nth C A nwy-bel		# part of paradox
+	Russia: F nrg C A stp-edi
 	Russia: F bar C A stp-edi
 	Russia: A stp-edi			# not part of paradox
 POSTSTATE
@@ -2389,8 +2389,8 @@ POSTSTATE
 	France: A bre
 	Germany: F bel
 	Germany: F eng
-	Russia: A nor
-	Russia: F nwg
+	Russia: A nwy
+	Russia: F nrg
 	Russia: F bar
 	Russia: A edi
 POSTSTATE_DISLODGED
@@ -2406,34 +2406,34 @@ PRESTATE
 	England: F edi
 	England: F yor
 	France: A bre
-	France: F ech
+	France: F eng
 	Germany: F bel
 	Germany: F lon
-	Italy: F mao
+	Italy: F mid
 	Italy: F iri
-	Russia: A nor
+	Russia: A nwy
 	Russia: F nth
 ORDERS
 	England: F edi-nth
 	England: F yor S F edi-nth
 	France: A bre-lon
-	France: F ech C A bre-lon
-	Germany: F bel S F ech
+	France: F eng C A bre-lon
+	Germany: F bel S F eng
 	Germany: F lon S F nth
-	Italy: F mao-ech
-	Italy: F iri S F mao-ech
-	Russia: A nor-bel
-	Russia: F nth C A nor-bel
+	Italy: F mid-eng
+	Italy: F iri S F mid-eng
+	Russia: A nwy-bel
+	Russia: F nth C A nwy-bel
 POSTSTATE
 	England: F edi
 	England: F yor
 	France: A bre
-	France: F ech
+	France: F eng
 	Germany: F bel
 	Germany: F lon
-	Italy: F mao
+	Italy: F mid
 	Italy: F iri
-	Russia: A nor
+	Russia: A nwy
 	Russia: F nth
 END
 
@@ -2444,31 +2444,31 @@ PRESTATE
 	England: F edi
 	England: F lon
 	England: F iri
-	England: F mao
+	England: F mid
 	France: A bre
 	France: F eng
 	France: F bel
-	Russia: A nor
+	Russia: A nwy
 	Russia: F nth
 ORDERS
 	England: F edi-nth
 	England: F lon S F edi-nth
 	England: F iri-eng
-	England: F mao S F iri-eng
+	England: F mid S F iri-eng
 	France: A bre-lon
 	France: F eng C A bre-lon
 	France: F bel S F eng
-	Russia: A nor-bel
-	Russia: F nth C A nor-bel
+	Russia: A nwy-bel
+	Russia: F nth C A nwy-bel
 POSTSTATE
 	England: F nth
 	England: F lon
 	England: F iri
-	England: F mao
+	England: F mid
 	France: A bre
 	France: F eng
 	France: F bel
-	Russia: A nor
+	Russia: A nwy
 POSTSTATE_DISLODGED
 	Russia: F nth	
 END
@@ -2491,17 +2491,17 @@ END
 CASE 6.G.1
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: A nor
+	England: A nwy
 	England: F ska
 	Russia: A swe 
 ORDERS
-	England: A nor-swe
-	England: F ska C A nor-swe
-	Russia: A swe-nor
+	England: A nwy-swe
+	England: F ska C A nwy-swe
+	Russia: A swe-nwy
 POSTSTATE
 	England: A swe
 	England: F ska
-	Russia: A nor 
+	Russia: A nwy 
 END
 
 
@@ -2510,15 +2510,15 @@ END
 CASE 6.G.2
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: A nor
+	England: A nwy
 	Russia: F swe
 	Germany: F ska
 ORDERS
-	England: A nor-swe
-	Russia: F swe-nor
-	Germany: F ska C A nor-swe
+	England: A nwy-swe
+	Russia: F swe-nwy
+	Germany: F ska C A nwy-swe
 POSTSTATE
-	England: A nor
+	England: A nwy
 	Russia: F swe
 	Germany: F ska
 END
@@ -2532,19 +2532,19 @@ PRESTATE
 	France: F bre
 	France: A pic
 	France: A bur
-	France: F mao
+	France: F mid
 	England: F eng
 ORDERS
 	France: F bre-eng
 	France: A pic-bel	# this will occur, over land.
 	France: A bur S A pic-bel
-	France: F mao S F bre-eng
+	France: F mid S F bre-eng
 	England: F eng C A pic-bel
 POSTSTATE
 	France: F eng
 	France: A bel
 	France: A bur
-	France: F mao
+	France: F mid
 POSTSTATE_DISLODGED
 	England: F eng	
 END
@@ -2557,24 +2557,24 @@ PRESTATE
 	France: F bre
 	France: A pic
 	France: A bur
-	France: F mao
-	England: F ech
+	France: F mid
+	England: F eng
 	England: A bel
 ORDERS
-	France: F bre-ech			# will dislodged English fleet
+	France: F bre-eng			# will dislodged English fleet
 	France: A pic-bel			# should be successful, over land
 	France: A bur S A pic-bel	
-	France: F mao S F bre-ech
-	England: F ech C A pic-bel
+	France: F mid S F bre-eng
+	England: F eng C A pic-bel
 	England: A bel-pic
 POSTSTATE
-	France: F ech
+	France: F eng
 	France: A bel
 	France: A bur
-	France: F mao
+	France: F mid
 POSTSTATE_DISLODGED	
 	England: A bel		# dislodged via land route
-	England: F ech
+	England: F eng
 END
 	
 # swapping with intent
@@ -2609,7 +2609,7 @@ PRESTATE
 	France: F iri
 	France: F nth
 	Russia: F nrg
-	Russia: F nao
+	Russia: F nat
 ORDERS
 	England: A lvp-edi
 	England: F eng C A lvp-edi
@@ -2617,7 +2617,7 @@ ORDERS
 	France: F iri H
 	France: F nth H
 	Russia: F nrg C A lvp-edi
-	Russia: F nao C A lvp-edi
+	Russia: F nat C A lvp-edi
 POSTSTATE
 	England: A edi
 	England: F eng
@@ -2625,7 +2625,7 @@ POSTSTATE
 	France: F iri
 	France: F nth
 	Russia: F nrg
-	Russia: F nao
+	Russia: F nat
 END
 
 # swapping with illegal intent
@@ -2633,19 +2633,19 @@ CASE 6.G.7
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: F ska
-	England: F norway
+	England: F nwy
 	Russia: A swe
-	Russia: F gob
+	Russia: F bot
 ORDERS
-	England: F ska C A swe-norway
-	England: F norway-swe
-	Russia: A swe-norway
-	Russia: F gob C A swe-norway
+	England: F ska C A swe-nwy
+	England: F nwy-swe
+	Russia: A swe-nwy
+	Russia: F bot C A swe-nwy
 POSTSTATE	
 	England: F ska
-	England: F norway
+	England: F nwy
 	Russia: A swe
-	Russia: F gob
+	Russia: F bot
 END
 
 
@@ -2675,20 +2675,20 @@ END
 CASE 6.G.9
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: A nor
+	England: A nwy
 	England: F ska
 	England: F fin
 	Russia: A swe
 ORDERS
-	England: A nor-swe				# intent is to convoy
-	England: F ska C A nor-swe		# this is the order that shows intent
-	England: F fin S A nor-swe
-	Russia: A swe-nor
+	England: A nwy-swe				# intent is to convoy
+	England: F ska C A nwy-swe		# this is the order that shows intent
+	England: F fin S A nwy-swe
+	Russia: A swe-nwy
 POSTSTATE
 	England: A swe
 	England: F ska
 	England: F fin
-	Russia: A nor
+	Russia: A nwy
 END
 
 
@@ -2696,7 +2696,7 @@ END
 CASE 6.G.10
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: A nor
+	England: A nwy
 	England: F den
 	England: F fin
 	Germany: F ska
@@ -2705,14 +2705,14 @@ PRESTATE
 	France: F nrg
 	France: F nth
 ORDERS
-	England: A nor-swe by convoy		# explicit!
-	England: F den S A nor-swe
-	England: F fin S A nor-swe
-	Germany: F ska C A nor-swe
-	Russia: A swe-nor
-	Russia: F bar S A swe-nor
-	France: F nrg-nor
-	France: F nth S F nrg-nor
+	England: A nwy-swe by convoy		# explicit!
+	England: F den S A nwy-swe
+	England: F fin S A nwy-swe
+	Germany: F ska C A nwy-swe
+	Russia: A swe-nwy
+	Russia: F bar S A swe-nwy
+	France: F nrg-nwy
+	France: F nth S F nrg-nwy
 POSTSTATE
 	England: A swe
 	England: F den
@@ -2733,7 +2733,7 @@ END
 CASE 6.G.10.mod
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: A nor
+	England: A nwy
 	England: F den
 	England: F fin
 	Germany: F ska
@@ -2742,21 +2742,21 @@ PRESTATE
 	France: F nrg
 	France: F nth
 ORDERS
-	England: A nor-swe
-	England: F den S A nor-swe
-	England: F fin S A nor-swe
-	Germany: F ska C A nor-swe
-	Russia: A swe-nor
-	Russia: F bar S A swe-nor
-	France: F nrg-nor
-	France: F nth S F nrg-nor
+	England: A nwy-swe
+	England: F den S A nwy-swe
+	England: F fin S A nwy-swe
+	Germany: F ska C A nwy-swe
+	Russia: A swe-nwy
+	Russia: F bar S A swe-nwy
+	France: F nrg-nwy
+	France: F nth S F nrg-nwy
 POSTSTATE
 	England: A swe
 	England: F den
 	England: F fin
 	Germany: F ska
 	Russia: F bar
-	France: F nor
+	France: F nwy
 	France: F nth
 POSTSTATE_DISLODGED
 	# Russia: A swe 	# dislodged, destroyed
@@ -2774,20 +2774,20 @@ END
 CASE 6.G.11
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F nor
+	England: F nwy
 	England: F nth
 	Russia: A swe
 	Russia: F ska
 	Russia: F bar
 ORDERS
-	England: F nor S F nth-ska
+	England: F nwy S F nth-ska
 	England: F nth-ska
-	Russia: A swe-nor			# intent is to convoy
-	Russia: F ska C A swe-nor	# this creates intent to convoy
-	Russia: F bar S A swe-nor
+	Russia: A swe-nwy			# intent is to convoy
+	Russia: F ska C A swe-nwy	# this creates intent to convoy
+	Russia: F bar S A swe-nwy
 POSTSTATE
 	England: F ska
-	England: F nor
+	England: F nwy
 	Russia: A swe
 	Russia: F bar
 POSTSTATE_DISLODGED
@@ -2806,20 +2806,20 @@ END
 CASE 6.G.11.mod
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: F nor
+	England: F nwy
 	England: F nth
 	Russia: A swe
 	Russia: F ska
 	Russia: F bar
 ORDERS
-	England: F nor S F nth-ska
+	England: F nwy S F nth-ska
 	England: F nth-ska
-	Russia: A swe-nor via convoy
-	Russia: F ska C A swe-nor
-	Russia: F bar S A swe-nor
+	Russia: A swe-nwy via convoy
+	Russia: F ska C A swe-nwy
+	Russia: F bar S A swe-nwy
 POSTSTATE
 	England: F ska
-	England: F nor
+	England: F nwy
 	Russia: A swe
 	Russia: F bar
 POSTSTATE_DISLODGED
@@ -2835,7 +2835,7 @@ CASE 6.G.12
 PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
 	England: A lvp
-	England: F nao
+	England: F nat
 	England: F nrg
 	Germany: A edi
 	Germany: F nth
@@ -2843,7 +2843,7 @@ PRESTATE
 	Germany: F iri
 ORDERS
 	England: A lvp-edi by convoy
-	England: F nao C A lvp-edi
+	England: F nat C A lvp-edi
 	England: F nrg C A lvp-edi
 	Germany: A edi-lvp by convoy
 	Germany: F nth C A edi-lvp
@@ -2851,7 +2851,7 @@ ORDERS
 	Germany: F iri C A edi-lvp
 POSTSTATE
 	Germany: A lvp		# swap
-	England: F nao
+	England: F nat
 	England: F nrg
 	England: A edi		# swap
 	Germany: F nth
@@ -2884,28 +2884,28 @@ END
 
 CASE 6.G.14. TEST CASE, BOUNCE BY CONVOY TO ADJACENT PLACE
 PRESTATE
-	England: A Norway
+	England: A nwy
 	England: F Denmark
 	England: F Finland
-	France:  F Norwegian Sea
+	France:  F nwywegian Sea
 	France:  F nth
 	Germany: F Skagerrak
 	Russia:  A Sweden
 	Russia:  F Barents Sea
 ORDERS
-	England: A Norway - Sweden
-	England: F Denmark Supports A Norway - Sweden
-	England: F Finland Supports A Norway - Sweden
-	France:  F Norwegian Sea - Norway
-	France:  F nth Supports F Norwegian Sea - Norway
-	Germany: F Skagerrak Convoys A Sweden - Norway
-	Russia:  A Sweden - Norway via Convoy
-	Russia:  F Barents Sea Supports A Sweden - Norway
+	England: A nwy - Sweden
+	England: F Denmark Supports A nwy - Sweden
+	England: F Finland Supports A nwy - Sweden
+	France:  F nwywegian Sea - nwy
+	France:  F nth Supports F nwywegian Sea - nwy
+	Germany: F Skagerrak Convoys A Sweden - nwy
+	Russia:  A Sweden - nwy via Convoy
+	Russia:  F Barents Sea Supports A Sweden - nwy
 POSTSTATE
 	England: A Sweden
 	England: F Denmark
 	England: F Finland
-	France:  F Norwegian Sea
+	France:  F nwywegian Sea
 	France:  F nth
 	Germany: F Skagerrak
 	Russia:  F Barents Sea
@@ -2940,57 +2940,57 @@ END
 
 CASE 6.G.16. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING BY CONVOY
 PRESTATE
-	England: A Norway
+	England: A nwy
 	England: A Denmark
 	England: F Baltic Sea
 	England: F nth
 	Russia:  A Sweden
 	Russia:  F Skagerrak
-	Russia:  F Norwegian Sea
+	Russia:  F nwywegian Sea
 ORDERS
-	England: A Norway - Sweden
-	England: A Denmark Supports A Norway - Sweden
-	England: F Baltic Sea Supports A Norway - Sweden
-	England: F nth - Norway
-	Russia:  A Sweden - Norway via Convoy
-	Russia:  F Skagerrak Convoys A Sweden - Norway
-	Russia:  F Norwegian Sea Supports A Sweden - Norway
+	England: A nwy - Sweden
+	England: A Denmark Supports A nwy - Sweden
+	England: F Baltic Sea Supports A nwy - Sweden
+	England: F nth - nwy
+	Russia:  A Sweden - nwy via Convoy
+	Russia:  F Skagerrak Convoys A Sweden - nwy
+	Russia:  F nwywegian Sea Supports A Sweden - nwy
 POSTSTATE
 	England: A Sweden
 	England: A Denmark
 	England: F Baltic Sea
 	England: F nth
-	Russia:  A Norway
+	Russia:  A nwy
 	Russia:  F Skagerrak
-	Russia:  F Norwegian Sea
+	Russia:  F nwywegian Sea
 POSTSTATE_DISLODGED
 END
 
 CASE 6.G.17. TEST CASE, THE TWO UNIT IN ONE AREA BUG, MOVING OVER LAND
 PRESTATE
-	England: A Norway
+	England: A nwy
 	England: A Denmark
 	England: F Baltic Sea
 	England: F Skagerrak
 	England: F nth
 	Russia:  A Sweden
-	Russia:  F Norwegian
+	Russia:  F nwywegian
 ORDERS
-	England: A Norway - Sweden via Convoy
-	England: A Denmark Supports A Norway - Sweden
-	England: F Baltic Sea Supports A Norway - Sweden
-	England: F Skagerrak Convoys A Norway - Sweden
-	England: F nth - Norway
-	Russia:  A Sweden - Norway
-	Russia:  F Norwegian Sea Supports A Sweden - Norway
+	England: A nwy - Sweden via Convoy
+	England: A Denmark Supports A nwy - Sweden
+	England: F Baltic Sea Supports A nwy - Sweden
+	England: F Skagerrak Convoys A nwy - Sweden
+	England: F nth - nwy
+	Russia:  A Sweden - nwy
+	Russia:  F nwywegian Sea Supports A Sweden - nwy
 POSTSTATE
 	England: A Sweden
 	England: A Denmark
 	England: F Baltic Sea
 	England: F Skagerrak
 	England: F nth
-	Russia:  A Norway
-	Russia:  F Norwegian
+	Russia:  A nwy
+	Russia:  F nwywegian
 POSTSTATE_DISLODGED
 END
 
@@ -3085,23 +3085,23 @@ PRESTATE
 	Germany: A kie
 	Germany: A hol
 	Russia: A swe
-	Russia: A nor
+	Russia: A nwy
 PRESTATE_DISLODGED
-	England: F nor
+	England: F nwy
 	Russia: F edi
 	Russia: F hol
 PRESTATE_RESULTS
 	SUCCESS: England: A lvp-edi
 	SUCCESS: England: F yor S A lvp-edi
-	FAILURE: England: F nor H
+	FAILURE: England: F nwy H
 	SUCCESS: Germany: A kie S A ruh-hol
 	SUCCESS: Germany: A ruh-hol
 	FAILURE: Russia: F edi H
-	SUCCESS: Russia: A swe S A fin-nor
-	SUCCESS: Russia: A fin-nor
+	SUCCESS: Russia: A swe S A fin-nwy
+	SUCCESS: Russia: A fin-nwy
 	FAILURE: Russia: F hol H
 ORDERS
-	England: F nor-nth
+	England: F nwy-nth
 	Russia: F edi-nth
 	Russia: F hol S F edi-nth		# clearly illegal
 POSTSTATE
@@ -3110,7 +3110,7 @@ POSTSTATE
 	Germany: A kie
 	Germany: A hol
 	Russia: A swe
-	Russia: A nor
+	Russia: A nwy
 # POSTSTATE_DISLODGED	# all dislodged units disband
 END
 
@@ -3158,7 +3158,7 @@ PRESTATE_RESULTS
 	SUCCESS: Germany: A ruh-hol
 ORDERS
 	England: A hol-bel			# valid retreat order
-	England: F nth-nor			# clearly illegal; unit isn't dislodged
+	England: F nth-nwy			# clearly illegal; unit isn't dislodged
 POSTSTATE
 	England: F nth
 	England: A bel 				# retreated unit
@@ -3281,23 +3281,23 @@ PRESTATE
 	Germany: A kie
 	Germany: A hol
 	Russia: A swe
-	Russia: A nor
+	Russia: A nwy
 PRESTATE_DISLODGED
-	England: F nor
+	England: F nwy
 	Russia: F edi
 	Russia: F hol
 PRESTATE_RESULTS
 	SUCCESS: England: A lvp-edi
 	SUCCESS: England: F yor S A lvp-edi
-	FAILURE: England: F nor H
+	FAILURE: England: F nwy H
 	SUCCESS: Germany: A kie S A ruh-hol
 	SUCCESS: Germany: A ruh-hol
 	FAILURE: Russia: F edi H
-	SUCCESS: Russia: A swe S A fin-nor
-	SUCCESS: Russia: A fin-nor
+	SUCCESS: Russia: A swe S A fin-nwy
+	SUCCESS: Russia: A fin-nwy
 	FAILURE: Russia: F hol H
 ORDERS
-	England: F nor-nth
+	England: F nwy-nth
 	Russia: F edi-nth
 	Russia: F hol-nth
 POSTSTATE
@@ -3306,7 +3306,7 @@ POSTSTATE
 	Germany: A kie
 	Germany: A hol
 	Russia: A swe
-	Russia: A nor
+	Russia: A nwy
 # all dislodged units are disbanded.
 END
 
@@ -3379,7 +3379,7 @@ PRESTATE_SETPHASE Spring 1901, Retreat
 PRESTATE
 	France: A mar
 	France: A bur
-	France: F mao
+	France: F mid
 	France: F wes
 	France: F gol
 PRESTATE_DISLODGED
@@ -3387,7 +3387,7 @@ PRESTATE_DISLODGED
 PRESTATE_RESULTS
 	SUCCESS: France: A gas-mar by convoy	# explicit (per DATC)
 	SUCCESS: France: A bur S A gas-mar
-	SUCCESS: France: F mao C A gas-mar
+	SUCCESS: France: F mid C A gas-mar
 	SUCCESS: France: F wes C A gas-mar
 	SUCCESS: France: F gol C A gas-mar
 	FAILURE: Italy: A mar H
@@ -3396,7 +3396,7 @@ ORDERS
 POSTSTATE
 	France: A mar
 	France: A bur
-	France: F mao
+	France: F mid
 	France: F wes
 	France: F gol
 	Italy: A gas
@@ -3410,44 +3410,44 @@ PRESTATE
 	England: F iri
 	England: F nth
 	#
-	France: F ech
-	France: F mao
+	France: F eng
+	France: F mid
 	#
 	Russia: A lvp
-	Russia: F nwg
-	Russia: F nao
+	Russia: F nrg
+	Russia: F nat
 	Russia: A cly
 PRESTATE_DISLODGED
 	England: A lvp
-	England: F ech
+	England: F eng
 PRESTATE_RESULTS
 	FAILURE: England: A lvp-edi by convoy 	# "by convoy" required for TestSuite
 	SUCCESS: England: F iri C A lvp-edi
-	SUCCESS: England: F ech C A lvp-edi
+	SUCCESS: England: F eng C A lvp-edi
 	SUCCESS: England: F nth C A lvp-edi
 	#
-	SUCCESS: France: F bre-ech
-	SUCCESS: France: F mao S F bre-ech
+	SUCCESS: France: F bre-eng
+	SUCCESS: France: F mid S F bre-eng
 	#
 	SUCCESS: Russia: A edi-lvp by convoy
-	SUCCESS: Russia: F nwg C A edi-lvp
-	SUCCESS: Russia: F nao C A edi-lvp
+	SUCCESS: Russia: F nrg C A edi-lvp
+	SUCCESS: Russia: F nat C A edi-lvp
 	SUCCESS: Russia: A cly S A edi-lvp
 ORDERS
-	England: F ech-pic
+	England: F eng-pic
 	England: A lvp-edi		# this is the question
 POSTSTATE
 	England: F iri			
 	England: F nth
 	England: A edi			# lvp-edi retreat
-	England: F pic			# ech-pic retreat
+	England: F pic			# eng-pic retreat
 	#
-	France: F ech
-	France: F mao
+	France: F eng
+	France: F mid
 	#
 	Russia: A lvp
-	Russia: F nwg
-	Russia: F nao
+	Russia: F nrg
+	Russia: F nat
 	Russia: A cly
 END
 
@@ -3456,20 +3456,20 @@ END
 CASE 6.H.13
 PRESTATE_SETPHASE Spring 1901, Retreat
 PRESTATE
-	England: F ech
+	England: F eng
 	France: A pic
 	France: A bre
 PRESTATE_DISLODGED
 	England: A pic
 PRESTATE_RESULTS
 	FAILURE: England: A pic H
-	FAILURE: England: F ech C A pic-lon
+	FAILURE: England: F eng C A pic-lon
 	SUCCESS: France: A par-pic
 	SUCCESS: France: A bre S A par-pic
 ORDERS
 	England: A pic-lon		# illegal retreat! will disband.
 POSTSTATE
-	England: F ech
+	England: F eng
 	France: A pic
 	France: A bre
 END
@@ -3480,7 +3480,7 @@ END
 CASE 6.H.14
 PRESTATE_SETPHASE Spring 1901, Retreat
 PRESTATE	
-	England: F ech
+	England: F eng
 	France: A par
 	France: A bre
 	Germany: A mun
@@ -3490,7 +3490,7 @@ PRESTATE_DISLODGED
 	France: A bur	
 PRESTATE_RESULTS
 	FAILURE: England: A pic H
-	FAILURE: England: F ech C A pic-bel
+	FAILURE: England: F eng C A pic-bel
 	SUCCESS: France: A par-pic
 	SUCCESS: France: A bre S A par-pic
 	SUCCESS: France: A bur H
@@ -3500,7 +3500,7 @@ ORDERS
 	England: A pic-bel		# will disband
 	France: A bur-bel		# will disband
 POSTSTATE
-	England: F ech
+	England: F eng
 	France: A par
 	France: A bre
 	Germany: A mun
@@ -3514,16 +3514,16 @@ CASE 6.H.15
 PRESTATE_SETPHASE Spring 1901, Retreat
 PRESTATE
 	France: F spa/sc
-	France: F mao
+	France: F mid
 PRESTATE_RESULTS
 	SUCCESS: France: F spa/sc-por
-	SUCCESS: France: F mao S F spa/sc-por
+	SUCCESS: France: F mid S F spa/sc-por
 	FAILURE: England: F por hold
 ORDERS
-	# NO orders; English F portugal destroyed
+	# NO orders; English F por destroyed
 POSTSTATE
 	France: F spa/sc
-	France: F mao
+	France: F mid
 END
 
 
@@ -3532,22 +3532,22 @@ END
 CASE 6.H.16
 PRESTATE_SETPHASE Spring 1901, Retreat
 PRESTATE
-	France: F mao
+	France: F mid
 	France: F gas
 	Italy: F tun 
 	Italy: F wes
 PRESTATE_DISLODGED
 	France: F wes
 PRESTATE_RESULTS
-	FAILURE: France: F mao-spa
+	FAILURE: France: F mid-spa
 	FAILURE: France: F gas-spa/nc
 	FAILURE: France: F wes H
 	SUCCESS: Italy: F tun S F tys-wes
 	SUCCESS: Italy: F tys-wes
 ORDERS
-	France: F wes-spa/sc	# spain (all of) is contested; disbands
+	France: F wes-spa/sc	# spa (all of) is contested; disbands
 POSTSTATE
-	France: F mao
+	France: F mid
 	France: F gas
 	Italy: F tun 
 	Italy: F wes
@@ -3572,15 +3572,15 @@ CASE 6.I.1
 PRESTATE_SETPHASE Fall 1901, Adjustment
 PRESTATE_SUPPLYCENTER_OWNERS
 	Russia: A war
-	Germany: A kiel
+	Germany: A kie
 	Germany: A mun
 PRESTATE
 	Russia: A war
 	Germany: A par
 ORDERS
 	Germany: Build A war 		# not owned, not a Homse SC, and has a unit there!
-	Germany: Build A kiel		# this should succeed
-	Germany: Build A mun		# fails; already built kiel unit
+	Germany: Build A kie		# this should succeed
+	Germany: Build A mun		# fails; already built kie unit
 POSTSTATE
 	Russia: A war
 	Germany: A par
