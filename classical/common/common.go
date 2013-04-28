@@ -98,6 +98,11 @@ func (self ErrBounce) Error() string {
 	return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
+/*
+convoyPossible will return whether it is possible to convoy from src to dst in v.
+
+It will validate the presence of successful and relevant convoy orders if checkOrders.
+*/
 func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
 	unit, _, ok := v.Unit(src)
 	if !ok {
@@ -134,6 +139,11 @@ func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
 	return nil
 }
 
+/*
+AnyConvoyPossible will return whether it is possible to convoy from any coast in src to any coast in dst.
+
+It will validate the presence of successful and relevant convoy orders if checkConvoyOrders.
+*/
 func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool) (err error) {
 	if err = convoyPossible(v, src, dst, checkConvoyOrders); err == nil {
 		return
@@ -148,6 +158,9 @@ func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool) (
 	return
 }
 
+/*
+AnySupportPossible will return whether the src can support the dst province by checking if movement is possible from src to any coast of dst.
+*/
 func AnySupportPossible(v Validator, src, dst Province) (err error) {
 	if err = movePossible(v, src, dst, false, false); err == nil {
 		return
@@ -162,6 +175,12 @@ func AnySupportPossible(v Validator, src, dst Province) (err error) {
 
 /*
 AnyMovePossible returns true if movePossible would return true for any movement between src and any coast of dst.
+
+It will check sub provinces (coasts) of dstonly if lax or if dst is the name of the super province.
+
+It will allow convoys if allowConvoy.
+
+It will validate presence of successful and relevant convoy orders along the path if checkConvoyOrders.
 */
 func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, checkConvoyOrders bool) (dstCoast Province, err error) {
 	dstCoast = dst
@@ -185,7 +204,7 @@ func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, checkConv
 }
 
 /*
-PossibleMove returns true if a move from src to dst is possible in v.
+movePossible returns true if a move from src to dst is possible in v.
 
 It will validate that the move is theoretically possible without privileged information.
 
@@ -301,4 +320,26 @@ func IsConvoyed(r Resolver, order Order) (result bool, err error) {
 		}
 	}
 	return
+}
+
+/*
+MoveSupport returns the successful supports of movement from src to dst, discounting the nations in forbiddenSupports.
+*/
+func MoveSupport(r Resolver, src, dst Province, forbiddenSupports []Nation) int {
+	_, supports, _ := r.Find(func(p Province, o Order, u *Unit) bool {
+		if o != nil && u != nil {
+			if o.Type() == Support && len(o.Targets()) == 3 && o.Targets()[1].Contains(src) && o.Targets()[2].Contains(dst) {
+				for _, ban := range forbiddenSupports {
+					if ban == u.Nation {
+						return false
+					}
+				}
+				if err := r.Resolve(p); err == nil {
+					return true
+				}
+			}
+		}
+		return false
+	})
+	return len(supports)
 }
