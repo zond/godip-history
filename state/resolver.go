@@ -40,6 +40,7 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 				self.resolving[prov] = true
 				n_guesses := len(self.guesses)
 				err = self.adjudicate(prov)
+				delete(self.resolving, prov)
 				if _, ok = self.guesses[prov]; ok {
 					common.Logf("Guess made for %v, changing guess to positive", prov)
 					self.guesses[prov] = nil
@@ -48,7 +49,6 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 					if (err == nil && secondErr != nil) || (err != nil && secondErr == nil) {
 						common.Logf("Calling backup rule with %v", self.deps)
 						self.State.backupRule(self, self.deps)
-						delete(self.resolving, prov)
 						err = self.Resolve(prov)
 					} else {
 						common.Logf("Only one consistent result, returning %+v", err)
@@ -57,7 +57,6 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 					common.Logf("Made new guess, adding %v to deps", prov)
 					self.deps = append(self.deps, prov)
 				}
-				delete(self.resolving, prov)
 			}
 		} else {
 			common.Logf("Guessed")
