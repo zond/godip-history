@@ -28,15 +28,6 @@ func (self *resolver) adjudicate(prov common.Province) (err error) {
 func (self *resolver) Resolve(prov common.Province) (err error) {
 	common.Logf("Res(%v) (deps %v)", prov, self.deps)
 	common.Indent("  ")
-	defer func() {
-		common.DeIndent()
-		if err == nil {
-			common.Logf("%v: Success (deps %v)", prov, self.deps)
-		} else {
-			common.Logf("%v: Failure: %v (deps %v)", prov, err, self.deps)
-		}
-	}()
-
 	var ok bool
 	if err, ok = self.State.resolutions[prov]; !ok {
 		if err, ok = self.guesses[prov]; !ok {
@@ -77,6 +68,12 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 	if len(self.guesses) == 0 {
 		common.Logf("No guessing, resolving %v", prov)
 		self.State.resolutions[prov] = err
+	}
+	common.DeIndent()
+	if err == nil {
+		common.Logf("%v: Success (deps %v)", prov, self.deps)
+	} else {
+		common.Logf("%v: Failure: %v (deps %v)", prov, err, self.deps)
 	}
 	return
 }
