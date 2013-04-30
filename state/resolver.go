@@ -12,6 +12,19 @@ type resolver struct {
 	resolving map[common.Province]bool
 }
 
+func (self *resolver) adjudicate(prov common.Province) (err error) {
+	common.Logf("Adj(%v)", prov)
+	common.Indent("  ")
+	err = self.State.orders[prov].Adjudicate(self)
+	common.DeIndent()
+	if err == nil {
+		common.Logf("%v: Success", prov)
+	} else {
+		common.Logf("%v: Failure: %v", prov, err)
+	}
+	return
+}
+
 func (self *resolver) Resolve(prov common.Province) (err error) {
 	common.Logf("Res(%v) (deps %v)", prov, self.deps)
 	common.Indent("  ")
@@ -35,27 +48,11 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 			} else {
 				self.resolving[prov] = true
 				n_guesses := len(self.guesses)
-				common.Logf("Adj(%v)", prov)
-				common.Indent("  ")
-				err = self.State.orders[prov].Adjudicate(self)
-				common.DeIndent()
-				if err == nil {
-					common.Logf("%v: Success", prov)
-				} else {
-					common.Logf("%v: Failure: %v", prov, err)
-				}
+				err = self.adjudicate(prov)
 				if _, ok = self.guesses[prov]; ok {
 					common.Logf("Guess made for %v, changing guess to positive", prov)
 					self.guesses[prov] = nil
-					common.Logf("Adj(%v)", prov)
-					common.Indent("  ")
-					secondErr := self.State.orders[prov].Adjudicate(self)
-					common.DeIndent()
-					if secondErr == nil {
-						common.Logf("%v: Success", prov)
-					} else {
-						common.Logf("%v: Failure: %v", prov, secondErr)
-					}
+					secondErr := self.adjudicate(prov)
 					delete(self.guesses, prov)
 					if (err == nil && secondErr != nil) || (err != nil && secondErr == nil) {
 						common.Logf("Calling backup rule with %v", self.deps)
