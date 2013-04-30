@@ -158,7 +158,7 @@ func convoyPossible(v Validator, src, dst Province, checkOrders bool, mustNation
 			return false
 		})
 		for _, waypoint := range waypoints {
-			if convoyPathExists(v, src, waypoint, src, dst, checkOrders) && convoyPathExists(v, waypoint, dst, src, dst, checkOrders) {
+			if convoyPathExists(v, src, waypoint, src, dst, false) && convoyPathExists(v, waypoint, dst, src, dst, false) {
 				return nil
 			}
 		}
