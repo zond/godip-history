@@ -60,8 +60,9 @@ type State struct {
 
 func (self *State) resolver() *resolver {
 	return &resolver{
-		State:   self,
-		guesses: make(map[common.Province]error),
+		State:     self,
+		guesses:   make(map[common.Province]error),
+		resolving: make(map[common.Province]bool),
 	}
 }
 

@@ -1,6 +1,7 @@
 package common
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,6 +10,7 @@ import (
 
 var Debug = false
 var LogIndent = []string{}
+var logBuffer = new(bytes.Buffer)
 
 func Indent(s string) {
 	LogIndent = append(LogIndent, s)
@@ -20,8 +22,16 @@ func DeIndent() {
 
 func Logf(s string, o ...interface{}) {
 	if Debug {
-		fmt.Printf(fmt.Sprintf("%v%v\n", strings.Join(LogIndent, ""), s), o...)
+		fmt.Fprintf(logBuffer, fmt.Sprintf("%v%v\n", strings.Join(LogIndent, ""), s), o...)
 	}
+}
+
+func ClearLog() {
+	logBuffer = new(bytes.Buffer)
+}
+
+func DumpLog() {
+	fmt.Print(string(logBuffer.Bytes()))
 }
 
 func MustParseInt(s string) (result int) {

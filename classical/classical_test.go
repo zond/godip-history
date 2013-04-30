@@ -159,6 +159,7 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 		}
 	}
 	if err {
+		dip.DumpLog()
 		t.Errorf("%v: ### Units:", statePair.Case)
 		for prov, unit := range statePair.Before.Units {
 			t.Errorf("%v: %v %v", statePair.Case, prov, unit)
@@ -197,6 +198,7 @@ func assertDATC(t *testing.T, file string) {
 		ProvinceParser: DATCProvince,
 	}
 	parser.Parse(in, func(statePair *datc.StatePair) {
+		dip.ClearLog()
 		dip.Logf("Running %v", statePair.Case)
 		testDATC(t, statePair)
 	})
