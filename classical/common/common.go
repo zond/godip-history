@@ -98,21 +98,9 @@ func (self ErrBounce) Error() string {
 	return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
-/*
-convoyPossible will return whether it is possible to convoy from src to dst in v.
-
-It will validate the presence of successful and relevant convoy orders if checkOrders.
-*/
-func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
-	unit, _, ok := v.Unit(src)
-	if !ok {
-		return ErrMissingUnit
-	}
-	if unit.Type != Army {
-		return ErrIllegalConvoyUnit
-	}
-	if path := v.Graph().Path(src, dst, func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
-		if name.Contains(src) || name.Contains(dst) {
+func convoyPathExists(v Validator, src, dst, realSrc, realDst Province, checkOrders bool) bool {
+	return v.Graph().Path(src, dst, func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
+		if name.Contains(dst) {
 			return true
 		}
 		if nodeFlags[Land] {
@@ -122,21 +110,60 @@ func convoyPossible(v Validator, src, dst Province, checkOrders bool) error {
 			if !checkOrders {
 				return true
 			}
-			if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
+			if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(realSrc) && order.Targets()[2].Contains(realDst) {
 				if r, ok := v.(Resolver); ok {
-					if err := r.Resolve(prov); err == nil {
-						return true
+					if err := r.Resolve(prov); err != nil {
+						return false
 					}
-				} else {
-					return true
 				}
+				return true
 			}
 		}
 		return false
-	}); path == nil {
-		return ErrMissingConvoyPath
+	}) != nil
+}
+
+/*
+convoyPossible will return whether it is possible to convoy from src to dst in v.
+
+It will validate the presence of successful and relevant convoy orders if checkOrders.
+*/
+func convoyPossible(v Validator, src, dst Province, checkOrders bool, mustNation *Nation) error {
+	unit, _, ok := v.Unit(src)
+	if !ok {
+		return ErrMissingUnit
 	}
-	return nil
+	if unit.Type != Army {
+		return ErrIllegalConvoyUnit
+	}
+	if mustNation == nil {
+		if convoyPathExists(v, src, dst, src, dst, checkOrders) {
+			return nil
+		}
+	} else {
+		waypoints, _, _ := v.Find(func(p Province, o Order, u *Unit) bool {
+			if u.Nation == *mustNation && u.Type == Fleet && o.Type() == Convoy {
+				if !checkOrders {
+					return true
+				}
+				if o.Type() == Convoy && o.Targets()[1].Contains(src) && o.Targets()[2].Contains(dst) {
+					if r, ok := v.(Resolver); ok {
+						if err := r.Resolve(p); err != nil {
+							return false
+						}
+					}
+					return true
+				}
+			}
+			return false
+		})
+		for _, waypoint := range waypoints {
+			if convoyPathExists(v, src, waypoint, src, dst, checkOrders) && convoyPathExists(v, waypoint, dst, src, dst, checkOrders) {
+				return nil
+			}
+		}
+	}
+	return ErrMissingConvoyPath
 }
 
 /*
@@ -144,13 +171,13 @@ AnyConvoyPossible will return whether it is possible to convoy from any coast in
 
 It will validate the presence of successful and relevant convoy orders if checkConvoyOrders.
 */
-func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool) (err error) {
-	if err = convoyPossible(v, src, dst, checkConvoyOrders); err == nil {
+func AnyConvoyPossible(v Validator, src, dst Province, checkConvoyOrders bool, mustNation *Nation) (err error) {
+	if err = convoyPossible(v, src, dst, checkConvoyOrders, mustNation); err == nil {
 		return
 	}
 	for _, srcCoast := range v.Graph().Coasts(src) {
 		for _, dstCoast := range v.Graph().Coasts(dst) {
-			if err = convoyPossible(v, srcCoast, dstCoast, checkConvoyOrders); err == nil {
+			if err = convoyPossible(v, srcCoast, dstCoast, checkConvoyOrders, mustNation); err == nil {
 				return
 			}
 		}
@@ -243,7 +270,7 @@ func movePossible(v Validator, src, dst Province, allowConvoy, checkConvoyOrders
 	}
 	if path := v.Graph().Path(src, dst, filter); path == nil || len(path) > 1 {
 		if allowConvoy {
-			return AnyConvoyPossible(v, src, dst, checkConvoyOrders)
+			return AnyConvoyPossible(v, src, dst, checkConvoyOrders, nil)
 		}
 		if path == nil {
 			return ErrMissingPath
@@ -302,10 +329,10 @@ func IsConvoyed(r Resolver, order Order) (result bool, err error) {
 	// is convoyed?
 	if unit.Type == Army {
 		steps := r.Graph().Path(order.Targets()[0], order.Targets()[1], nil)
-		if order.Flags()[ViaConvoy] || len(steps) > 1 {
+		if order.Flags()[ViaConvoy] || len(steps) > 1 || AnyConvoyPossible(r, order.Targets()[0], order.Targets()[1], true, &unit.Nation) == nil {
 			Logf("Conv(%v)", order)
 			Indent("  ")
-			err = AnyConvoyPossible(r, order.Targets()[0], order.Targets()[1], true)
+			err = AnyConvoyPossible(r, order.Targets()[0], order.Targets()[1], true, nil)
 			if err != nil {
 				DeIndent()
 				Logf("%v", err)

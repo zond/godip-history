@@ -61,12 +61,12 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 		} else {
 			common.Logf("Guessed")
 		}
+		if len(self.guesses) == 0 {
+			common.Logf("No guessing, resolving %v", prov)
+			self.State.resolutions[prov] = err
+		}
 	} else {
 		common.Logf("Resolved")
-	}
-	if len(self.guesses) == 0 {
-		common.Logf("No guessing, resolving %v", prov)
-		self.State.resolutions[prov] = err
 	}
 	common.DeIndent()
 	if err == nil {
