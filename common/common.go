@@ -32,6 +32,7 @@ func ClearLog() {
 
 func DumpLog() {
 	fmt.Print(string(logBuffer.Bytes()))
+	ClearLog()
 }
 
 func MustParseInt(s string) (result int) {
