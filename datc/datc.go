@@ -172,6 +172,8 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 						self.UnitTypeParser(match[2]),
 						self.NationParser(match[1]),
 					}
+				} else if line == prestateResults {
+					state = inPrestateResults
 				} else if line == orders {
 					state = inOrders
 				} else if line == prestateDislodged {

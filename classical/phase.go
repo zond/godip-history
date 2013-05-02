@@ -87,13 +87,10 @@ func (self *phase) DefaultOrder(p dip.Province) dip.Adjudicator {
 
 func (self *phase) PostProcess(s dip.State) {
 	if self.typ == cla.Retreat {
-		s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-			if _, _, ok := s.Dislodged(p); ok {
-				s.RemoveDislodged(p)
-				s.SetResolution(p, cla.ErrForcedDisband)
-			}
-			return false
-		})
+		for prov, _ := range s.Dislodgeds() {
+			s.RemoveDislodged(prov)
+			s.SetResolution(prov, cla.ErrForcedDisband)
+		}
 		s.ClearDislodgers()
 		s.ClearBounces()
 		if self.season == cla.Fall {
