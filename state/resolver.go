@@ -49,6 +49,7 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 					if (err == nil && secondErr != nil) || (err != nil && secondErr == nil) {
 						common.Logf("Calling backup rule with %v", self.deps)
 						self.State.backupRule(self, self.deps)
+						self.deps = nil
 						err = self.Resolve(prov)
 					} else {
 						common.Logf("Only one consistent result, returning %+v", err)
