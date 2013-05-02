@@ -29,16 +29,15 @@ This is, currently, my thoughts on what must be true in all variants this judge 
 
 ### Todo
 
-* Build a DATC parser.
-* Introduce the DATC test cases from http://mtn-host.prjek.net/viewmtn/droidippy/branch/changes/cx.ath.troja.jdip.droidippy
 * Make the DATC cases pass...
+ * Currently 6.A-G pass! :-----------)
 * Create DATC compatible test cases from the (at least later) part of the Droidippy database.
 
 ### Algorithm
 
 Heavily inspired by [The Math of Adjudication](http://www.diplom.org/Zine/S2009M/Kruijswijk/DipMath_Chp1.htm) by Lucas Kruijswijk.
 
-Resolve is [judge.State#Resolve](https://github.com/zond/godip/blob/master/judge/judge.go).
+Resolve is https://github.com/zond/godip/blob/master/state/resolver.go.
 
 Adjudicate is defined in each order type.
 
