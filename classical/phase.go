@@ -116,11 +116,13 @@ func (self *phase) PostProcess(s dip.State) {
 			}
 		}
 	} else if self.typ == cla.Movement {
-		for prov, _ := range s.Dislodgeds() {
+		for prov, unit := range s.Dislodgeds() {
 			hasRetreat := false
 			for _, edge := range s.Graph().Edges(prov) {
+				dip.Logf("checking retreat from %v to %v", prov, edge)
 				if _, _, ok := s.Unit(edge); !ok && !s.IsDislodger(edge, prov) {
-					if _, err := cla.AnyMovePossible(s, prov, edge, false, false, false); err == nil {
+					dip.Logf("Checking movement")
+					if path := cla.Path(s, unit.Type, prov, edge); len(path) == 1 {
 						hasRetreat = true
 						break
 					}

@@ -2888,31 +2888,31 @@ CASE 6.G.14. TEST CASE, BOUNCE via convoy TO ADJACENT PLACE
 PRESTATE
 	England: A nwy
 	England: F den
-	England: F Finland
-	France:  F nwywegian Sea
+	England: F fin
+	France:  F nrg
 	France:  F nth
-	Germany: F Skagerrak
-	Russia:  A Sweden
-	Russia:  F Barents Sea
+	Germany: F ska
+	Russia:  A swe
+	Russia:  F bar
 ORDERS
-	England: A nwy - Sweden
-	England: F den Supports A nwy - Sweden
-	England: F Finland Supports A nwy - Sweden
-	France:  F nwywegian Sea - nwy
-	France:  F nth Supports F nwywegian Sea - nwy
-	Germany: F Skagerrak Convoys A Sweden - nwy
-	Russia:  A Sweden - nwy via Convoy
-	Russia:  F Barents Sea Supports A Sweden - nwy
+	England: A nwy - swe
+	England: F den Supports A nwy - swe
+	England: F fin Supports A nwy - swe
+	France:  F nrg - nwy
+	France:  F nth Supports F nrg - nwy
+	Germany: F ska Convoys A swe - nwy
+	Russia:  A swe - nwy via Convoy
+	Russia:  F bar Supports A swe - nwy
 POSTSTATE
-	England: A Sweden
+	England: A swe
 	England: F den
-	England: F Finland
-	France:  F nwywegian Sea
+	England: F fin
+	France:  F nrg
 	France:  F nth
-	Germany: F Skagerrak
-	Russia:  F Barents Sea
+	Germany: F ska
+	Russia:  F bar
 POSTSTATE_DISLODGED
-	# Russia:  A Sweden	 -- this unit is destroyed (not dislodged)
+	# Russia:  A swe	 -- this unit is destroyed (not dislodged)
 END
 
 CASE 6.G.15. TEST CASE, BOUNCE AND DISLODGE WITH DOUBLE CONVOY
@@ -2946,25 +2946,25 @@ PRESTATE
 	England: A den
 	England: F bal
 	England: F nth
-	Russia:  A Sweden
-	Russia:  F Skagerrak
-	Russia:  F nwywegian Sea
+	Russia:  A swe
+	Russia:  F ska
+	Russia:  F nrg
 ORDERS
-	England: A nwy - Sweden
-	England: A den Supports A nwy - Sweden
-	England: F bal Supports A nwy - Sweden
+	England: A nwy - swe
+	England: A den Supports A nwy - swe
+	England: F bal Supports A nwy - swe
 	England: F nth - nwy
-	Russia:  A Sweden - nwy via Convoy
-	Russia:  F Skagerrak Convoys A Sweden - nwy
-	Russia:  F nwywegian Sea Supports A Sweden - nwy
+	Russia:  A swe - nwy via Convoy
+	Russia:  F ska Convoys A swe - nwy
+	Russia:  F nrg Supports A swe - nwy
 POSTSTATE
-	England: A Sweden
+	England: A swe
 	England: A den
 	England: F bal
 	England: F nth
 	Russia:  A nwy
-	Russia:  F Skagerrak
-	Russia:  F nwywegian Sea
+	Russia:  F ska
+	Russia:  F nrg
 POSTSTATE_DISLODGED
 END
 
@@ -2973,26 +2973,26 @@ PRESTATE
 	England: A nwy
 	England: A den
 	England: F bal
-	England: F Skagerrak
+	England: F ska
 	England: F nth
-	Russia:  A Sweden
-	Russia:  F nwywegian
+	Russia:  A swe
+	Russia:  F nwy
 ORDERS
-	England: A nwy - Sweden via Convoy
-	England: A den Supports A nwy - Sweden
-	England: F bal Supports A nwy - Sweden
-	England: F Skagerrak Convoys A nwy - Sweden
+	England: A nwy - swe via Convoy
+	England: A den Supports A nwy - swe
+	England: F bal Supports A nwy - swe
+	England: F ska Convoys A nwy - swe
 	England: F nth - nwy
-	Russia:  A Sweden - nwy
-	Russia:  F nwywegian Sea Supports A Sweden - nwy
+	Russia:  A swe - nwy
+	Russia:  F nrg Supports A swe - nwy
 POSTSTATE
-	England: A Sweden
+	England: A swe
 	England: A den
 	England: F bal
-	England: F Skagerrak
+	England: F ska
 	England: F nth
 	Russia:  A nwy
-	Russia:  F nwywegian
+	Russia:  F nwy
 POSTSTATE_DISLODGED
 END
 

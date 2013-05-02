@@ -20,7 +20,11 @@ type move struct {
 }
 
 func (self *move) String() string {
-	return fmt.Sprintf("%v %v %v", self.targets[0], cla.Move, self.targets[1])
+	via := ""
+	if self.flags[cla.ViaConvoy] {
+		via = " via convoy"
+	}
+	return fmt.Sprintf("%v %v %v%v", self.targets[0], cla.Move, self.targets[1], via)
 }
 
 func (self *move) ViaConvoy() *move {
@@ -74,35 +78,35 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], forbiddenSupporters) + 1
 		dip.Logf("'%v' vs '%v': %v", self, competingOrder, attackStrength)
 		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], []dip.Nation{unit.Nation}) + 1; as >= attackStrength {
-			if conv, err := cla.IsConvoyed(r, competingOrder); err == nil {
-				if conv {
+			if cla.MustConvoy(r, competingOrder.Targets()[0]) {
+				if cla.AnyConvoyPath(r, competingOrder.Targets()[0], competingOrder.Targets()[1], true, nil) != nil {
+					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
+					return cla.ErrBounce{competingOrder.Targets()[0]}
+				}
+			} else {
+				dip.Logf("H2HDisl(%v)", self.targets[1])
+				dip.Indent("  ")
+				if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
+					res := o != nil && // is an order
+						u != nil && // is a unit
+						o.Type() == cla.Move && // move
+						o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
+						o.Targets()[0].Super() == competingOrder.Targets()[1].Super() && // from their destination
+						u.Nation != competingUnits[index].Nation // not from themselves
+					if res {
+						if !cla.MustConvoy(r, o.Targets()[0]) && r.Resolve(p) == nil {
+							return true
+						}
+					}
+					return false
+				}); len(dislodgers) == 0 {
+					dip.DeIndent()
+					dip.Logf("Not dislodged")
 					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				} else {
-					dip.Logf("H2HDisl(%v)", self.targets[1])
-					dip.Indent("  ")
-					if dislodgers, _, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-						res := o != nil && // is an order
-							u != nil && // is a unit
-							o.Type() == cla.Move && // move
-							o.Targets()[1].Super() == competingOrder.Targets()[0].Super() && // against the competition
-							o.Targets()[0].Super() == competingOrder.Targets()[1].Super() && // from their destination
-							u.Nation != competingUnits[index].Nation // not from themselves
-						if res {
-							if conv, _ := cla.IsConvoyed(r, o); !conv && r.Resolve(p) == nil {
-								return true
-							}
-						}
-						return false
-					}); len(dislodgers) == 0 {
-						dip.DeIndent()
-						dip.Logf("Not dislodged")
-						dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
-						return cla.ErrBounce{competingOrder.Targets()[0]}
-					} else {
-						dip.DeIndent()
-						dip.Logf("Dislodged by %v", dislodgers)
-					}
+					dip.DeIndent()
+					dip.Logf("Dislodged by %v", dislodgers)
 				}
 			}
 		} else {
@@ -115,9 +119,11 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 	unit, _, _ := r.Unit(self.targets[0])
 
-	convoyed, err := cla.IsConvoyed(r, self)
-	if err != nil {
-		return err
+	convoyed := cla.MustConvoy(r, self.targets[0])
+	if convoyed {
+		if cla.AnyConvoyPath(r, self.targets[0], self.targets[1], true, nil) == nil {
+			return cla.ErrMissingConvoyPath
+		}
 	}
 
 	if err := self.adjudicateAgainstCompetition(r, nil); err != nil {
@@ -132,7 +138,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 		order, prov, _ := r.Order(self.targets[1])
 		dip.Logf("'%v' vs '%v': %v", self, order, attackStrength)
 		if order.Type() == cla.Move {
-			victimConvoyed, _ := cla.IsConvoyed(r, order)
+			victimConvoyed := cla.MustConvoy(r, order.Targets()[0])
 			if !convoyed && !victimConvoyed && order.Targets()[1] == self.targets[0] {
 				as := cla.MoveSupport(r, order.Targets()[0], order.Targets()[1], []dip.Nation{unit.Nation}) + 1
 				dip.Logf("'%v' vs '%v': %v", order, self, as)
@@ -186,6 +192,9 @@ func (self *move) validateRetreatPhase(v dip.Validator) error {
 	if !v.Graph().Has(self.targets[1]) {
 		return cla.ErrInvalidDestination
 	}
+	if self.targets[0] == self.targets[1] {
+		return cla.ErrIllegalMove
+	}
 	var unit dip.Unit
 	var ok bool
 	if unit, self.targets[0], ok = v.Dislodged(self.targets[0]); !ok {
@@ -207,6 +216,9 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 	}
 	if !v.Graph().Has(self.targets[1]) {
 		return cla.ErrInvalidDestination
+	}
+	if self.targets[0] == self.targets[1] {
+		return cla.ErrIllegalMove
 	}
 	var unit dip.Unit
 	var ok bool

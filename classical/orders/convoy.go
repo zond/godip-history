@@ -70,7 +70,7 @@ func (self *convoy) Validate(v dip.Validator) error {
 	if _, self.targets[1], ok = v.Unit(self.targets[1]); !ok {
 		return cla.ErrMissingConvoyee
 	}
-	if err := cla.AnyConvoyPossible(v, self.targets[1], self.targets[2], false, nil); err != nil {
+	if cla.AnyConvoyPath(v, self.targets[1], self.targets[2], false, nil) == nil {
 		return cla.ErrIllegalConvoyMove
 	}
 	return nil

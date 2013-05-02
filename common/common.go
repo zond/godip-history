@@ -23,6 +23,7 @@ func DeIndent() {
 func Logf(s string, o ...interface{}) {
 	if Debug {
 		fmt.Fprintf(logBuffer, fmt.Sprintf("%v%v\n", strings.Join(LogIndent, ""), s), o...)
+		DumpLog()
 	}
 }
 

@@ -73,7 +73,7 @@ func TestSupportValidation(t *testing.T) {
 	judge.SetUnit("spa/nc", dip.Unit{cla.Fleet, cla.France})
 	assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalSupportDestination)
 	// Illegal moves
-	assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrInvalidSupportMove)
+	assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrIllegalSupportMove)
 }
 
 func TestMoveValidation(t *testing.T) {
@@ -83,7 +83,7 @@ func TestMoveValidation(t *testing.T) {
 	// Happy path army
 	assertOrderValidity(t, judge, orders.Move("mun", "ruh"), nil)
 	// Too far
-	assertOrderValidity(t, judge, orders.Move("bre", "wes"), cla.ErrIllegalConvoyUnit)
+	assertOrderValidity(t, judge, orders.Move("bre", "wes"), cla.ErrIllegalMove)
 	// Fleet on land
 	assertOrderValidity(t, judge, orders.Move("bre", "par"), cla.ErrIllegalDestination)
 	// Army at sea
@@ -112,7 +112,16 @@ func TestMoveAdjudication(t *testing.T) {
 }
 
 func testDATC(t *testing.T, statePair *datc.StatePair) {
-	s := Blank(statePair.Before.Phase)
+	var s *state.State
+	if statePair.Before.Phase == nil {
+		s = Blank(&phase{
+			year:   1901,
+			season: cla.Spring,
+			typ:    cla.Movement,
+		})
+	} else {
+		s = Blank(statePair.Before.Phase)
+	}
 	s.SetUnits(statePair.Before.Units)
 	s.SetDislodgeds(statePair.Before.Dislodgeds)
 	s.SetSupplyCenters(statePair.Before.SCs)
