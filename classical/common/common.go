@@ -312,8 +312,6 @@ func AdjustmentStatus(v Validator, me Nation) (builds Orders, disbands Orders, b
 		disbands = nil
 	}
 
-	Logf("builds: %v, disbands: %v, balance: %v", builds, disbands, balance)
-
 	return
 }
 

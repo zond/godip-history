@@ -1,6 +1,7 @@
 package classical
 
 import (
+	"bytes"
 	"fmt"
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
@@ -22,23 +23,34 @@ func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Pro
 		panic(fmt.Errorf("No unit at %v", src))
 	}
 	var filter dip.PathFilter
-	if unit.Type == cla.Fleet {
-		filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
-			return edgeFlags[cla.Sea] && nodeFlags[cla.Sea]
-		}
-	} else {
-		filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
-			u, _, ok := s.Unit(p)
-			return (edgeFlags[cla.Land] && nodeFlags[cla.Land]) || (ok && u.Nation == unit.Nation && u.Type == cla.Fleet)
-		}
-	}
 	found := false
 	for _, destination := range dst {
+		if unit.Type == cla.Fleet {
+			filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
+				return edgeFlags[cla.Sea] && nodeFlags[cla.Sea]
+			}
+		} else {
+			filter = func(p dip.Province, edgeFlags, nodeFlags map[dip.Flag]bool, sc *dip.Nation) bool {
+				if p.Super() == destination.Super() {
+					return true
+				}
+				u, _, ok := s.Unit(p)
+				return (edgeFlags[cla.Land] && nodeFlags[cla.Land]) || (ok && !nodeFlags[cla.Land] && u.Nation == unit.Nation && u.Type == cla.Fleet)
+			}
+		}
 		for _, coast := range s.Graph().Coasts(destination) {
-			if path := s.Graph().Path(src, coast, filter); path != nil {
-				if !found || len(path) < result {
-					result = len(path)
-					found = true
+			for _, srcCoast := range s.Graph().Coasts(src) {
+				if path := s.Graph().Path(srcCoast, coast, filter); path != nil {
+					if !found || len(path) < result {
+						result = len(path)
+						found = true
+					}
+				}
+				if path := s.Graph().Path(srcCoast, coast, nil); path != nil {
+					if !found || len(path) < result {
+						result = len(path)
+						found = true
+					}
 				}
 			}
 		}
@@ -49,6 +61,7 @@ func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Pro
 type remoteUnitSlice struct {
 	provinces []dip.Province
 	distances map[dip.Province]int
+	units     map[dip.Province]dip.Unit
 }
 
 func (self remoteUnitSlice) Len() int {
@@ -60,16 +73,29 @@ func (self remoteUnitSlice) Swap(i, j int) {
 }
 
 func (self remoteUnitSlice) Less(i, j int) bool {
+	if self.distances[self.provinces[i]] == self.distances[self.provinces[j]] {
+		u1 := self.units[self.provinces[i]]
+		u2 := self.units[self.provinces[j]]
+		if u1.Type == cla.Fleet && u2.Type == cla.Army {
+			return true
+		}
+		if u2.Type == cla.Fleet && u1.Type == cla.Army {
+			return false
+		}
+		return bytes.Compare([]byte(self.provinces[i]), []byte(self.provinces[j])) < 0
+	}
 	return self.distances[self.provinces[i]] > self.distances[self.provinces[j]]
 }
 
 func (self *phase) sortedUnits(s dip.State, n dip.Nation) []dip.Province {
 	provs := remoteUnitSlice{
 		distances: make(map[dip.Province]int),
+		units:     make(map[dip.Province]dip.Unit),
 	}
 	provs.provinces, _, _ = s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 		if u != nil && u.Nation == n {
 			provs.distances[p] = self.shortestDistance(s, p, s.Graph().SCs(n))
+			provs.units[p] = *u
 			return true
 		}
 		return false
