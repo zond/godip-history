@@ -184,15 +184,6 @@ func MustConvoy(r Resolver, src Province) bool {
 		AnyConvoyPath(r, order.Targets()[0], order.Targets()[1], false, &unit.Nation) != nil)
 }
 
-func InConvoyPath(r Resolver, src, dst, needle Province) bool {
-	for _, prov := range AnyConvoyPath(r, src, dst, true, nil) {
-		if prov.Super() == needle.Super() {
-			return true
-		}
-	}
-	return false
-}
-
 func AnyConvoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *Nation) (result []Province) {
 	if result = convoyPath(v, src, dst, resolveConvoys, viaNation); result != nil {
 		return

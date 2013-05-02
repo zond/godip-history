@@ -48,7 +48,6 @@ func (self *support) Adjudicate(r dip.Resolver) error {
 			o.Type() == cla.Move && // move
 			o.Targets()[1].Super() == self.targets[0].Super() && // against us
 			(len(self.targets) == 2 || o.Targets()[0].Super() != self.targets[2].Super()) && // not from something we support attacking
-			(len(self.targets) == 2 || !cla.InConvoyPath(r, o.Targets()[0], o.Targets()[1], self.targets[2])) && // not from something moving along a path that we are attacking
 			u.Nation != unit.Nation { // not from ourselves
 
 			_, err := cla.AnyMovePossible(r, o.Targets()[0], o.Targets()[1], u.Type == cla.Army, true, true) // and legal move counting convoy success
