@@ -120,11 +120,8 @@ func (self *phase) PostProcess(s dip.State) {
 		for prov, unit := range s.Dislodgeds() {
 			hasRetreat := false
 			for _, edge := range s.Graph().Edges(prov) {
-				dip.Logf("checking retreat from %v to %v", prov, edge)
 				if _, _, ok := s.Unit(edge); !ok && !s.IsDislodger(edge, prov) {
-					dip.Logf("Checking movement")
 					if path := cla.Path(s, unit.Type, prov, edge); len(path) == 1 {
-						dip.Logf("retrating to %v is ok", edge)
 						hasRetreat = true
 						break
 					}
