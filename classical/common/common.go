@@ -300,13 +300,13 @@ func AdjustmentStatus(v Validator, me Nation) (builds Orders, disbands Orders, b
 	sort.Sort(builds)
 	sort.Sort(disbands)
 
-	change := scs - units
-	if change > 0 {
+	balance = scs - units
+	if balance > 0 {
 		disbands = nil
-		builds = builds[:Max(0, Min(len(builds)-1, change))]
-	} else if change < 0 {
+		builds = builds[:Max(0, Min(len(builds), balance))]
+	} else if balance < 0 {
 		builds = nil
-		disbands = disbands[:Max(0, Min(len(disbands)-1, change))]
+		disbands = disbands[:Max(0, Min(len(disbands), balance))]
 	} else {
 		builds = nil
 		disbands = nil

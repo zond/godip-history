@@ -44,7 +44,7 @@ func (self *build) At() time.Time {
 func (self *build) Adjudicate(r dip.Resolver) error {
 	me := r.Graph().SC(self.targets[0])
 	builds, _, _ := cla.AdjustmentStatus(r, *me)
-	if self.at.After(builds[len(builds)-1].At()) {
+	if len(builds) == 0 || self.at.After(builds[len(builds)-1].At()) {
 		return cla.ErrIllegalBuild
 	}
 	return nil

@@ -35,10 +35,14 @@ func (self *disband) Targets() []dip.Province {
 	return self.targets
 }
 
+func (self *disband) At() time.Time {
+	return self.at
+}
+
 func (self *disband) adjudicateBuildPhase(r dip.Resolver) error {
 	unit, _, _ := r.Unit(self.targets[0])
 	_, disbands, _ := cla.AdjustmentStatus(r, unit.Nation)
-	if self.at.After(disbands[len(disbands)-1].At()) {
+	if len(disbands) == 0 || self.at.After(disbands[len(disbands)-1].At()) {
 		return cla.ErrIllegalDisband
 	}
 	return nil
