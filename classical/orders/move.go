@@ -80,7 +80,7 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 			if cla.MustConvoy(r, competingOrder.Targets()[0]) {
 				if cla.AnyConvoyPath(r, competingOrder.Targets()[0], competingOrder.Targets()[1], true, nil) != nil {
 					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
-					r.SetBounce(self.targets[1])
+					r.AddBounce(self.targets[0], self.targets[1])
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				}
 			} else {
@@ -103,7 +103,7 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 					dip.DeIndent()
 					dip.Logf("Not dislodged")
 					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
-					r.SetBounce(self.targets[1])
+					r.AddBounce(self.targets[0], self.targets[1])
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				} else {
 					dip.DeIndent()
@@ -208,10 +208,7 @@ func (self *move) validateRetreatPhase(v dip.Validator) error {
 	if _, _, ok := v.Unit(self.targets[1]); ok {
 		return cla.ErrIllegalRetreat
 	}
-	if v.Bounce(self.targets[1]) {
-		return cla.ErrIllegalRetreat
-	}
-	if v.IsDislodger(self.targets[1], self.targets[0]) {
+	if v.Bounce(self.targets[0], self.targets[1]) {
 		return cla.ErrIllegalRetreat
 	}
 	return nil
@@ -243,6 +240,6 @@ func (self *move) Execute(state dip.State) {
 	if state.Phase().Type() == cla.Retreat {
 		state.Retreat(self.targets[0], self.targets[1])
 	} else {
-		state.Move(self.targets[0], self.targets[1])
+		state.Move(self.targets[0], self.targets[1], !cla.MustConvoy(state, self.targets[0]))
 	}
 }

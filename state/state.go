@@ -15,14 +15,15 @@ func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule) *
 		dislodgeds:    make(map[common.Province]common.Unit),
 		supplyCenters: make(map[common.Province]common.Nation),
 		dislodgers:    make(map[common.Province]common.Province),
-		bounces:       make(map[common.Province]bool),
+		bounces:       make(map[common.Province]map[common.Province]bool),
 	}
 }
 
 type movement struct {
-	src  common.Province
-	dst  common.Province
-	unit common.Unit
+	src            common.Province
+	dst            common.Province
+	unit           common.Unit
+	preventRetreat bool
 }
 
 func (self *movement) prepare(s *State) {
@@ -39,7 +40,9 @@ func (self *movement) execute(s *State) {
 	if dislodged, prov, ok := s.Unit(self.dst); ok {
 		s.RemoveUnit(prov)
 		s.SetDislodged(prov, dislodged)
-		s.SetDislodger(self.src, prov)
+		if self.preventRetreat {
+			s.SetDislodger(self.src, prov)
+		}
 		common.Logf("Dislodged %v from %v", dislodged, self.dst)
 	}
 	s.SetUnit(self.dst, self.unit)
@@ -57,7 +60,7 @@ type State struct {
 	resolutions   map[common.Province]error
 	dislodgers    map[common.Province]common.Province
 	movements     []*movement
-	bounces       map[common.Province]bool
+	bounces       map[common.Province]map[common.Province]bool
 }
 
 func (self *State) resolver() *resolver {
@@ -138,7 +141,7 @@ func (self *State) Next() (err error) {
 	self.movements = nil
 	for prov, order := range self.orders {
 		if err, ok := self.resolutions[prov]; ok && err == nil {
-			order.Execute(self)
+			order.Execute(self.resolver())
 		}
 	}
 	self.orders = make(map[common.Province]common.Adjudicator)
@@ -156,7 +159,7 @@ func (self *State) Next() (err error) {
 	/*
 	   Change phase.
 	*/
-	self.phase.PostProcess(self)
+	self.phase.PostProcess(self.resolver())
 	self.phase = self.phase.Next()
 	return
 }
@@ -197,7 +200,7 @@ func (self *State) SetSupplyCenters(supplyCenters map[common.Province]common.Nat
 }
 
 func (self *State) ClearBounces() {
-	self.bounces = make(map[common.Province]bool)
+	self.bounces = make(map[common.Province]map[common.Province]bool)
 }
 
 func (self *State) ClearDislodgers() {
@@ -207,11 +210,17 @@ func (self *State) ClearDislodgers() {
 // Singular setters
 
 func (self *State) SetDislodger(attacker, victim common.Province) {
-	self.dislodgers[victim.Super()] = attacker.Super()
+	self.dislodgers[attacker.Super()] = victim.Super()
 }
 
-func (self *State) SetBounce(prov common.Province) {
-	self.bounces[prov.Super()] = true
+func (self *State) AddBounce(src, dst common.Province) {
+	if existing, ok := self.bounces[dst.Super()]; ok {
+		existing[src.Super()] = true
+	} else {
+		self.bounces[dst.Super()] = map[common.Province]bool{
+			src.Super(): true,
+		}
+	}
 }
 
 func (self *State) SetResolution(p common.Province, err error) {
@@ -279,15 +288,17 @@ func (self *State) Orders() map[common.Province]common.Adjudicator {
 
 // Singular getters, will search all coasts of a province
 
-func (self *State) Bounce(prov common.Province) bool {
-	return self.bounces[prov.Super()]
-}
-
-func (self *State) IsDislodger(attacker, victim common.Province) bool {
-	if dislodger, ok := self.dislodgers[victim.Super()]; ok {
-		if dislodger.Super() == attacker.Super() {
-			return true
+func (self *State) Bounce(src, dst common.Province) bool {
+	if sources, ok := self.bounces[dst.Super()]; ok {
+		if dislodger, ok := self.dislodgers[dst.Super()]; ok {
+			if len(sources) == 1 && sources[dislodger.Super()] {
+				return false
+			}
 		}
+		return true
+	}
+	if self.dislodgers[dst.Super()] == src.Super() {
+		return true
 	}
 	return false
 }
@@ -370,10 +381,11 @@ func (self *State) Order(prov common.Province) (o common.Order, p common.Provinc
 
 // Mutators
 
-func (self *State) Move(src, dst common.Province) {
+func (self *State) Move(src, dst common.Province, preventRetreat bool) {
 	self.movements = append(self.movements, &movement{
-		src: src,
-		dst: dst,
+		src:            src,
+		dst:            dst,
+		preventRetreat: preventRetreat,
 	})
 }
 

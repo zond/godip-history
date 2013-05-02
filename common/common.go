@@ -182,35 +182,30 @@ type Validator interface {
 	Unit(Province) (Unit, Province, bool)
 	Dislodged(Province) (Unit, Province, bool)
 	SupplyCenter(Province) (Nation, Province, bool)
-	Bounce(Province) bool
+	Bounce(src, dst Province) bool
 
 	Orders() map[Province]Adjudicator
 	Units() map[Province]Unit
 	Dislodgeds() map[Province]Unit
 	SupplyCenters() map[Province]Nation
 
-	IsDislodger(attacker Province, victim Province) bool
 	Graph() Graph
 	Phase() Phase
 	Find(StateFilter) (provinces []Province, orders []Order, units []*Unit)
 }
 
-type Bouncer interface {
-	SetBounce(Province)
-}
-
 type Resolver interface {
 	Validator
-	Bouncer
+
+	AddBounce(src, dst Province)
 	Resolve(Province) error
 }
 
 type State interface {
-	Bouncer
-	Validator
+	Resolver
 
-	Move(Province, Province)
-	Retreat(Province, Province)
+	Move(src, dst Province, preventRetreat bool)
+	Retreat(src, dst Province)
 
 	RemoveDislodged(Province)
 	RemoveUnit(Province)
@@ -219,7 +214,7 @@ type State interface {
 	SetSC(Province, Nation)
 	SetOrder(Province, Adjudicator)
 	SetUnit(Province, Unit)
-	SetDislodger(Province, Province)
+	SetDislodger(attacker, victim Province)
 
 	ClearDislodgers()
 	ClearBounces()

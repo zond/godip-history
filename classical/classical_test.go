@@ -144,13 +144,12 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 		}
 	}
 	for _, order := range statePair.Before.FailedOrders {
-		if order.Order.Type() == cla.Move {
-			dip.Logf("bounce in %v", order.Order.Targets()[1])
-			s.SetBounce(order.Order.Targets()[1])
+		if order.Order.Type() == cla.Move && !order.Order.Flags()[cla.ViaConvoy] {
+			s.AddBounce(order.Order.Targets()[0], order.Order.Targets()[1])
 		}
 	}
 	for _, order := range statePair.Before.SuccessfulOrders {
-		if order.Order.Type() == cla.Move {
+		if order.Order.Type() == cla.Move && !order.Order.Flags()[cla.ViaConvoy] {
 			s.SetDislodger(order.Order.Targets()[0], order.Order.Targets()[1])
 		}
 	}

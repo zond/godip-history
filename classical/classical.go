@@ -18,10 +18,6 @@ func Start() *state.State {
 		SetSupplyCenters(start.SupplyCenters())
 }
 
-/*
-BackupRule will make sets of only Move orders succeed, while orders with at least one Convoy all fail.
-Any other alternative will cause a panic.
-*/
 func BackupRule(state dip.State, deps []dip.Province) {
 	dip.Logf("Calling backup rule for %v", deps)
 	only_moves := true
