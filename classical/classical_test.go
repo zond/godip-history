@@ -136,8 +136,14 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 				s.SetOrder(prov, order.Order)
 			}
 		} else if s.Phase().Type() == cla.Adjustment {
-			if n, _, ok := s.SupplyCenter(prov); ok && n == order.Nation {
-				s.SetOrder(prov, order.Order)
+			if order.Order.Type() == cla.Build {
+				if n, _, ok := s.SupplyCenter(prov); ok && n == order.Nation {
+					s.SetOrder(prov, order.Order)
+				}
+			} else if order.Order.Type() == cla.Disband {
+				if u, _, ok := s.Unit(prov); ok && u.Nation == order.Nation {
+					s.SetOrder(prov, order.Order)
+				}
 			}
 		} else {
 			panic(fmt.Errorf("Unsupported phase type %v", s.Phase().Type()))

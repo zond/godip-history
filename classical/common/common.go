@@ -306,11 +306,13 @@ func AdjustmentStatus(v Validator, me Nation) (builds Orders, disbands Orders, b
 		builds = builds[:Max(0, Min(len(builds), balance))]
 	} else if balance < 0 {
 		builds = nil
-		disbands = disbands[:Max(0, Min(len(disbands), balance))]
+		disbands = disbands[:Max(0, Min(len(disbands), -balance))]
 	} else {
 		builds = nil
 		disbands = nil
 	}
+
+	Logf("builds: %v, disbands: %v, balance: %v", builds, disbands, balance)
 
 	return
 }
