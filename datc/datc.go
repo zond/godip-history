@@ -20,6 +20,8 @@ var stateReg = regexp.MustCompile("^([^:\\s]+):?\\s+(\\S+)\\s+(\\S+)\\s*$")
 
 var ordersReg = regexp.MustCompile("^([^:]+):\\s+(.*)$")
 
+var preOrderReg = regexp.MustCompile("^(SUCCESS|FAILURE):\\s+([^:]+):\\s+(.*)$")
+
 const (
 	prestate                   = "PRESTATE"
 	orders                     = "ORDERS"
@@ -28,14 +30,20 @@ const (
 	poststate                  = "POSTSTATE"
 	poststateDislodged         = "POSTSTATE_DISLODGED"
 	prestateSupplycenterOwners = "PRESTATE_SUPPLYCENTER_OWNERS"
+	prestateDislodged          = "PRESTATE_DISLODGED"
+	prestateResults            = "PRESTATE_RESULTS"
+	success                    = "SUCCESS"
+	failure                    = "FAILURE"
 )
 
 func newState() *State {
 	return &State{
-		SCs:        make(map[common.Province]common.Nation),
-		Units:      make(map[common.Province]common.Unit),
-		Dislodgeds: make(map[common.Province]common.Unit),
-		Orders:     make(map[common.Province]NationalizedOrder),
+		SCs:              make(map[common.Province]common.Nation),
+		Units:            make(map[common.Province]common.Unit),
+		Dislodgeds:       make(map[common.Province]common.Unit),
+		Orders:           make(map[common.Province]NationalizedOrder),
+		FailedOrders:     make(map[common.Province]NationalizedOrder),
+		SuccessfulOrders: make(map[common.Province]NationalizedOrder),
 	}
 }
 
@@ -49,11 +57,13 @@ func (self NationalizedOrder) String() string {
 }
 
 type State struct {
-	SCs        map[common.Province]common.Nation
-	Units      map[common.Province]common.Unit
-	Dislodgeds map[common.Province]common.Unit
-	Orders     map[common.Province]NationalizedOrder
-	Phase      common.Phase
+	SCs              map[common.Province]common.Nation
+	Units            map[common.Province]common.Unit
+	Dislodgeds       map[common.Province]common.Unit
+	Orders           map[common.Province]NationalizedOrder
+	FailedOrders     map[common.Province]NationalizedOrder
+	SuccessfulOrders map[common.Province]NationalizedOrder
+	Phase            common.Phase
 }
 
 func (self *State) copyFrom(o *State) {
@@ -114,6 +124,8 @@ const (
 	inPoststate
 	inPoststateDislodged
 	inPrestateSupplycenterOwners
+	inPrestateDislodged
+	inPrestateResults
 )
 
 func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
@@ -162,6 +174,8 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 					}
 				} else if line == orders {
 					state = inOrders
+				} else if line == prestateDislodged {
+					state = inPrestateDislodged
 				} else {
 					panic(fmt.Errorf("Unrecognized line for state inPrestate: %#v", line))
 				}
@@ -179,6 +193,36 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 					state = inPoststateDislodged
 				} else {
 					panic(fmt.Errorf("Unrecognized line for state inPoststate: %#v", line))
+				}
+			case inPrestateDislodged:
+				if match = stateReg.FindStringSubmatch(line); match != nil {
+					statePair.Before.Dislodgeds[self.ProvinceParser(match[3])] = common.Unit{
+						self.UnitTypeParser(match[2]),
+						self.NationParser(match[1]),
+					}
+				} else if line == prestateResults {
+					state = inPrestateResults
+				} else {
+					panic(fmt.Errorf("Unrecognized line for state inPrestateDislodged: %#v", line))
+				}
+			case inPrestateResults:
+				if match = preOrderReg.FindStringSubmatch(line); match != nil {
+					prov, order := self.OrderParser(match[3])
+					nOrder := NationalizedOrder{
+						Order:  order,
+						Nation: self.NationParser(match[2]),
+					}
+					if match[1] == success {
+						statePair.Before.SuccessfulOrders[prov] = nOrder
+					} else if match[1] == failure {
+						statePair.Before.FailedOrders[prov] = nOrder
+					} else {
+						panic(fmt.Errorf("Unrecognized state for pre order: %#v", match[1]))
+					}
+				} else if line == orders {
+					state = inOrders
+				} else {
+					panic(fmt.Errorf("Unrecognized line for state inPrestateResult: %#v", line))
 				}
 			case inPoststateDislodged:
 				if match = stateReg.FindStringSubmatch(line); match != nil {
@@ -211,6 +255,8 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 				} else {
 					panic(fmt.Errorf("Unrecognized line for state inOrders: %#v", line))
 				}
+			default:
+				panic(fmt.Errorf("Unknown state %v", state))
 			}
 		}
 	}

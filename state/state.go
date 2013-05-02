@@ -15,6 +15,7 @@ func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule) *
 		dislodgeds:    make(map[common.Province]common.Unit),
 		supplyCenters: make(map[common.Province]common.Nation),
 		dislodgers:    make(map[common.Province]common.Province),
+		bounces:       make(map[common.Province]bool),
 	}
 }
 
@@ -38,7 +39,7 @@ func (self *movement) execute(s *State) {
 	if dislodged, prov, ok := s.Unit(self.dst); ok {
 		s.RemoveUnit(prov)
 		s.SetDislodged(prov, dislodged)
-		s.dislodgers[prov] = self.src
+		s.SetDislodger(self.src, prov)
 		common.Logf("Dislodged %v from %v", dislodged, self.dst)
 	}
 	s.SetUnit(self.dst, self.unit)
@@ -56,6 +57,7 @@ type State struct {
 	resolutions   map[common.Province]error
 	dislodgers    map[common.Province]common.Province
 	movements     []*movement
+	bounces       map[common.Province]bool
 }
 
 func (self *State) resolver() *resolver {
@@ -99,7 +101,6 @@ func (self *State) Find(filter common.StateFilter) (provinces []common.Province,
 }
 
 func (self *State) Next() (err error) {
-
 	/*
 	   Sanitize orders.
 	*/
@@ -195,11 +196,23 @@ func (self *State) SetSupplyCenters(supplyCenters map[common.Province]common.Nat
 	return self
 }
 
+func (self *State) ClearBounces() {
+	self.bounces = make(map[common.Province]bool)
+}
+
 func (self *State) ClearDislodgers() {
 	self.dislodgers = make(map[common.Province]common.Province)
 }
 
 // Singular setters
+
+func (self *State) SetDislodger(attacker, victim common.Province) {
+	self.dislodgers[victim.Super()] = attacker.Super()
+}
+
+func (self *State) SetBounce(prov common.Province) {
+	self.bounces[prov.Super()] = true
+}
 
 func (self *State) SetResolution(p common.Province, err error) {
 	self.resolutions[p] = err
@@ -266,19 +279,14 @@ func (self *State) Orders() map[common.Province]common.Adjudicator {
 
 // Singular getters, will search all coasts of a province
 
+func (self *State) Bounce(prov common.Province) bool {
+	return self.bounces[prov.Super()]
+}
+
 func (self *State) IsDislodger(attacker, victim common.Province) bool {
-	if dislodger, ok := self.findDislodger(victim); ok {
-		if dislodger == attacker {
+	if dislodger, ok := self.dislodgers[victim.Super()]; ok {
+		if dislodger.Super() == attacker.Super() {
 			return true
-		}
-		sup, _ := dislodger.Split()
-		if sup == attacker {
-			return true
-		}
-		for _, name := range self.graph.Coasts(dislodger) {
-			if name == attacker {
-				return true
-			}
 		}
 	}
 	return false
@@ -360,24 +368,6 @@ func (self *State) Order(prov common.Province) (o common.Order, p common.Provinc
 	return
 }
 
-// Finders, used by singular getters and setters
-
-func (self *State) findDislodger(prov common.Province) (p common.Province, ok bool) {
-	if p, ok = self.dislodgers[prov]; ok {
-		return
-	}
-	sup, _ := prov.Split()
-	if p, ok = self.dislodgers[sup]; ok {
-		return
-	}
-	for _, name := range self.graph.Coasts(prov) {
-		if p, ok = self.dislodgers[name]; ok {
-			return
-		}
-	}
-	return
-}
-
 // Mutators
 
 func (self *State) Move(src, dst common.Province) {
@@ -393,5 +383,6 @@ func (self *State) Retreat(src, dst common.Province) {
 	} else {
 		self.RemoveDislodged(prov)
 		self.SetUnit(dst, unit)
+		common.Logf("Moving dislodged %v from %v to %v", unit, src, dst)
 	}
 }

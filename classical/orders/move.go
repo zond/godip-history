@@ -52,11 +52,10 @@ func (self *move) Adjudicate(r dip.Resolver) error {
 }
 
 func (self *move) adjudicateRetreatPhase(r dip.Resolver) error {
-	_, competingOrders, _ := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
-		return p != self.targets[0] && o.Type() == cla.Move && o.Targets()[1] == self.targets[1]
-	})
-	if len(competingOrders) > 0 {
-		return cla.ErrBounce{competingOrders[0].Targets()[0]}
+	for prov, order := range r.Orders() {
+		if prov.Super() != self.targets[0].Super() && order.Type() == cla.Move && order.Targets()[1].Super() == self.targets[1].Super() {
+			return cla.ErrBounce{order.Targets()[0]}
+		}
 	}
 	return nil
 }
@@ -81,6 +80,7 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 			if cla.MustConvoy(r, competingOrder.Targets()[0]) {
 				if cla.AnyConvoyPath(r, competingOrder.Targets()[0], competingOrder.Targets()[1], true, nil) != nil {
 					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
+					r.SetBounce(self.targets[1])
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				}
 			} else {
@@ -103,6 +103,7 @@ func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporte
 					dip.DeIndent()
 					dip.Logf("Not dislodged")
 					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)
+					r.SetBounce(self.targets[1])
 					return cla.ErrBounce{competingOrder.Targets()[0]}
 				} else {
 					dip.DeIndent()
@@ -203,6 +204,12 @@ func (self *move) validateRetreatPhase(v dip.Validator) error {
 	var err error
 	if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, false, false); err != nil {
 		return err
+	}
+	if _, _, ok := v.Unit(self.targets[1]); ok {
+		return cla.ErrIllegalRetreat
+	}
+	if v.Bounce(self.targets[1]) {
+		return cla.ErrIllegalRetreat
 	}
 	if v.IsDislodger(self.targets[1], self.targets[0]) {
 		return cla.ErrIllegalRetreat

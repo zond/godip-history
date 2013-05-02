@@ -95,6 +95,7 @@ func (self *phase) PostProcess(s dip.State) {
 			return false
 		})
 		s.ClearDislodgers()
+		s.ClearBounces()
 		if self.season == cla.Fall {
 			s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 				if u != nil {
@@ -123,6 +124,7 @@ func (self *phase) PostProcess(s dip.State) {
 				if _, _, ok := s.Unit(edge); !ok && !s.IsDislodger(edge, prov) {
 					dip.Logf("Checking movement")
 					if path := cla.Path(s, unit.Type, prov, edge); len(path) == 1 {
+						dip.Logf("retrating to %v is ok", edge)
 						hasRetreat = true
 						break
 					}

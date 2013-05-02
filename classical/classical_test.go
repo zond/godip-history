@@ -1,6 +1,7 @@
 package classical
 
 import (
+	"fmt"
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
 	dip "github.com/zond/godip/common"
@@ -126,9 +127,31 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 	s.SetDislodgeds(statePair.Before.Dislodgeds)
 	s.SetSupplyCenters(statePair.Before.SCs)
 	for prov, order := range statePair.Before.Orders {
-		u, _, ok := s.Unit(prov)
-		if ok && u.Nation == order.Nation {
-			s.SetOrder(prov, order.Order)
+		if s.Phase().Type() == cla.Movement {
+			if u, _, ok := s.Unit(prov); ok && u.Nation == order.Nation {
+				s.SetOrder(prov, order.Order)
+			}
+		} else if s.Phase().Type() == cla.Retreat {
+			if u, _, ok := s.Dislodged(prov); ok && u.Nation == order.Nation {
+				s.SetOrder(prov, order.Order)
+			}
+		} else if s.Phase().Type() == cla.Adjustment {
+			if n, _, ok := s.SupplyCenter(prov); ok && n == order.Nation {
+				s.SetOrder(prov, order.Order)
+			}
+		} else {
+			panic(fmt.Errorf("Unsupported phase type %v", s.Phase().Type()))
+		}
+	}
+	for _, order := range statePair.Before.FailedOrders {
+		if order.Order.Type() == cla.Move {
+			dip.Logf("bounce in %v", order.Order.Targets()[1])
+			s.SetBounce(order.Order.Targets()[1])
+		}
+	}
+	for _, order := range statePair.Before.SuccessfulOrders {
+		if order.Order.Type() == cla.Move {
+			s.SetDislodger(order.Order.Targets()[0], order.Order.Targets()[1])
 		}
 	}
 	s.Next()
@@ -172,6 +195,10 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 		t.Errorf("%v: ### Units:", statePair.Case)
 		for prov, unit := range statePair.Before.Units {
 			t.Errorf("%v: %v %v", statePair.Case, prov, unit)
+		}
+		t.Errorf("%v: ### Dislodged before:", statePair.Case)
+		for prov, disl := range statePair.Before.Dislodgeds {
+			t.Errorf("%v: %v %v", statePair.Case, prov, disl)
 		}
 		t.Errorf("%v: ### Orders:", statePair.Case)
 		for _, order := range statePair.Before.Orders {
