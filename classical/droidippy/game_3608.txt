@@ -1,0 +1,3648 @@
+PHASE 1901 Spring Movement
+POSITIONS
+Turkey: F ank
+Turkey: S ank
+Germany: A ber
+Germany: S ber
+France: F bre
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: A con
+Turkey: S con
+England: F edi
+England: S edi
+Germany: F kie
+Germany: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: A mar
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: F nap
+Italy: S nap
+France: A par
+France: S par
+Italy: A rom
+Italy: S rom
+Russia: F sev
+Russia: S sev
+Turkey: A smy
+Turkey: S smy
+Russia: S stp
+Russia: F stp/sc
+Austria: F tri
+Austria: S tri
+Italy: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Russia: A war
+Russia: S war
+ORDERS
+ Turkey: Fleet ank move con
+ Germany: Army ber move kie
+ France: Fleet bre move mid
+ Austria: Army bud move rum
+ Turkey: Army con move bul
+ England: Fleet edi move nth
+ Germany: Fleet kie move den
+ England: Fleet lon move eng
+ England: Army lvp move yor
+ France: Army mar move spa
+ Germany: Army mun move ruh
+ Italy: Fleet nap move tys
+ France: Army par move pic
+ Italy: Army rom move tus
+ Turkey: Army smy move arm
+ Austria: Fleet tri move alb
+ Italy: Army ven move tri
+ Austria: Army vie move tri
+PHASE 1901 Fall Movement
+POSITIONS
+Austria: F alb
+Turkey: S ank
+Turkey: A arm
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: A bul
+Turkey: F con
+Turkey: S con
+Germany: F den
+England: S edi
+England: F eng
+Germany: A kie
+Germany: S kie
+England: S lon
+England: S lvp
+France: F mao
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: S mun
+Italy: S nap
+England: F nth
+France: S par
+France: A pic
+Italy: S rom
+Germany: A ruh
+Austria: A rum
+Russia: F sev
+Russia: S sev
+Turkey: S smy
+France: A spa
+Russia: S stp
+Russia: F stp/sc
+Austria: S tri
+Italy: A tus
+Italy: F tys
+Italy: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Russia: A war
+Russia: S war
+England: A yor
+ORDERS
+ Austria: Fleet alb move gre
+ Turkey: Army arm move sev
+ Turkey: Army bul move ser
+ Turkey: Fleet con move bul/ec
+ Germany: Fleet den hold
+ England: Fleet eng hold
+ Germany: Army kie move mun
+ France: Fleet mid move spa/sc
+ England: Fleet nth convoy Army yor move hol
+ France: Army pic move bel
+ Germany: Army ruh move hol
+ Austria: Army rum hold
+ France: Army spa move por
+ Italy: Army tus move ven
+ Italy: Fleet tys move tun
+ Italy: Army ven move tri
+ Austria: Army vie move tri
+ England: Army yor move hol via convoy
+PHASE 1901 Fall Adjustment
+POSITIONS
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+England: F eng
+Austria: F gre
+Austria: S gre
+Germany: S kie
+England: S lon
+England: S lvp
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+France: S par
+France: A por
+France: S por
+Italy: S rom
+Germany: A ruh
+Austria: A rum
+Austria: S rum
+Turkey: A ser
+Turkey: S ser
+Russia: F sev
+Russia: S sev
+Turkey: S smy
+France: S spa
+France: F spa/sc
+Russia: S stp
+Russia: F stp/sc
+Austria: S tri
+Italy: F tun
+Italy: S tun
+Italy: A tus
+Italy: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Russia: A war
+Russia: S war
+England: A yor
+ORDERS
+ Germany: build Fleet ber
+ France: build Army bre
+ Austria: build Army bud
+ Turkey: build Fleet con
+ France: build Fleet mar
+ Italy: build Fleet nap
+ France: build Army par
+ Turkey: build Fleet smy
+ Austria: build Army tri
+PHASE 1902 Spring Movement
+POSITIONS
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: F ber
+Germany: S ber
+France: A bre
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+Turkey: F con
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+England: F eng
+Austria: F gre
+Austria: S gre
+Germany: S kie
+England: S lon
+England: S lvp
+France: F mar
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: F nap
+Italy: S nap
+England: F nth
+France: A par
+France: S par
+France: A por
+France: S por
+Italy: S rom
+Germany: A ruh
+Austria: A rum
+Austria: S rum
+Turkey: A ser
+Turkey: S ser
+Russia: F sev
+Russia: S sev
+Turkey: F smy
+Turkey: S smy
+France: S spa
+France: F spa/sc
+Russia: S stp
+Russia: F stp/sc
+Austria: A tri
+Austria: S tri
+Italy: F tun
+Italy: S tun
+Italy: A tus
+Italy: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Russia: A war
+Russia: S war
+England: A yor
+ORDERS
+ Turkey: Army arm hold
+ France: Army bel support Army ruh move hol
+ Germany: Fleet ber move bal
+ France: Army bre move pic
+ Austria: Army bud support Army tri
+ Turkey: Fleet bul/ec support Army ser move rum
+ Turkey: Fleet con move aeg
+ Germany: Fleet den move swe
+ Austria: Fleet gre move ion
+ France: Fleet mar move gol
+ Italy: Fleet nap move apu
+ England: Fleet nth convoy Army yor move nwy
+ France: Army par move bur
+ France: Army por move spa
+ Germany: Army ruh move hol
+ Austria: Army rum move ser
+ Turkey: Army ser move rum
+ Turkey: Fleet smy support Fleet con move aeg
+ France: Fleet spa/sc move wes
+ Austria: Army tri hold
+ Italy: Fleet tun move ion
+ Italy: Army tus support Army ven
+ Italy: Army ven hold
+ Austria: Army vie move tyr
+ England: Army yor move nwy via convoy
+PHASE 1902 Spring Retreat
+POSITIONS
+Turkey: F aeg
+Turkey: S ank
+Italy: F apu
+Turkey: A arm
+Germany: F bal
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+France: A bur
+Turkey: S con
+Germany: S den
+England: S edi
+England: F eng
+Austria: F gre
+Austria: S gre
+Germany: A hol
+Germany: S kie
+England: S lon
+England: S lvp
+France: F lyo
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+France: S par
+France: A pic
+France: S por
+Italy: S rom
+Turkey: A rum
+Austria:  rum
+Austria: S rum
+Turkey: S ser
+Russia: F sev
+Russia: S sev
+Turkey: F smy
+Turkey: S smy
+France: A spa
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: F swe
+Austria: A tri
+Austria: S tri
+Italy: F tun
+Italy: S tun
+Italy: A tus
+Austria: A tyr
+Italy: A ven
+Italy: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Austria: Army rum move gal
+PHASE 1902 Fall Movement
+POSITIONS
+Turkey: F aeg
+Turkey: S ank
+Italy: F apu
+Turkey: A arm
+Germany: F bal
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+France: A bur
+Turkey: S con
+Germany: S den
+England: S edi
+England: F eng
+Austria: A gal
+Austria: F gre
+Austria: S gre
+Germany: A hol
+Germany: S kie
+England: S lon
+England: S lvp
+France: F lyo
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+France: S par
+France: A pic
+France: S por
+Italy: S rom
+Turkey: A rum
+Austria: S rum
+Turkey: S ser
+Russia: F sev
+Russia: S sev
+Turkey: F smy
+Turkey: S smy
+France: A spa
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: F swe
+Austria: A tri
+Austria: S tri
+Italy: F tun
+Italy: S tun
+Italy: A tus
+Austria: A tyr
+Italy: A ven
+Italy: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Turkey: Fleet aeg support Fleet gre move ion
+ Italy: Fleet apu move adr
+ Turkey: Army arm move sev
+ Germany: Fleet bal move den
+ Austria: Army bud move ser
+ Turkey: Fleet bul/ec hold
+ England: Fleet eng hold
+ Austria: Army gal move ukr
+ Austria: Fleet gre move ion
+ Germany: Army hol hold
+ Germany: Army mun hold
+ England: Fleet nth support Army nwy
+ Turkey: Army rum support Army arm move sev
+ Turkey: Fleet smy move eas
+ Austria: Army tri support Army tyr move ven
+ Italy: Army tus move ven
+ Austria: Army tyr move ven
+ Italy: Army ven move tri
+PHASE 1902 Fall Retreat
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+France: A bur
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: S gre
+Germany: A hol
+Austria: F ion
+Germany: S kie
+England: S lon
+England: S lvp
+France: F lyo
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+France: S par
+France: A pic
+France: S por
+Italy: S rom
+Turkey: A rum
+Austria: S rum
+Austria: A ser
+Turkey: S ser
+Turkey: A sev
+Russia:  sev
+Russia: S sev
+Turkey: S smy
+France: A spa
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: F swe
+Austria: A tri
+Austria: S tri
+Italy: F tun
+Italy: S tun
+Italy: A tus
+Austria: A ukr
+Austria: A ven
+Italy:  ven
+Italy: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Italy: Army ven move rom
+PHASE 1902 Fall Adjustment
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+France: A bur
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Austria: F ion
+Germany: S kie
+England: S lon
+England: S lvp
+France: F lyo
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: A pic
+France: S por
+Italy: A rom
+Italy: S rom
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+France: A spa
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: F swe
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Italy: F tun
+Italy: S tun
+Italy: A tus
+Austria: A ukr
+Austria: A ven
+Austria: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Germany: build Army ber
+ Austria: build Army bud
+ Germany: build Army kie
+ England: build Army lon
+ Turkey: build Fleet smy
+ Italy: remove Fleet tun
+PHASE 1903 Spring Movement
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+Turkey: F bul/ec
+France: A bur
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Austria: F ion
+Germany: A kie
+Germany: S kie
+England: A lon
+England: S lon
+England: S lvp
+France: F lyo
+France: S mar
+Russia: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: A pic
+France: S por
+Italy: A rom
+Italy: S rom
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: F smy
+Turkey: S smy
+France: A spa
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: F swe
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Italy: S tun
+Italy: A tus
+Austria: A ukr
+Austria: A ven
+Austria: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Italy: Fleet adr support Army rom move ven
+ Turkey: Fleet aeg move gre
+ France: Army bel support Army lon move hol
+ Germany: Army ber move pru
+ Austria: Army bud move gal
+ Turkey: Fleet bul/ec move con
+ France: Army bur move ruh
+ Turkey: Fleet eas move ion
+ Austria: Fleet ion move tys
+ Germany: Army kie move mun
+ England: Army lon move hol via convoy
+ France: Fleet gol support Army ven move tus
+ Germany: Army mun move sil
+ England: Fleet nth convoy Army lon move hol
+ England: Army nwy hold
+ France: Army pic move bur
+ Italy: Army rom move ven
+ Turkey: Army rum move bul
+ Austria: Army ser move gre
+ Turkey: Army sev move mos
+ Turkey: Fleet smy move aeg
+ France: Army spa move mar
+ Germany: Fleet swe move bal
+ Austria: Army tri hold
+ Italy: Army tus support Army rom move ven
+ Austria: Army ukr support Army sev move mos
+ Austria: Army ven move tus
+ France: Fleet wes move tys
+PHASE 1903 Spring Retreat
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+Germany: F bal
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: F con
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: A gal
+Austria: S gre
+England: A hol
+Germany:  hol
+Germany: S hol
+Austria: F ion
+Germany: S kie
+England: S lon
+England: S lvp
+France: F lyo
+France: A mar
+France: S mar
+Turkey: A mos
+Russia:  mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: S por
+Germany: A pru
+Italy: S rom
+France: A ruh
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Germany: A sil
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Italy: S tun
+Austria: A tus
+Italy:  tus
+Austria: A ukr
+Italy: A ven
+Austria: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Germany: Army hol move kie
+ Italy: Army tus move rom
+PHASE 1903 Fall Movement
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+Germany: F bal
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: F con
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: A gal
+Austria: S gre
+England: A hol
+Germany: S hol
+Austria: F ion
+Germany: A kie
+Germany: S kie
+England: S lon
+England: S lvp
+France: F lyo
+France: A mar
+France: S mar
+Turkey: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Italy: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: S por
+Germany: A pru
+Italy: A rom
+Italy: S rom
+France: A ruh
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Germany: A sil
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Italy: S tun
+Austria: A tus
+Austria: A ukr
+Italy: A ven
+Austria: S ven
+Austria: S vie
+Russia: A war
+Russia: S war
+France: F wes
+ORDERS
+ Italy: Fleet adr move ion
+ Germany: Fleet bal move swe
+ France: Army bel support Army ruh
+ Turkey: Army bul move rum
+ France: Army bur move mun
+ Turkey: Fleet con move bla
+ Germany: Fleet den move ska
+ Turkey: Fleet eas move ion
+ England: Fleet eng move nth
+ Austria: Army gal support Army ukr move war
+ England: Army hol move kie
+ Austria: Fleet ion move nap
+ Germany: Army kie support Army mun move ruh
+ France: Fleet gol move tys
+ France: Army mar move pie
+ Turkey: Army mos support Army ukr move war
+ Germany: Army mun move ruh
+ England: Fleet nth move hol
+ England: Army nwy move swe
+ Germany: Army pru move ber
+ Italy: Army rom move tus
+ France: Army ruh support Army hol move kie
+ Austria: Army ser support Army tri
+ Germany: Army sil move mun
+ Austria: Army tri hold
+ Austria: Army tus move rom
+ Austria: Army ukr move war
+ Italy: Army ven support Army rom move tus
+ France: Fleet wes move tun
+PHASE 1903 Fall Retreat
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+Germany: F bal
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+Turkey: F bla
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: S con
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: A gal
+Austria: S gre
+England: A hol
+Germany: S hol
+Germany: A kie
+Germany: S kie
+England: S lon
+England: S lvp
+France: S mar
+Turkey: A mos
+Russia: S mos
+Germany: A mun
+Germany: S mun
+Austria: F nap
+Italy: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: A pie
+France: S por
+Italy: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Germany: A sil
+Germany: F ska
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+Italy: S tun
+Italy: A tus
+France: F tys
+Italy: A ven
+Austria: S ven
+Austria: S vie
+Austria: A war
+Russia:  war
+Russia: S war
+ORDERS
+PHASE 1903 Fall Adjustment
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+Germany: F bal
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+Turkey: F bla
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: S con
+Germany: S den
+Turkey: F eas
+England: S edi
+England: F eng
+Austria: A gal
+Austria: S gre
+England: A hol
+England: S hol
+Germany: A kie
+Germany: S kie
+England: S lon
+England: S lvp
+France: S mar
+Turkey: A mos
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: F nap
+Austria: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: A pie
+France: S por
+Italy: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Germany: A sil
+Germany: F ska
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+Italy: A tus
+France: F tys
+Italy: A ven
+Italy: S ven
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Austria: build Army bud
+ Turkey: build Army con
+ England: build Army edi
+ France: build Army mar
+ Germany: remove Army sil
+ Italy: remove Army tus
+ Austria: build Army vie
+PHASE 1904 Spring Movement
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+Germany: F bal
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+Turkey: F bla
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Turkey: F eas
+England: A edi
+England: S edi
+England: F eng
+Austria: A gal
+Austria: S gre
+England: A hol
+England: S hol
+Germany: A kie
+Germany: S kie
+England: S lon
+England: S lvp
+France: A mar
+France: S mar
+Turkey: A mos
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: F nap
+Austria: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: A pie
+France: S por
+Italy: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Germany: F ska
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: F tys
+Italy: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Italy: Fleet adr support Army ven move tri
+ Turkey: Fleet aeg move gre
+ Germany: Fleet bal move swe
+ France: Army bel move pic
+ Germany: Army ber move mun
+ Turkey: Fleet bla move con
+ France: Army bur support Army ruh
+ Turkey: Army con move bul
+ Turkey: Fleet eas move ion
+ England: Fleet eng move bel
+ Austria: Army gal move war
+ England: Army hol move kie
+ Germany: Army kie support Army mun move ruh
+ France: Army mar support Army bur
+ Turkey: Army mos support Army war move lvn
+ Germany: Army mun move ruh
+ Austria: Fleet nap support Fleet aeg move ion
+ England: Fleet nth hold
+ England: Army nwy move swe
+ France: Army pie support Army tri move ven
+ France: Army ruh support Army hol move kie
+ Turkey: Army rum move gal
+ Austria: Army ser move tri
+ Germany: Fleet ska move nwy
+ Turkey: Fleet smy move aeg
+ Austria: Army tri move ven
+ France: Fleet tun support Fleet tys
+ France: Fleet tys support Fleet tun
+ Italy: Army ven move tri
+ Austria: Army vie move tyr
+ Austria: Army war move lvn
+PHASE 1904 Fall Movement
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: S ank
+Germany: F bal
+England: F bel
+France: S bel
+Germany: A ber
+Germany: S ber
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: F con
+Turkey: S con
+Germany: S den
+England: A edi
+England: S edi
+Turkey: A gal
+Turkey: F gre
+Austria: S gre
+England: A hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: S lon
+Austria: A lvn
+England: S lvp
+France: A mar
+France: S mar
+Turkey: A mos
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: F nap
+Austria: S nap
+England: F nth
+England: A nwy
+England: S nwy
+France: S par
+France: A pic
+France: A pie
+France: S por
+Italy: S rom
+France: A ruh
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Germany: F ska
+Turkey: S smy
+France: S spa
+Russia: S stp
+Russia: F stp/sc
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+Austria: A tyr
+France: F tys
+Italy: A ven
+Italy: S ven
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Italy: Fleet adr support Army ven move tri
+ Turkey: Fleet aeg move ion
+ Germany: Fleet bal move den
+ England: Fleet bel support Fleet nth
+ Germany: Army ber support Army mun
+ France: Army bur move mun
+ Turkey: Fleet con move aeg
+ England: Army edi move den via convoy
+ Turkey: Army gal move boh
+ Turkey: Fleet gre move alb
+ England: Army hol move kie
+ Turkey: Fleet ion move apu
+ Germany: Army kie support Army mun
+ Austria: Army lvn move stp
+ France: Army mar move pie
+ Turkey: Army mos support Army lvn move stp
+ Germany: Army mun support Army kie
+ Austria: Fleet nap move rom
+ England: Fleet nth convoy Army edi move den
+ England: Army nwy move swe
+ France: Army pic support Army bur
+ France: Army pie move tus
+ France: Army ruh support Army hol move kie
+ Austria: Army ser move gre
+ Germany: Fleet ska move nwy
+ Austria: Army tri move ven
+ France: Fleet tun support Fleet tys
+ Austria: Army tyr support Army tri move ven
+ France: Fleet tys support Fleet tun
+ Italy: Army ven move tri
+PHASE 1904 Fall Retreat
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: F alb
+Turkey: S ank
+Turkey: F apu
+Germany: F bal
+England: F bel
+France: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: S con
+Germany: S den
+England: A edi
+England: S edi
+Austria: A gre
+Austria: S gre
+England: S hol
+Turkey: F ion
+England: A kie
+Germany: S kie
+England: S lon
+England: S lvp
+France: S mar
+Turkey: A mos
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: S nap
+England: F nth
+Germany: F nwy
+England: S nwy
+France: S par
+France: A pic
+France: A pie
+France: S por
+Austria: F rom
+Italy: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Turkey: S smy
+France: S spa
+Austria: A stp
+Russia: S stp
+Russia:  stp/sc
+England: A swe
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+France: F tys
+Italy: A ven
+Italy: S ven
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+PHASE 1904 Fall Adjustment
+POSITIONS
+Italy: F adr
+Turkey: F aeg
+Turkey: F alb
+Turkey: S ank
+Turkey: F apu
+Germany: F bal
+England: F bel
+England: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: S con
+Germany: S den
+England: A edi
+England: S edi
+Austria: A gre
+Austria: S gre
+England: S hol
+Turkey: F ion
+England: A kie
+England: S kie
+England: S lon
+England: S lvp
+France: S mar
+Turkey: A mos
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: S nap
+England: F nth
+Germany: F nwy
+Germany: S nwy
+France: S par
+France: A pic
+France: A pie
+France: S por
+Austria: F rom
+Austria: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+England: A swe
+England: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+France: F tys
+Italy: A ven
+Italy: S ven
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Italy: remove Fleet adr
+ England: build Fleet lon
+ England: build Army lvp
+ France: remove Army pic
+ Austria: build Army vie
+PHASE 1905 Spring Movement
+POSITIONS
+Turkey: F aeg
+Turkey: F alb
+Turkey: S ank
+Turkey: F apu
+Germany: F bal
+England: F bel
+England: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: S con
+Germany: S den
+England: A edi
+England: S edi
+Austria: A gre
+Austria: S gre
+England: S hol
+Turkey: F ion
+England: A kie
+England: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: S mar
+Turkey: A mos
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: S nap
+England: F nth
+Germany: F nwy
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Austria: F rom
+Austria: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+England: A swe
+England: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+France: F tys
+Italy: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: Fleet aeg move ion
+ Turkey: Fleet alb move adr
+ Turkey: Fleet apu support Army tri move ven
+ Germany: Fleet bal support Army ber move kie
+ England: Fleet bel move hol
+ Germany: Army ber move kie
+ Turkey: Army boh support Army mun
+ Austria: Army bud move rum
+ Turkey: Army bul move rum
+ France: Army bur move mun
+ England: Army edi move den via convoy
+ Austria: Army gre hold
+ Turkey: Fleet ion move tys
+ England: Army kie move ber
+ Turkey: Army mos move lvn
+ Germany: Army mun hold
+ England: Fleet nth convoy Army edi move den
+ Germany: Fleet nwy move nth
+ Austria: Fleet rom hold
+ France: Army ruh support Army bur move mun
+ Austria: Army stp support Fleet nwy
+ Austria: Army tri support Army tyr move ven
+ France: Fleet tun support Fleet tys
+ France: Army tus move nap via convoy
+ Austria: Army tyr move ven
+ Italy: Army ven hold
+ Austria: Army vie support Army tyr
+ Austria: Army war move sil
+PHASE 1905 Fall Movement
+POSITIONS
+Turkey: F adr
+Turkey: F aeg
+Turkey: S ank
+Turkey: F apu
+Germany: F bal
+England: S bel
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: A bul
+Turkey: S bul
+France: A bur
+Turkey: S con
+England: A den
+Germany: S den
+England: S edi
+Austria: A gre
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+England: S kie
+England: F lon
+England: S lon
+Turkey: A lvn
+England: A lvp
+England: S lvp
+France: S mar
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Austria: S nap
+England: F nth
+Germany: F nwy
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Austria: F rom
+Austria: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+England: A swe
+England: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+France: F tys
+Austria: A ven
+Italy: S ven
+Austria: A vie
+Austria: S vie
+Austria: S war
+ORDERS
+ Turkey: Fleet adr support Army ven
+ Turkey: Fleet aeg move ion
+ Turkey: Fleet apu support Fleet ion move nap
+ Germany: Fleet bal move swe
+ Turkey: Army boh support Army mun
+ Austria: Army bud move gal
+ Turkey: Army bul move rum
+ Turkey: Fleet ion move nap
+ Germany: Army kie hold
+ Turkey: Army lvn move pru
+ Germany: Army mun support Army kie
+ Germany: Fleet nwy support Fleet bal move swe
+ Austria: Fleet rom hold
+ Austria: Army sil support Army mun
+ Austria: Army stp move fin
+ Austria: Army tri support Army vie move tyr
+ Austria: Army ven support Fleet rom
+ Austria: Army vie move tyr
+PHASE 1905 Fall Adjustment
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+Turkey: F apu
+England: S bel
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: S con
+England: A den
+England: S den
+England: S edi
+Austria: A fin
+Austria: A gal
+Austria: A gre
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: S mar
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Turkey: F nap
+Turkey: S nap
+England: F nth
+Germany: F nwy
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Turkey: A pru
+Austria: F rom
+Austria: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+Austria: S stp
+Germany: F swe
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+France: F tys
+Austria: A ven
+Austria: S ven
+Austria: S vie
+Austria: S war
+ORDERS
+ Germany: build Army ber
+ Turkey: build Army con
+ Austria: build Army vie
+PHASE 1906 Spring Movement
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+Turkey: F apu
+England: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+England: A den
+England: S den
+England: S edi
+Austria: A fin
+Austria: A gal
+Austria: A gre
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: S mar
+Turkey: S mos
+Germany: A mun
+Germany: S mun
+Turkey: F nap
+Turkey: S nap
+England: F nth
+Germany: F nwy
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Turkey: A pru
+Austria: F rom
+Austria: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+Austria: S stp
+Germany: F swe
+Germany: S swe
+Austria: A tri
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+France: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: S war
+ORDERS
+ Turkey: Fleet apu move nap
+ Germany: Army ber support Army kie
+ France: Army bur move mun
+ Austria: Army fin move stp
+ Austria: Army gal move war
+ Austria: Army gre move ser
+ Turkey: Fleet ion support Fleet nap move tys
+ Germany: Army kie support Fleet swe move den
+ Germany: Army mun hold
+ Turkey: Fleet nap move tys
+ Germany: Fleet nwy move ska
+ France: Army pie move ven
+ Austria: Fleet rom hold
+ France: Army ruh support Army bur move mun
+ Austria: Army sil hold
+ Germany: Fleet swe move den
+ Austria: Army tri move tyr
+ France: Fleet tun support Fleet tys
+ France: Army tus support Fleet tys move rom
+ Austria: Army tyr move pie
+ France: Fleet tys move rom
+ Austria: Army ven support Army tyr move pie
+ Austria: Army vie hold
+PHASE 1906 Spring Retreat
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+England: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+England: S den
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: S mar
+Turkey: S mos
+France: A mun
+Germany: S mun
+Turkey: F nap
+Turkey: S nap
+England: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+France:  pie
+France: S por
+Turkey: A pru
+France: F rom
+Austria: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Germany: F ska
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+Germany: S swe
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ France: Army pie move mar
+PHASE 1906 Fall Movement
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+England: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+England: S den
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: A mar
+France: S mar
+Turkey: S mos
+France: A mun
+Germany: S mun
+Turkey: F nap
+Turkey: S nap
+England: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+France: F rom
+Austria: S rom
+France: A ruh
+Turkey: A rum
+Turkey: S rum
+Austria: A ser
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Germany: F ska
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+Germany: S swe
+Austria: S tri
+France: F tun
+France: S tun
+France: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: Fleet adr support Army ven
+ Germany: Army ber move mun
+ Turkey: Army boh move mun
+ Turkey: Fleet ion move tun
+ Germany: Army kie support Army ber move mun
+ France: Army mar support Army tus move pie
+ France: Army mun move kie
+ Turkey: Fleet nap support Fleet tys move rom
+ Austria: Army pie support Army ven move tus
+ France: Fleet rom move tus
+ France: Army ruh support Army mun move kie
+ Turkey: Army rum move gal
+ Austria: Army ser move tri
+ Austria: Army sil support Army boh move mun
+ Germany: Fleet ska move nth
+ France: Fleet tun move tys
+ France: Army tus move pie
+ Austria: Army tyr support Army boh move mun
+ Turkey: Fleet tys move rom
+ Austria: Army ven move tus
+ Austria: Army vie support Army tyr
+ Austria: Army war support Army sil
+PHASE 1906 Fall Adjustment
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+England: S bel
+Germany: A ber
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+Turkey: A gal
+Austria: S gre
+England: F hol
+England: S hol
+France: A kie
+France: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F nap
+Turkey: S nap
+England: F nth
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Turkey: A pru
+Turkey: F rom
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Germany: F ska
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tyr
+France: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: build Army ank
+ Austria: build Army bud
+ France: build Army par
+ Turkey: build Fleet smy
+PHASE 1907 Spring Movement
+POSITIONS
+Turkey: F adr
+Turkey: A ank
+Turkey: S ank
+England: S bel
+Germany: A ber
+Germany: S ber
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+Turkey: A gal
+Austria: S gre
+England: F hol
+England: S hol
+France: A kie
+France: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F nap
+Turkey: S nap
+England: F nth
+Germany: S nwy
+France: A par
+France: S par
+France: A pie
+France: S por
+Turkey: A pru
+Turkey: F rom
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Germany: F ska
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tyr
+France: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: Fleet adr move ion
+ Turkey: Army ank move arm
+ Germany: Army ber move kie
+ Germany: Fleet den support Army ber move kie
+ Turkey: Army gal move boh
+ France: Army kie move mun
+ France: Army mar support Army pie
+ Turkey: Army mun move ruh
+ Turkey: Fleet nap move tys
+ France: Army par move bur
+ Turkey: Army pru support Army ber
+ Turkey: Fleet rom support Fleet nap move tys
+ France: Army ruh support Army kie move mun
+ Austria: Army sil support Army ber
+ Germany: Fleet ska move nth
+ Turkey: Fleet smy move eas
+ Austria: Army tri move ven
+ Turkey: Fleet tun support Fleet nap move tys
+ Austria: Army tyr move pie
+ France: Fleet tys move ion
+ Austria: Army ven move tus
+ Austria: Army vie move tyr
+PHASE 1907 Spring Retreat
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+Turkey: A arm
+England: S bel
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Germany: A kie
+France: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: A mar
+France: S mar
+Turkey: S mos
+France: A mun
+Turkey:  mun
+Turkey: S mun
+Turkey: S nap
+England: F nth
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Turkey: A pru
+Turkey: F rom
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Germany: F ska
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+France:  tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: Army mun move ber
+ France: Fleet tys move gol
+PHASE 1907 Fall Movement
+POSITIONS
+Turkey: F adr
+Turkey: S ank
+Turkey: A arm
+England: S bel
+Turkey: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: A bud
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+Turkey: F eas
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Germany: A kie
+France: S kie
+England: F lon
+England: S lon
+England: A lvp
+England: S lvp
+France: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+France: A mun
+Turkey: S mun
+Turkey: S nap
+England: F nth
+Germany: S nwy
+France: S par
+France: A pie
+France: S por
+Turkey: A pru
+Turkey: F rom
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Germany: F ska
+Turkey: S smy
+France: S spa
+Austria: A stp
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: Fleet adr move apu
+ Turkey: Army ber move mun
+ Turkey: Army boh support Army ber move mun
+ Austria: Army bud move tri
+ France: Army bur move bel
+ Germany: Fleet den support Fleet ska move nth
+ Turkey: Fleet eas move ion
+ Germany: Army kie hold
+ France: Fleet gol convoy Army mar move tus
+ France: Army mar move tus via convoy
+ France: Army mun move kie
+ France: Army pie support Army mar move tus
+ Turkey: Fleet rom move tys
+ France: Army ruh support Army mun move kie
+ Austria: Army sil support Army ber move mun
+ Germany: Fleet ska move nth
+ Austria: Army stp move lvn
+ Turkey: Fleet tun support Fleet tys move wes
+ Austria: Army tus support Army ven move pie
+ Austria: Army tyr support Army ven move pie
+ Turkey: Fleet tys move wes
+ Austria: Army ven move pie
+ Austria: Army vie support Army tyr
+ Austria: Army war support Army sil
+PHASE 1907 Fall Retreat
+POSITIONS
+Turkey: S ank
+Turkey: F apu
+Turkey: A arm
+France: A bel
+England: S bel
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+France: A kie
+Germany:  kie
+France: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+France: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+England:  nth
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+Austria: S stp
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Germany: Army kie move ber
+PHASE 1907 Fall Adjustment
+POSITIONS
+Turkey: S ank
+Turkey: F apu
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+France: A kie
+France: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+France: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+Austria: S stp
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ France: build Fleet bre
+ France: build Army par
+ Turkey: build Fleet smy
+PHASE 1908 Spring Movement
+POSITIONS
+Turkey: S ank
+Turkey: F apu
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+Turkey: A boh
+France: F bre
+France: S bre
+Austria: S bud
+Turkey: S bul
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+England: S edi
+Austria: S gre
+England: F hol
+England: S hol
+Turkey: F ion
+France: A kie
+France: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+France: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: A par
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: F smy
+Turkey: S smy
+France: S spa
+Austria: S stp
+Germany: S swe
+Austria: A tri
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Turkey: Fleet apu move nap
+ France: Army bel support Army ruh move hol
+ Germany: Army ber move kie
+ Turkey: Army boh support Army mun
+ France: Fleet bre move eng
+ Germany: Fleet den support Army ber move kie
+ Turkey: Fleet ion move tun
+ France: Army kie move mun
+ France: Fleet gol move spa/sc
+ France: Army mar move pie
+ Turkey: Army mun support Army ber move kie
+ Germany: Fleet nth move edi
+ France: Army par move bur
+ Austria: Army pie move mar
+ Turkey: Army pru hold
+ France: Army ruh move hol
+ Turkey: Fleet smy move aeg
+ Austria: Army tri move ven
+ Turkey: Fleet tun move naf
+ Austria: Army tus support Army pie
+ Austria: Army tyr support Army mun
+ Turkey: Fleet tys move gol
+ Turkey: Fleet wes move mid
+PHASE 1908 Spring Retreat
+POSITIONS
+Turkey: F aeg
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+Germany: F edi
+England: S edi
+France: F eng
+Austria: S gre
+France: A hol
+England:  hol
+England: S hol
+Germany: A kie
+France:  kie
+France: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F naf
+Turkey: F nap
+Turkey: S nap
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+France: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+PHASE 1908 Fall Movement
+POSITIONS
+Turkey: F aeg
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: S ber
+Turkey: A boh
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: F den
+Germany: S den
+Germany: F edi
+England: S edi
+France: F eng
+Austria: S gre
+France: A hol
+England: S hol
+Germany: A kie
+France: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F naf
+Turkey: F nap
+Turkey: S nap
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+France: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: F tun
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+ORDERS
+ Turkey: Fleet aeg move ion
+ Turkey: Army boh move mun
+ Germany: Fleet den move hel
+ Turkey: Fleet gol support Fleet mid move spa
+ Turkey: Fleet mid move spa/sc
+ Turkey: Army mun move ruh
+ Turkey: Fleet naf support Fleet tun move wes
+ Turkey: Fleet nap move tys
+ Austria: Army pie move mar
+ Austria: Army sil support Army mun
+ Turkey: Fleet tun move wes
+ Austria: Army tyr move pie
+PHASE 1908 Fall Retreat
+POSITIONS
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: F edi
+England: S edi
+France: F eng
+Austria: S gre
+Germany: F hel
+France: A hol
+England: S hol
+Turkey: F ion
+Germany: A kie
+France: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F naf
+Turkey: S nap
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+France: S spa
+Turkey: F spa/sc
+France:  spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+PHASE 1908 Fall Adjustment
+POSITIONS
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: F edi
+Germany: S edi
+France: F eng
+Austria: S gre
+Germany: F hel
+France: A hol
+France: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F naf
+Turkey: S nap
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Germany: build Army ber
+ France: build Fleet bre
+ Turkey: build Fleet smy
+PHASE 1909 Spring Movement
+POSITIONS
+Turkey: S ank
+Turkey: A arm
+France: A bel
+France: S bel
+Germany: A ber
+Germany: S ber
+France: F bre
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: F edi
+Germany: S edi
+France: F eng
+Austria: S gre
+Germany: F hel
+France: A hol
+France: S hol
+Turkey: F ion
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+France: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: F naf
+Turkey: S nap
+Germany: S nwy
+France: S par
+Austria: A pie
+France: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: S sev
+Austria: A sil
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: A ven
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Turkey: Army arm move sev
+ France: Army bel support Army hol move ruh
+ Germany: Army ber move kie
+ France: Fleet bre move eng
+ France: Army bur move mun
+ Germany: Fleet edi move nth
+ France: Fleet eng move wal
+ Germany: Fleet hel support Army kie move hol
+ France: Army hol move ruh
+ Turkey: Fleet ion move tys
+ Germany: Army kie move hol
+ Turkey: Fleet gol support Army pie move mar
+ France: Army mar move pie
+ Turkey: Army mun move bur
+ Turkey: Fleet naf move mid
+ Austria: Army pie move mar
+ Turkey: Army ruh support Army mun move bur
+ Turkey: Fleet spa/sc move por
+ Austria: Army tyr support Army mun
+ Turkey: Fleet tys move wes
+ Austria: Army ven move pie
+ Turkey: Fleet wes move spa/sc
+PHASE 1909 Spring Retreat
+POSITIONS
+Turkey: S ank
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: F eng
+Austria: S gre
+Germany: F hel
+Germany: A hol
+France: S hol
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+France:  mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+Turkey: F por
+France: S por
+Turkey: A pru
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Austria: A sil
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+France: F wal
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ France: Army mar move gas
+PHASE 1909 Fall Movement
+POSITIONS
+Turkey: S ank
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: F eng
+France: A gas
+Austria: S gre
+Germany: F hel
+Germany: A hol
+France: S hol
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+France: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+Turkey: F por
+France: S por
+Turkey: A pru
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Austria: A sil
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+France: F wal
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ France: Army bel move hol
+ France: Army bur support Army gas move mar
+ France: Fleet eng move bre
+ France: Army gas move mar
+ Germany: Fleet hel move nth
+ Germany: Army hol support Army kie move ruh
+ Germany: Army kie move ruh
+ Turkey: Fleet gol move wes
+ Turkey: Fleet mid move bre
+ Austria: Army mar hold
+ Germany: Fleet nth move yor
+ Austria: Army pie support Army mar
+ Turkey: Fleet por move spa/nc
+ France: Army ruh support Army bel move hol
+ Turkey: Fleet spa/sc move por
+ Austria: Army tyr support Army mun
+ Turkey: Fleet tys move gol
+ France: Fleet wal move iri
+ Turkey: Fleet wes move mid
+PHASE 1909 Fall Adjustment
+POSITIONS
+Turkey: S ank
+France: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: F eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+France: F iri
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+Turkey: F por
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+France: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Austria: A sil
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+Germany: F yor
+ORDERS
+ Turkey: build Army ank
+ Germany: build Army ber
+ Austria: build Fleet tri
+PHASE 1910 Spring Movement
+POSITIONS
+Turkey: A ank
+Turkey: S ank
+France: S bel
+Germany: A ber
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: F eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Germany: A kie
+Germany: S kie
+England: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Turkey: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+Turkey: F por
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Austria: A sil
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: F tri
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+Germany: F yor
+ORDERS
+ Germany: Army ber move kie
+ Germany: Army hol move bel
+ Germany: Army kie move hol
+ Turkey: Fleet mid move iri
+ Austria: Army mar support Army mun move bur
+ Turkey: Army mun move ruh
+ Germany: Fleet nth support Fleet yor move lon
+ Austria: Army pie support Army mar
+ Turkey: Fleet por move mid
+ Austria: Army sil move mun
+ Austria: Fleet tri move adr
+ Germany: Fleet yor move lon
+PHASE 1910 Spring Retreat
+POSITIONS
+Austria: F adr
+Turkey: A ank
+Turkey: S ank
+Germany: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: F eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Turkey: F iri
+Germany: A kie
+Germany: S kie
+Germany: F lon
+England:  lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+PHASE 1910 Fall Movement
+POSITIONS
+Austria: F adr
+Turkey: A ank
+Turkey: S ank
+Germany: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: F eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Turkey: F iri
+Germany: A kie
+Germany: S kie
+Germany: F lon
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Turkey: S mun
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: F smy
+Turkey: S smy
+Turkey: S spa
+Turkey: F spa/sc
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Austria: Fleet adr move ion
+ Germany: Army bel move pic
+ Germany: Army hol move bel
+ Germany: Army kie move hol
+ Germany: Fleet lon move eng
+ Turkey: Fleet gol move tys
+ Turkey: Fleet mid move nat
+ Austria: Army mar support Army mun move bur
+ Germany: Fleet nth support Fleet lon move eng
+ Austria: Army pie support Army mar
+ Turkey: Fleet smy move aeg
+ Turkey: Fleet spa/sc move mid
+ Turkey: Fleet tys move ion
+ Turkey: Fleet wes hold
+PHASE 1910 Fall Retreat
+POSITIONS
+Austria: F adr
+Turkey: F aeg
+Turkey: A ank
+Turkey: S ank
+Germany: A bel
+France: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+Germany: F eng
+France:  eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Turkey: F iri
+Germany: S kie
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Turkey: S mun
+Turkey: F nao
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Germany: A pic
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+Turkey: S spa
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+PHASE 1910 Fall Adjustment
+POSITIONS
+Austria: F adr
+Turkey: F aeg
+Turkey: A ank
+Turkey: S ank
+Germany: A bel
+Germany: S bel
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+Germany: F eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Turkey: F iri
+Germany: S kie
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Austria: S mun
+Turkey: F nao
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Germany: A pic
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+Turkey: S spa
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Germany: build Army ber
+ Germany: build Fleet kie
+ Austria: build Fleet tri
+PHASE 1911 Spring Movement
+POSITIONS
+Austria: F adr
+Turkey: F aeg
+Turkey: A ank
+Turkey: S ank
+Germany: A bel
+Germany: S bel
+Germany: A ber
+Germany: S ber
+France: S bre
+Austria: S bud
+Turkey: S bul
+France: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+Germany: F eng
+France: A gas
+Austria: S gre
+Germany: A hol
+Germany: S hol
+Turkey: F iri
+Germany: F kie
+Germany: S kie
+England: S lon
+Austria: A lvn
+England: A lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Austria: S mun
+Turkey: F nao
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Germany: A pic
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+Turkey: S spa
+Austria: S stp
+Germany: S swe
+Austria: F tri
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Austria: A tyr
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+ORDERS
+ Austria: Fleet adr move ion
+ Germany: Army bel move pic
+ Germany: Army ber move kie
+ Germany: Fleet eng move lon
+ Germany: Army hol move yor via convoy
+ Turkey: Fleet iri move lvp
+ Germany: Fleet kie move hol
+ Austria: Army mar support Army mun move bur
+ Austria: Army mun move bur
+ Turkey: Fleet nat support Fleet iri move lvp
+ Germany: Fleet nth convoy Army hol move yor
+ Germany: Army pic move bre
+ Austria: Army pie support Army mar
+ Austria: Fleet tri move adr
+ Austria: Army tyr move mun
+PHASE 1911 Spring Retreat
+POSITIONS
+Austria: F adr
+Turkey: F aeg
+Turkey: A ank
+Turkey: S ank
+Germany: S bel
+Germany: S ber
+Germany: A bre
+France: S bre
+Austria: S bud
+Turkey: S bul
+Austria: A bur
+France:  bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: A gas
+Austria: S gre
+Germany: F hol
+Germany: S hol
+Austria: F ion
+Germany: A kie
+Germany: S kie
+Germany: F lon
+England: S lon
+Austria: A lvn
+England:  lvp
+Turkey: F lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Austria: S mun
+Turkey: F nao
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Germany: A pic
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+Turkey: S spa
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+Germany: A yor
+ORDERS
+PHASE 1911 Fall Movement
+POSITIONS
+Austria: F adr
+Turkey: F aeg
+Turkey: A ank
+Turkey: S ank
+Germany: S bel
+Germany: S ber
+Germany: A bre
+France: S bre
+Austria: S bud
+Turkey: S bul
+Austria: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: A gas
+Austria: S gre
+Germany: F hol
+Germany: S hol
+Austria: F ion
+Germany: A kie
+Germany: S kie
+Germany: F lon
+England: S lon
+Austria: A lvn
+Turkey: F lvp
+England: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: A mun
+Austria: S mun
+Turkey: F nao
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+France: S par
+Germany: A pic
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+Turkey: S spa
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+Germany: A yor
+ORDERS
+ Austria: Army bur move par
+ Germany: Fleet hol move bel
+ Austria: Army mar move gas
+ Austria: Army mun move bur
+ Germany: Army pic support Army bur move par
+ Austria: Army pie move mar
+PHASE 1911 Fall Adjustment
+POSITIONS
+Austria: F adr
+Turkey: F aeg
+Turkey: A ank
+Turkey: S ank
+Germany: F bel
+Germany: S bel
+Germany: S ber
+Germany: A bre
+Germany: S bre
+Austria: S bud
+Turkey: S bul
+Austria: A bur
+Turkey: A con
+Turkey: S con
+Germany: S den
+Germany: S edi
+France: A gas
+Austria: S gre
+Germany: S hol
+Austria: F ion
+Germany: A kie
+Germany: S kie
+Germany: F lon
+Germany: S lon
+Austria: A lvn
+Turkey: F lvp
+Turkey: S lvp
+Turkey: F lyo
+Turkey: F mao
+Austria: A mar
+Austria: S mar
+Turkey: S mos
+Austria: S mun
+Turkey: F nao
+Turkey: S nap
+Germany: F nth
+Germany: S nwy
+Austria: A par
+Austria: S par
+Germany: A pic
+Austria: A pie
+Turkey: S por
+Turkey: A pru
+Turkey: S rom
+Turkey: A ruh
+Turkey: S rum
+Austria: S ser
+Turkey: A sev
+Turkey: S sev
+Turkey: S smy
+Turkey: S spa
+Austria: S stp
+Germany: S swe
+Austria: S tri
+Turkey: S tun
+Austria: A tus
+Turkey: F tys
+Austria: S ven
+Austria: A vie
+Austria: S vie
+Austria: A war
+Austria: S war
+Turkey: F wes
+Germany: A yor
+ORDERS
