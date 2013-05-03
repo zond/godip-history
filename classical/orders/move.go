@@ -65,18 +65,17 @@ func (self *move) Flags() map[dip.Flag]bool {
 }
 
 func (self *move) adjudicateAgainstCompetition(r dip.Resolver, forbiddenSupporter *dip.Nation) error {
-	unit, _, _ := r.Unit(self.targets[0])
 	_, competingOrders, competingUnits := r.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 		return o != nil && u != nil && o.Type() == cla.Move && o.Targets()[0] != self.targets[0] && self.targets[1].Super() == o.Targets()[1].Super()
 	})
 	for index, competingOrder := range competingOrders {
-		forbiddenSupporters := []dip.Nation{competingUnits[index].Nation}
+		var forbiddenSupporters []dip.Nation
 		if forbiddenSupporter != nil {
 			forbiddenSupporters = append(forbiddenSupporters, *forbiddenSupporter)
 		}
 		attackStrength := cla.MoveSupport(r, self.targets[0], self.targets[1], forbiddenSupporters) + 1
 		dip.Logf("'%v' vs '%v': %v", self, competingOrder, attackStrength)
-		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], []dip.Nation{unit.Nation}) + 1; as >= attackStrength {
+		if as := cla.MoveSupport(r, competingOrder.Targets()[0], competingOrder.Targets()[1], nil) + 1; as >= attackStrength {
 			if cla.MustConvoy(r, competingOrder.Targets()[0]) {
 				if cla.AnyConvoyPath(r, competingOrder.Targets()[0], competingOrder.Targets()[1], true, nil) != nil {
 					dip.Logf("'%v' vs '%v': %v", competingOrder, self, as)

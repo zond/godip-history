@@ -8,123 +8,123 @@
 VARIANT_ALL Standard
 
 CASE Move via convoy from Wales to Liverpool should not work without a convoy route
-PRESTATE_SETPHASE Spring 1901 (Movement)
+PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: Army wal
-	France: Fleet lvp
-	France: Fleet iri
+	England: A wal
+	France: F lvp
+	France: F iri
 ORDERS
-	England: Army wal m lvp via convoy
-	France: Fleet iri s Fleet lvp m wal
-	France: Fleet lvp m wal
+	England: A wal - lvp via convoy
+	France: F iri s F lvp - wal
+	France: F lvp - wal
 POSTSTATE
-	France: Fleet iri
-	France: Fleet wal
+	France: F iri
+	France: F wal
 POSTSTATE_DISLODGED
-	England: Army wal
+	England: A wal
 END
 
 CASE Convoy from yor should break support even if it didn't reach its destination
-PRESTATE_SETPHASE Spring 1901 (Movement)
+PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	England: Army yor
-	England: Fleet nth
-	Germany: Army hol
-	Germany: Army bur
-	France: Army bel
-	France: Army par
-	France: Army gas
+	England: A yor
+	England: F nth
+	Germany: A hol
+	Germany: A bur
+	France: A bel
+	France: A par
+	France: A gas
 ORDERS
-	England: Army yor m hol
-	England: Fleet nth c Army yor m hol
-	Germany: Army hol s Army bur m bel
-	Germany: Army bur m bel
-	France: Army bel m bur
-	France: Army par m bur
-	France: Army gas s Army bel m bur
+	England: A yor - hol
+	England: F nth c A yor - hol
+	Germany: A hol s A bur - bel
+	Germany: A bur - bel
+	France: A bel - bur
+	France: A par - bur
+	France: A gas s A bel - bur
 POSTSTATE
-	England: Army yor
-	England: Fleet nth
-	Germany: Army hol
-	France: Army bur
-	France: Army par
-	France: Army gas
+	England: A yor
+	England: F nth
+	Germany: A hol
+	France: A bur
+	France: A par
+	France: A gas
 POSTSTATE_DISLODGED
-	Germany: Army bur
+	Germany: A bur
 END
 
 CASE Failed convoy from tun to gre should NOT break support
-PRESTATE_SETPHASE Spring 1901 (Movement)
+PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Italy: Army tun
-	Italy: Fleet nap
-	Italy: Fleet ion
-	Austria: Army alb
-	Austria: Army vie
-	Austria: Army bud
-	Austria: Army ser
-	Austria: Fleet aeg
-	Russia: Army ukr
-	Russia: Army rom
-	Turkey: Army gre
-	Turkey: Army bul
-	Turkey: Fleet smy
-	Turkey: Fleet con
+	Italy: A tun
+	Italy: F nap
+	Italy: F ion
+	Austria: A alb
+	Austria: A vie
+	Austria: A bud
+	Austria: A ser
+	Austria: F aeg
+	Russia: A ukr
+	Russia: A rom
+	Turkey: A gre
+	Turkey: A bul
+	Turkey: F smy
+	Turkey: F con
 ORDERS
-	Italy: Army tun m gre
-	Italy: Fleet nap m ion
-	Italy: Fleet ion m eas
-	Turkey: Fleet smy m eas
-	Turkey: Fleet con m aeg
-	Turkey: Army bul m ser
-	Turkey: Army gre s Army bul m ser
-	Austria: Army alb s Army ser m gre
-	Austria: Army bud m ser
-	Austria: Army ser m gre
-	Austria: Army vie m bud
-	Austria: Fleet aeg m bul/sc
-	Russia: Army ukr s Army rom h
-	Russia: Army rom s Army ser m bul
+	Italy: A tun - gre
+	Italy: F nap - ion
+	Italy: F ion - eas
+	Turkey: F smy - eas
+	Turkey: F con - aeg
+	Turkey: A bul - ser
+	Turkey: A gre s A bul - ser
+	Austria: A alb s A ser - gre
+	Austria: A bud - ser
+	Austria: A ser - gre
+	Austria: A vie - bud
+	Austria: F aeg - bul/sc
+	Russia: A ukr s A rom
+	Russia: A rom s A ser - bul
 POSTSTATE
-	Italy: Army tun
-	Italy: Fleet nap
-	Italy: Fleet ion
-	Austria: Army vie
-	Austria: Army bud
-	Austria: Army alb
-	Austria: Army gre
-	Austria: Fleet aeg
-	Russia: Army ukr
-	Russia: Army rom
-	Turkey: Army bul
-	Turkey: Fleet con
-	Turkey: Fleet smy
+	Italy: A tun
+	Italy: F nap
+	Italy: F ion
+	Austria: A vie
+	Austria: A bud
+	Austria: A alb
+	Austria: A gre
+	Austria: F aeg
+	Russia: A ukr
+	Russia: A rom
+	Turkey: A bul
+	Turkey: F con
+	Turkey: F smy
 END	
 
 
 CASE Failed convoy from tun to smy should still break support
-PRESTATE_SETPHASE Spring 1901 (Movement)
+PRESTATE_SETPHASE Spring 1901, Movement
 PRESTATE
-	Italy: Army tun
-	Italy: Fleet ion
-	Italy: Fleet eas
-	Austria: Fleet aeg
-	Turkey: Fleet smy
-	Turkey: Fleet con
+	Italy: A tun
+	Italy: F ion
+	Italy: F eas
+	Austria: F aeg
+	Turkey: F smy
+	Turkey: F con
 ORDERS
-	Italy: Army tun m smy
-	Italy: Fleet ion c Army tun m smy
-	Italy: Fleet eas c Army tun m smy
-	Austria: Fleet aeg s Army tun m smy
-	Turkey: Fleet smy s Fleet con m aeg
-	Turkey: Fleet con m aeg
+	Italy: A tun - smy
+	Italy: F ion c A tun - smy
+	Italy: F eas c A tun - smy
+	Austria: F aeg s A tun - smy
+	Turkey: F smy s F con - aeg
+	Turkey: F con - aeg
 POSTSTATE
-	Italy: Army tun
-	Italy: Fleet ion
-	Italy: Fleet eas
-	Austria: Fleet aeg
-	Turkey: Fleet smy
-	Turkey: Fleet con
+	Italy: A tun
+	Italy: F ion
+	Italy: F eas
+	Austria: F aeg
+	Turkey: F smy
+	Turkey: F con
 END	
 
 
