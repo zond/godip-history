@@ -153,6 +153,8 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 					statePair.Before.SCs[self.ProvinceParser(match[3])] = self.NationParser(match[1])
 				} else if line == prestate {
 					state = inPrestate
+				} else if line == orders {
+					state = inOrders
 				} else {
 					panic(fmt.Errorf("Unrecognized line for state inPrestateSupplycenterOwners: %#v", line))
 				}
@@ -176,6 +178,8 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 					state = inPrestateResults
 				} else if line == orders {
 					state = inOrders
+				} else if line == prestateSupplycenterOwners {
+					state = inPrestateSupplycenterOwners
 				} else if line == prestateDislodged {
 					state = inPrestateDislodged
 				} else {
@@ -202,6 +206,8 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 						self.UnitTypeParser(match[2]),
 						self.NationParser(match[1]),
 					}
+				} else if line == orders {
+					state = inOrders
 				} else if line == prestateResults {
 					state = inPrestateResults
 				} else {

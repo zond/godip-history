@@ -81,8 +81,13 @@ var datcOrderTypes = map[*regexp.Regexp]func([]string) (dip.Province, dip.Adjudi
 		}
 		return
 	},
-	regexp.MustCompile("^(?i)remove\\s+(\\S+)$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
-		prov = DATCProvince(m[1])
+	regexp.MustCompile("^(?i)remove\\s+((A|F)\\s+)?(\\S+)$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
+		prov = DATCProvince(m[3])
+		order = orders.Disband(prov, time.Now())
+		return
+	},
+	regexp.MustCompile("^(?i)(A|F)\\s+(\\S+)\\s+disband$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
+		prov = DATCProvince(m[2])
 		order = orders.Disband(prov, time.Now())
 		return
 	},
@@ -96,9 +101,9 @@ var datcOrderTypes = map[*regexp.Regexp]func([]string) (dip.Province, dip.Adjudi
 		order = orders.Convoy(DATCProvince(m[2]), DATCProvince(m[5]), DATCProvince(m[6]))
 		return
 	},
-	regexp.MustCompile("^(?i)(A|F)\\s+(\\S+)\\s+S(UPPORTS)?\\s+(A|F)\\s+(\\S+)\\s*-\\s*(\\S+)$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
+	regexp.MustCompile("^(?i)(A|F)\\s+(\\S+)\\s+S(UPPORTS)?\\s+((A|F)\\s+)?(\\S+)\\s*-\\s*(\\S+)$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {
 		prov = DATCProvince(m[2])
-		order = orders.Support(DATCProvince(m[2]), DATCProvince(m[5]), DATCProvince(m[6]))
+		order = orders.Support(DATCProvince(m[2]), DATCProvince(m[6]), DATCProvince(m[7]))
 		return
 	},
 	regexp.MustCompile("^(?i)(A|F)\\s+(\\S+)\\s+H(OLD)?$"): func(m []string) (prov dip.Province, order dip.Adjudicator) {

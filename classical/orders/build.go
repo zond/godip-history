@@ -58,11 +58,11 @@ func (self *build) Validate(v dip.Validator) error {
 	// does someone own this
 	var me dip.Nation
 	var ok bool
-	if me, self.targets[0], ok = v.SupplyCenter(self.targets[0]); !ok {
+	if me, _, ok = v.SupplyCenter(self.targets[0]); !ok {
 		return cla.ErrMissingSupplyCenter
 	}
 	// is there a home sc here
-	if owner := v.Graph().SC(self.targets[0]); owner == nil {
+	if owner := v.Graph().SC(self.targets[0].Super()); owner == nil {
 		panic(fmt.Errorf("Should be SOME owner of %v", self.targets[0]))
 	} else if *owner != me {
 		return cla.ErrHostileSupplyCenter
@@ -86,11 +86,6 @@ func (self *build) Validate(v dip.Validator) error {
 }
 
 func (self *build) Execute(state dip.State) {
-	var me dip.Nation
-	for prov, nat := range state.SupplyCenters() {
-		if prov == self.targets[0] {
-			me = nat
-		}
-	}
-	state.SetUnit(self.targets[0], dip.Unit{self.typ, me})
+	me := state.Graph().SC(self.targets[0].Super())
+	state.SetUnit(self.targets[0], dip.Unit{self.typ, *me})
 }

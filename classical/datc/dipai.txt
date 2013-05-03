@@ -52,7 +52,7 @@ ORDERS
 	Austria: A bud-gal
 	Austria: F tri-ven
 	Austria: A vie-tyr
-	England: F lon-ech
+	England: F lon-eng
 	England: A lvp-wal
 	England: F edi-yor
 	France: F bre-pic
@@ -66,7 +66,7 @@ ORDERS
 	Italy: A ven-rom
 	Russia: A mos-sev
 	Russia: F sev-bla
-	Russia: F stp/sc-gob
+	Russia: F stp/sc-bot
 	Russia: A war HOLD
 	Turkey: F ank-arm
 	Turkey: A con-ank
@@ -75,7 +75,7 @@ POSTSTATE
 	Austria: A gal
 	Austria: F ven 
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A wal
 	England: F yor
 	France: F pic 
@@ -89,7 +89,7 @@ POSTSTATE
 	Italy: A rom
 	Russia: A sev
 	Russia: F bla
-	Russia: F gob
+	Russia: F bot
 	Russia: A war
 	Turkey: F arm
 	Turkey: A ank
@@ -106,7 +106,7 @@ PRESTATE
 	Austria: A gal
 	Austria: F ven 
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A wal
 	England: F yor
 	France: F pic 
@@ -120,7 +120,7 @@ PRESTATE
 	Italy: A rom
 	Russia: A sev
 	Russia: F bla
-	Russia: F gob
+	Russia: F bot
 	Russia: A war
 	Turkey: F arm
 	Turkey: A ank
@@ -129,7 +129,7 @@ ORDERS
 	Austria: A gal-war
 	Austria: F ven HOLD
 	Austria: A tyr S tus-pie
-	England: F ech C A wal-pic
+	England: F eng C A wal-pic
 	England: A wal-pic
 	England: F yor-lon
 	France: F pic HOLD
@@ -143,7 +143,7 @@ ORDERS
 	Italy: A rom S apu-ven
 	Russia: A sev S bla-arm
 	Russia: F bla-arm
-	Russia: F gob-stp/sc
+	Russia: F bot-stp/sc
 	Russia: A war HOLD
 	Turkey: F arm HOLD
 	Turkey: A ank-smy
@@ -151,7 +151,7 @@ ORDERS
 POSTSTATE
 	Austria: A war
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A pic
 	England: F lon
 	France: A mar
@@ -183,7 +183,7 @@ PRESTATE_SETPHASE  Fall 1901, Retreat
 PRESTATE
 	Austria: A war
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A pic
 	England: F lon
 	France: A mar
@@ -208,7 +208,7 @@ PRESTATE_RESULTS
 	SUCCESS: Austria: A gal-war
 	FAILURE: Austria: F ven HOLD			# fails
 	SUCCESS: Austria: A tyr S tus-pie
-	SUCCESS: England: F ech C A wal-pic
+	SUCCESS: England: F eng C A wal-pic
 	SUCCESS: England: A wal-pic
 	SUCCESS: England: F yor-lon
 	FAILURE: France: F pic HOLD			# fails
@@ -222,7 +222,7 @@ PRESTATE_RESULTS
 	SUCCESS: Italy: A rom S apu-ven
 	SUCCESS: Russia: A sev S bla-arm
 	SUCCESS: Russia: F bla-arm
-	SUCCESS: Russia: F gob-stp/sc
+	SUCCESS: Russia: F bot-stp/sc
 	FAILURE: Russia: A war HOLD			# fails
 	FAILURE: Turkey: F arm HOLD			# fails
 	SUCCESS: Turkey: A ank-smy	
@@ -236,7 +236,7 @@ ORDERS
 POSTSTATE
 	Austria: A war
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A pic
 	England: F lon
 	France: A mar
@@ -263,7 +263,7 @@ PRESTATE_SETPHASE Fall 1901, Adjustment
 PRESTATE
 	Austria: A war
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A pic
 	England: F lon
 	France: A mar
@@ -315,7 +315,7 @@ ORDERS
 POSTSTATE
 	Austria: A war
 	Austria: A tyr
-	England: F ech
+	England: F eng
 	England: A pic
 	England: F lon
 	France: A mar
@@ -352,7 +352,7 @@ PRESTATE
 	Austria: A tyr
 	Austria: F tri
 	Austria: A bud
-	England: F ech
+	England: F eng
 	England: A pic
 	England: F lon
 	France: A mar
@@ -375,9 +375,9 @@ ORDERS
 	Austria: A tyr-ven
 	Austria: F tri S tyr-ven
 	Austria: A bud HOLD
-	England: F ech-nth
+	England: F eng-nth
 	England: A pic-bre
-	England: F lon S F ech-nth
+	England: F lon S F eng-nth
 	France: A mar-bur
 	France: F bre-gas
 	France: A par S mar-bur
@@ -449,29 +449,6 @@ PRESTATE_DISLODGED
 	Germany: A bur
 	Italy: F ven
 	Russia: F arm
-PRESTATE_RESULTS	
-	FAILURE: Austria: A war		# dislodged
-	SUCCESS: Austria: A ven		
-	SUCCESS: Austria: F tri
-	SUCCESS: Austria: A bud
-	SUCCESS: England: F nth
-	SUCCESS: England: A bre
-	SUCCESS: England: F lon
-	SUCCESS: France:  A bur
-	SUCCESS: France:  F gas
-	SUCCESS: France:  A par
-	SUCCESS: Germany: A war
-	FAILURE: Germany: F nth		# dislodged
-	FAILURE: Germany: A bur		# dislodged
-	FAILURE: Italy:   F ven		# dislodged
-	SUCCESS: Italy:   A pie
-	SUCCESS: Italy:   A rom
-	SUCCESS: Russia:  A ukr
-	FAILURE: Russia:  F arm		# dislodged
-	SUCCESS: Russia:  A mos
-	SUCCESS: Turkey:  A smy
-	SUCCESS: Turkey:  A con
-	SUCCESS: Turkey:  F arm
 ORDERS
 	Austria: A war DISBAND
 	Germany: F nth DISBAND
