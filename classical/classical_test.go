@@ -249,4 +249,5 @@ func TestDATC(t *testing.T) {
 	assertDATC(t, "datc/datc_v2.4_06.txt")
 	assertDATC(t, "datc/droidippy_errors.txt")
 	assertDATC(t, "datc/dipai.txt")
+	assertDATC(t, "datc/real.txt")
 }
