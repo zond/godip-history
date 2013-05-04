@@ -34,7 +34,7 @@ func Graph() *graph.Graph {
 		// naf
 		Prov("naf").Conn("mid", c.Sea).Conn("wes", c.Sea).Conn("tun", c.Sea).Flag(c.Coast...).
 		// mid
-		Prov("mid").Conn("nat", c.Sea).Conn("iri", c.Sea).Conn("eng", c.Sea).Conn("bre", c.Sea).Conn("gas", c.Sea).Conn("spa/nc", c.Sea).Conn("por", c.Sea).Conn("spa/sc", c.Sea).Conn("naf", c.Sea).Flag(c.Sea).
+		Prov("mid").Conn("wes", c.Sea).Conn("nat", c.Sea).Conn("iri", c.Sea).Conn("eng", c.Sea).Conn("bre", c.Sea).Conn("gas", c.Sea).Conn("spa/nc", c.Sea).Conn("por", c.Sea).Conn("spa/sc", c.Sea).Conn("naf", c.Sea).Flag(c.Sea).
 		// iri
 		Prov("iri").Conn("nat", c.Sea).Conn("lvp", c.Sea).Conn("wal", c.Sea).Conn("eng", c.Sea).Conn("mid", c.Sea).Flag(c.Sea).
 		// lvp
