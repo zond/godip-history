@@ -3,6 +3,7 @@
 fileReg = /^game_(\d+)\.txt$/
 phaseReg = /\s*(\d+)\s*\|\s*(\S+),\s*(\d+)\s[^|]+\s*\|\s*(\S+)\s*$/
 posReg = /\s*(\S+)\s*\|\s*(\S+)\s*\|\s*(\S+)\s*$/
+orderReg = /\s*\S+:\s*(.*\S+)\s*$/
 
 gameId = fileReg.match(ARGV[0])[1]
 
@@ -11,12 +12,6 @@ translations = {
   "mao" => "mid",
   "nwg" => "nrg",
   "nao" => "nat",
-}
-
-positions = {
-  "fleet" => "F",
-  "army" => "A",
-  "supply" => "S",
 }
 
 `echo 'select id, name, type from gamephase where game_id = #{gameId} order by ordinal' | psql -t dippy | grep -v '^$'`.each_line do |line|
@@ -28,8 +23,13 @@ positions = {
     puts "PHASE #{year} #{season} #{type}"
     puts "POSITIONS"
     `echo 'select type, power, province from gameposition where phase_id = #{phaseId}' | psql -t dippy | grep -v '^$'`.each_line do |line|
+			translations.each do |k,v|
+				line.gsub!(k,v)
+			end
       if (m = posReg.match(line)) != nil
-        puts "#{m[2]}: #{positions[m[1]]} #{m[3]}"
+				puts "#{m[2]}: #{m[1]} #{m[3]}"
+			else
+				raise "Unknown line #{line}"
       end
     end
     puts "ORDERS"
@@ -37,7 +37,17 @@ positions = {
       translations.each do |k,v| 
         line.gsub!(k,v)
       end
-      puts line
+			if (match = orderReg.match(line)) != nil
+				parts = match[1].split
+				if !(/build/ =~ line) 
+					parts = parts.reject! do |p|
+						["Army", "Fleet"].include?(p)
+					end
+				end
+				puts parts.join(" ")
+			else 
+        raise "Unknown line #{line}"
+			end
     end
     
   end
