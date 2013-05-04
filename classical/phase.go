@@ -123,7 +123,7 @@ func (self *phase) PostProcess(s dip.State) {
 			s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 				if u != nil {
 					if s.Graph().SC(p) != nil {
-						s.SetSC(p, u.Nation)
+						s.SetSC(p.Super(), u.Nation)
 					}
 				}
 				return false
