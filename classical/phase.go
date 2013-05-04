@@ -40,16 +40,21 @@ func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Pro
 		}
 		for _, coast := range s.Graph().Coasts(destination) {
 			for _, srcCoast := range s.Graph().Coasts(src) {
-				if path := s.Graph().Path(srcCoast, coast, filter); path != nil {
-					if !found || len(path) < result {
-						result = len(path)
-						found = true
+				if srcCoast == destination {
+					result = 0
+					found = true
+				} else {
+					if path := s.Graph().Path(srcCoast, coast, filter); path != nil {
+						if !found || len(path) < result {
+							result = len(path)
+							found = true
+						}
 					}
-				}
-				if path := s.Graph().Path(srcCoast, coast, nil); path != nil {
-					if !found || len(path) < result {
-						result = len(path)
-						found = true
+					if path := s.Graph().Path(srcCoast, coast, nil); path != nil {
+						if !found || len(path) < result {
+							result = len(path)
+							found = true
+						}
 					}
 				}
 			}
@@ -133,7 +138,9 @@ func (self *phase) PostProcess(s dip.State) {
 		for _, nationality := range cla.Nations {
 			_, _, balance := cla.AdjustmentStatus(s, nationality)
 			if balance < 0 {
-				for _, prov := range self.sortedUnits(s, nationality)[:-balance] {
+				su := self.sortedUnits(s, nationality)[:-balance]
+				for _, prov := range su {
+					dip.Logf("Removing %v due to forced disband", prov)
 					s.RemoveUnit(prov)
 					s.SetResolution(prov, cla.ErrForcedDisband)
 				}
