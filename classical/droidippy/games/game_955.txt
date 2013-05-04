@@ -1,1616 +1,1616 @@
 PHASE 1901 Spring Movement
 POSITIONS
-Turkey: F ank
-Turkey: S ank
-Germany: A ber
-Germany: S ber
-France: F bre
-France: S bre
-Austria: A bud
-Austria: S bud
-Turkey: A con
-Turkey: S con
-England: F edi
-England: S edi
-Germany: F kie
-Germany: S kie
-England: F lon
-England: S lon
-England: A lvp
-England: S lvp
-France: A mar
-France: S mar
-Russia: A mos
-Russia: S mos
-Germany: A mun
-Germany: S mun
-Italy: F nap
-Italy: S nap
-France: A par
-France: S par
-Italy: A rom
-Italy: S rom
-Russia: F sev
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Russia: S stp
-Russia: F stp/sc
-Austria: F tri
-Austria: S tri
-Italy: A ven
-Italy: S ven
-Austria: A vie
-Austria: S vie
-Russia: A war
-Russia: S war
+Turkey: fleet ank
+Turkey: supply ank
+Germany: army ber
+Germany: supply ber
+France: fleet bre
+France: supply bre
+Austria: army bud
+Austria: supply bud
+Turkey: army con
+Turkey: supply con
+England: fleet edi
+England: supply edi
+Germany: fleet kie
+Germany: supply kie
+England: fleet lon
+England: supply lon
+England: army lvp
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: army mos
+Russia: supply mos
+Germany: army mun
+Germany: supply mun
+Italy: fleet nap
+Italy: supply nap
+France: army par
+France: supply par
+Italy: army rom
+Italy: supply rom
+Russia: fleet sev
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Russia: supply stp
+Russia: fleet stp/sc
+Austria: fleet tri
+Austria: supply tri
+Italy: army ven
+Italy: supply ven
+Austria: army vie
+Austria: supply vie
+Russia: army war
+Russia: supply war
 ORDERS
- Turkey: Fleet ank move con
- Germany: Army ber move kie
- Turkey: Army con move bul
- England: Fleet edi move nth
- Germany: Fleet kie move hol
- England: Fleet lon move eng
- England: Army lvp move wal
- Russia: Army mos move ukr
- Germany: Army mun move boh
- Italy: Fleet nap move tys
- Italy: Army rom move tus
- Russia: Fleet sev move bla
- Russia: Fleet stp/sc move bot
- Italy: Army ven hold
- Russia: Army war move gal
+ank move con
+ber move kie
+con move bul
+edi move nth
+kie move hol
+lon move eng
+lvp move wal
+mos move ukr
+mun move boh
+nap move tys
+rom move tus
+sev move bla
+stp/sc move bot
+ven hold
+war move gal
 PHASE 1901 Fall Movement
 POSITIONS
-Turkey: S ank
-Germany: S ber
-Russia: F bla
-Germany: A boh
-Russia: F bot
-France: F bre
-France: S bre
-Austria: A bud
-Austria: S bud
-Turkey: A bul
-Turkey: F con
-Turkey: S con
-England: S edi
-England: F eng
-Russia: A gal
-Germany: F hol
-Germany: A kie
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-England: F nth
-France: A par
-France: S par
-Italy: S rom
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Russia: S stp
-Austria: F tri
-Austria: S tri
-Italy: A tus
-Italy: F tys
-Russia: A ukr
-Italy: A ven
-Italy: S ven
-Austria: A vie
-Austria: S vie
-England: A wal
-Russia: S war
+Turkey: supply ank
+Germany: supply ber
+Russia: fleet bla
+Germany: army boh
+Russia: fleet bot
+France: fleet bre
+France: supply bre
+Austria: army bud
+Austria: supply bud
+Turkey: army bul
+Turkey: fleet con
+Turkey: supply con
+England: supply edi
+England: fleet eng
+Russia: army gal
+Germany: fleet hol
+Germany: army kie
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+England: fleet nth
+France: army par
+France: supply par
+Italy: supply rom
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Russia: supply stp
+Austria: fleet tri
+Austria: supply tri
+Italy: army tus
+Italy: fleet tys
+Russia: army ukr
+Italy: army ven
+Italy: supply ven
+Austria: army vie
+Austria: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Russia: Fleet bla support Army ukr move rum
- Germany: Army boh move vie
- Russia: Fleet bot move swe
- Turkey: Army bul move ser
- Turkey: Fleet con move aeg
- England: Fleet eng move pic
- Russia: Army gal support Army boh move vie
- Germany: Fleet hol hold
- Germany: Army kie move den
- England: Fleet nth move hol
- Italy: Army tus support Army ven move pie
- Italy: Fleet tys move tun
- Russia: Army ukr move rum
- Italy: Army ven move pie
- England: Army wal move bre
+bla support ukr move rum
+boh move vie
+bot move swe
+bul move ser
+con move aeg
+eng move pic
+gal support boh move vie
+hol hold
+kie move den
+nth move hol
+tus support ven move pie
+tys move tun
+ukr move rum
+ven move pie
+wal move bre
 PHASE 1901 Fall Retreat
 POSITIONS
-Turkey: F aeg
-Turkey: S ank
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Austria: A bud
-Austria: S bud
-Turkey: S con
-Germany: A den
-England: S edi
-Russia: A gal
-Germany: F hol
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-England: F nth
-France: A par
-France: S par
-England: F pic
-Italy: A pie
-Italy: S rom
-Russia: A rum
-Turkey: A ser
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Russia: S stp
-Russia: F swe
-Austria: F tri
-Austria: S tri
-Italy: F tun
-Italy: A tus
-Italy: S ven
-Germany: A vie
-Austria:  vie
-Austria: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Turkey: supply ank
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Austria: army bud
+Austria: supply bud
+Turkey: supply con
+Germany: army den
+England: supply edi
+Russia: army gal
+Germany: fleet hol
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+England: fleet nth
+France: army par
+France: supply par
+England: fleet pic
+Italy: army pie
+Italy: supply rom
+Russia: army rum
+Turkey: army ser
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Russia: supply stp
+Russia: fleet swe
+Austria: fleet tri
+Austria: supply tri
+Italy: fleet tun
+Italy: army tus
+Italy: supply ven
+Germany: army vie
+Austria: army/dislodged vie
+Austria: supply vie
+England: army wal
+Russia: supply war
 ORDERS
 PHASE 1901 Fall Adjustment
 POSITIONS
-Turkey: F aeg
-Turkey: S ank
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Austria: A bud
-Austria: S bud
-Turkey: S con
-Germany: A den
-Germany: S den
-England: S edi
-Russia: A gal
-Germany: F hol
-Germany: S hol
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-England: F nth
-France: A par
-France: S par
-England: F pic
-Italy: A pie
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Russia: S stp
-Russia: F swe
-Russia: S swe
-Austria: F tri
-Austria: S tri
-Italy: F tun
-Italy: S tun
-Italy: A tus
-Italy: S ven
-Germany: A vie
-Germany: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Turkey: supply ank
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Austria: army bud
+Austria: supply bud
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: supply edi
+Russia: army gal
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+England: fleet nth
+France: army par
+France: supply par
+England: fleet pic
+Italy: army pie
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Russia: supply stp
+Russia: fleet swe
+Russia: supply swe
+Austria: fleet tri
+Austria: supply tri
+Italy: fleet tun
+Italy: supply tun
+Italy: army tus
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Germany: build Army ber
- Turkey: build Army con
- Germany: build Fleet kie
- Russia: build Army mos
- Germany: build Army mun
- Italy: build Army nap
- Italy: build Army rom
- Russia: build Army sev
- Russia: build Fleet stp/sc
- Italy: build Army ven
- Russia: build Army war
+build Army ber
+build Army con
+build Fleet kie
+build Army mos
+build Army mun
+build Army nap
+build Army rom
+build Army sev
+build Fleet stp/sc
+build Army ven
+build Army war
 PHASE 1902 Spring Movement
 POSITIONS
-Turkey: F aeg
-Turkey: S ank
-Germany: A ber
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Austria: A bud
-Austria: S bud
-Turkey: A con
-Turkey: S con
-Germany: A den
-Germany: S den
-England: S edi
-Russia: A gal
-Germany: F hol
-Germany: S hol
-Germany: F kie
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: A mos
-Russia: S mos
-Germany: A mun
-Germany: S mun
-Italy: A nap
-Italy: S nap
-England: F nth
-France: A par
-France: S par
-England: F pic
-Italy: A pie
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: A sev
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Russia: S stp
-Russia: F swe
-Russia: S swe
-Austria: F tri
-Austria: S tri
-Italy: F tun
-Italy: S tun
-Italy: A tus
-Italy: S ven
-Germany: A vie
-Germany: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Turkey: supply ank
+Germany: army ber
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Austria: army bud
+Austria: supply bud
+Turkey: army con
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: supply edi
+Russia: army gal
+Germany: fleet hol
+Germany: supply hol
+Germany: fleet kie
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: army mos
+Russia: supply mos
+Germany: army mun
+Germany: supply mun
+Italy: army nap
+Italy: supply nap
+England: fleet nth
+France: army par
+France: supply par
+England: fleet pic
+Italy: army pie
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: army sev
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Russia: supply stp
+Russia: fleet swe
+Russia: supply swe
+Austria: fleet tri
+Austria: supply tri
+Italy: fleet tun
+Italy: supply tun
+Italy: army tus
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Turkey: Fleet aeg convoy Army smy move gre
- Germany: Army ber move mun
- Russia: Fleet bla support Army rum move bul
- Turkey: Army con move bul
- Germany: Army den hold
- Russia: Army gal move bud
- Germany: Fleet hol hold
- Germany: Fleet kie move hel
- Russia: Army mos move lvn
- Germany: Army mun move tyr
- Italy: Army nap move rom
- England: Fleet nth move bel
- England: Fleet pic move bre
- Italy: Army pie move mar
- Russia: Army rum move bul
- Russia: Army sev move arm
- Turkey: Army smy move gre
- Russia: Fleet swe move bal
- Italy: Fleet tun move wes
- Italy: Army tus support Army pie
- Germany: Army vie support Army gal move bud
+aeg convoy smy move gre
+ber move mun
+bla support rum move bul
+con move bul
+den hold
+gal move bud
+hol hold
+kie move hel
+mos move lvn
+mun move tyr
+nap move rom
+nth move bel
+pic move bre
+pie move mar
+rum move bul
+sev move arm
+smy move gre
+swe move bal
+tun move wes
+tus support pie
+vie support gal move bud
 PHASE 1902 Spring Retreat
 POSITIONS
-Turkey: F aeg
-Turkey: S ank
-Russia: A arm
-Russia: F bal
-England: F bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Austria:  bud
-Austria: S bud
-Russia: A bul
-Turkey: A con
-Turkey: S con
-Germany: A den
-Germany: S den
-England: S edi
-Turkey: A gre
-Germany: F hel
-Germany: F hol
-Germany: S hol
-Germany: S kie
-England: S lon
-Russia: A lvn
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: A mun
-Germany: S mun
-Italy: S nap
-France: A par
-France: S par
-England: F pic
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: S smy
-Russia: S stp
-Russia: S swe
-Austria: F tri
-Austria: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: S ven
-Germany: A vie
-Germany: S vie
-England: A wal
-Russia: S war
-Italy: F wes
+Turkey: fleet aeg
+Turkey: supply ank
+Russia: army arm
+Russia: fleet bal
+England: fleet bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Austria: army/dislodged bud
+Austria: supply bud
+Russia: army bul
+Turkey: army con
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: supply edi
+Turkey: army gre
+Germany: fleet hel
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+England: supply lon
+Russia: army lvn
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: army mun
+Germany: supply mun
+Italy: supply nap
+France: army par
+France: supply par
+England: fleet pic
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: supply smy
+Russia: supply stp
+Russia: supply swe
+Austria: fleet tri
+Austria: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+England: army wal
+Russia: supply war
+Italy: fleet wes
 ORDERS
 PHASE 1902 Fall Movement
 POSITIONS
-Turkey: F aeg
-Turkey: S ank
-Russia: A arm
-Russia: F bal
-England: F bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Austria: S bud
-Russia: A bul
-Turkey: A con
-Turkey: S con
-Germany: A den
-Germany: S den
-England: S edi
-Turkey: A gre
-Germany: F hel
-Germany: F hol
-Germany: S hol
-Germany: S kie
-England: S lon
-Russia: A lvn
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: A mun
-Germany: S mun
-Italy: S nap
-France: A par
-France: S par
-England: F pic
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: S smy
-Russia: S stp
-Russia: S swe
-Austria: F tri
-Austria: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: S ven
-Germany: A vie
-Germany: S vie
-England: A wal
-Russia: S war
-Italy: F wes
+Turkey: fleet aeg
+Turkey: supply ank
+Russia: army arm
+Russia: fleet bal
+England: fleet bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Austria: supply bud
+Russia: army bul
+Turkey: army con
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: supply edi
+Turkey: army gre
+Germany: fleet hel
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+England: supply lon
+Russia: army lvn
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: army mun
+Germany: supply mun
+Italy: supply nap
+France: army par
+France: supply par
+England: fleet pic
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: supply smy
+Russia: supply stp
+Russia: supply swe
+Austria: fleet tri
+Austria: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+England: army wal
+Russia: supply war
+Italy: fleet wes
 ORDERS
- Turkey: Fleet aeg support Army con move bul
- Russia: Army arm move ank
- Russia: Fleet bal convoy Army lvn move swe
- Russia: Fleet bla move bul/ec
- Russia: Army bud support Army vie move tri
- Russia: Army bul move ser
- Turkey: Army con move bul
- Germany: Army den hold
- Turkey: Army gre support Army con move bul
- Germany: Fleet hel move nth
- Germany: Fleet hol support Fleet hel move nth
- Russia: Army lvn move swe
- Germany: Army mun move ruh
- England: Fleet pic move eng
- Italy: Army pie move mar
- Italy: Army rom move tus
- Italy: Army tus move ven
- Germany: Army tyr move ven
- Germany: Army vie move tri
- Italy: Fleet wes move spa/sc
+aeg support con move bul
+arm move ank
+bal convoy lvn move swe
+bla move bul/ec
+bud support vie move tri
+bul move ser
+con move bul
+den hold
+gre support con move bul
+hel move nth
+hol support hel move nth
+lvn move swe
+mun move ruh
+pic move eng
+pie move mar
+rom move tus
+tus move ven
+tyr move ven
+vie move tri
+wes move spa/sc
 PHASE 1902 Fall Retreat
 POSITIONS
-Turkey: F aeg
-Russia: A ank
-Turkey: S ank
-Russia: F bal
-England: F bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Austria: S bud
-Turkey: A bul
-Russia:  bul
-Turkey: S con
-Germany: A den
-Germany: S den
-England: S edi
-England: F eng
-Turkey: A gre
-Germany: F hol
-Germany: S hol
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-France: A par
-France: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Germany: A ruh
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: S smy
-Italy: F spa/sc
-Russia: S stp
-Russia: A swe
-Russia: S swe
-Germany: A tri
-Austria:  tri
-Austria: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Russia: army ank
+Turkey: supply ank
+Russia: fleet bal
+England: fleet bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Austria: supply bud
+Turkey: army bul
+Russia: army/dislodged bul
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: supply edi
+England: fleet eng
+Turkey: army gre
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+France: army par
+France: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Germany: army ruh
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: supply smy
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: army swe
+Russia: supply swe
+Germany: army tri
+Austria: fleet/dislodged tri
+Austria: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Russia: Army bul move rum
+bul move rum
 PHASE 1902 Fall Adjustment
 POSITIONS
-Turkey: F aeg
-Russia: A ank
-Russia: S ank
-Russia: F bal
-England: F bel
-England: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Turkey: A bul
-Turkey: S bul
-Turkey: S con
-Germany: A den
-Germany: S den
-England: S edi
-England: F eng
-Turkey: A gre
-Turkey: S gre
-Germany: F hol
-Germany: S hol
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-France: A par
-France: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Germany: A ruh
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: A swe
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Russia: army ank
+Russia: supply ank
+Russia: fleet bal
+England: fleet bel
+England: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Turkey: army bul
+Turkey: supply bul
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: supply edi
+England: fleet eng
+Turkey: army gre
+Turkey: supply gre
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+France: army par
+France: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Germany: army ruh
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: army swe
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- England: build Army edi
- England: build Fleet lon
- England: build Army lvp
- Russia: build Army mos
- Germany: build Army mun
- Russia: build Army sev
- Turkey: build Army smy
- Russia: build Army stp
- Italy: build Army ven
- Russia: build Army war
+build Army edi
+build Fleet lon
+build Army lvp
+build Army mos
+build Army mun
+build Army sev
+build Army smy
+build Army stp
+build Army ven
+build Army war
 PHASE 1903 Spring Movement
 POSITIONS
-Turkey: F aeg
-Russia: A ank
-Russia: S ank
-Russia: F bal
-England: F bel
-England: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Turkey: A bul
-Turkey: S bul
-Turkey: S con
-Germany: A den
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Turkey: A gre
-Turkey: S gre
-Germany: F hol
-Germany: S hol
-Germany: S kie
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: A mos
-Russia: S mos
-Germany: A mun
-Germany: S mun
-Italy: S nap
-Germany: F nth
-France: A par
-France: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Germany: A ruh
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: A sev
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: A swe
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: A ven
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Russia: army ank
+Russia: supply ank
+Russia: fleet bal
+England: fleet bel
+England: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Turkey: army bul
+Turkey: supply bul
+Turkey: supply con
+Germany: army den
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Turkey: army gre
+Turkey: supply gre
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: army mos
+Russia: supply mos
+Germany: army mun
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+France: army par
+France: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Germany: army ruh
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: army sev
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: army swe
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: army ven
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Turkey: Fleet aeg move con
- Russia: Army ank move con
- Russia: Fleet bal move swe
- England: Fleet bel hold
- Russia: Fleet bla convoy Army sev move bul
- Russia: Army bud hold
- Turkey: Army bul support Fleet aeg move con
- Germany: Army den move lon
- England: Army edi hold
- England: Fleet eng convoy Army wal move bre
- Turkey: Army gre support Army ser
- Germany: Fleet hol support Army ruh move bel
- Russia: Army mos move ukr
- Germany: Army mun move bur
- Germany: Fleet nth convoy Army den move lon
- Germany: Army ruh move bel
- Russia: Army rum support Army sev move bul
- Turkey: Army ser hold
- Russia: Army sev move bul
- Turkey: Army smy support Fleet aeg move con
- Russia: Army swe move nwy
- Germany: Army tri support Army tyr
- Germany: Army tyr support Army tri
- England: Army wal move bre
+aeg move con
+ank move con
+bal move swe
+bel hold
+bla convoy sev move bul
+bud hold
+bul support aeg move con
+den move lon
+edi hold
+eng convoy wal move bre
+gre support ser
+hol support ruh move bel
+mos move ukr
+mun move bur
+nth convoy den move lon
+ruh move bel
+rum support sev move bul
+ser hold
+sev move bul
+smy support aeg move con
+swe move nwy
+tri support tyr
+tyr support tri
+wal move bre
 PHASE 1903 Spring Retreat
 POSITIONS
-Russia: A ank
-Russia: S ank
-Germany: A bel
-England:  bel
-England: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Russia: A bul
-Turkey: S bul
-Germany: A bur
-Turkey: F con
-Turkey: S con
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Turkey: A gre
-Turkey: S gre
-Germany: F hol
-Germany: S hol
-Germany: S kie
-Germany: A lon
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-France: A par
-France: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: F swe
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Russia: A ukr
-Italy: A ven
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Russia: army ank
+Russia: supply ank
+Germany: army bel
+England: fleet/dislodged bel
+England: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: army bul
+Turkey: supply bul
+Germany: army bur
+Turkey: fleet con
+Turkey: supply con
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Turkey: army gre
+Turkey: supply gre
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+Germany: army lon
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+France: army par
+France: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: fleet swe
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Russia: army ukr
+Italy: army ven
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- England: Fleet bel move pic
+bel move pic
 PHASE 1903 Fall Movement
 POSITIONS
-Russia: A ank
-Russia: S ank
-Germany: A bel
-England: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Russia: A bul
-Turkey: S bul
-Germany: A bur
-Turkey: F con
-Turkey: S con
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Turkey: A gre
-Turkey: S gre
-Germany: F hol
-Germany: S hol
-Germany: S kie
-Germany: A lon
-England: S lon
-England: S lvp
-France: A mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-France: A par
-France: S par
-England: F pic
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Turkey: A smy
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: F swe
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Russia: A ukr
-Italy: A ven
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Russia: army ank
+Russia: supply ank
+Germany: army bel
+England: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: army bul
+Turkey: supply bul
+Germany: army bur
+Turkey: fleet con
+Turkey: supply con
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Turkey: army gre
+Turkey: supply gre
+Germany: fleet hol
+Germany: supply hol
+Germany: supply kie
+Germany: army lon
+England: supply lon
+England: supply lvp
+France: army mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+France: army par
+France: supply par
+England: fleet pic
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Turkey: army smy
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: fleet swe
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Russia: army ukr
+Italy: army ven
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Russia: Army ank move con
- Germany: Army bel move pic
- Russia: Fleet bla support Army ank move con
- Russia: Army bud move ser
- Russia: Army bul support Army ank move con
- Germany: Army bur support Army bel move pic
- Turkey: Fleet con hold
- England: Army edi hold
- England: Fleet eng support Army wal move lon
- Turkey: Army gre move bul
- Germany: Fleet hol move bel
- Germany: Army lon hold
- Germany: Fleet nth move eng
- Russia: Army nwy hold
- England: Fleet pic hold
- Italy: Army pie move mar
- Russia: Army rum support Army bul
- Turkey: Army ser support Army gre move bul
- Turkey: Army smy move arm
- Italy: Fleet spa/sc support Army pie move mar
- Russia: Fleet swe move ska
- Germany: Army tri support Army tyr
- Germany: Army tyr support Army tri
- Russia: Army ukr move gal
- England: Army wal move lon
+ank move con
+bel move pic
+bla support ank move con
+bud move ser
+bul support ank move con
+bur support bel move pic
+con hold
+edi hold
+eng support wal move lon
+gre move bul
+hol move bel
+lon hold
+nth move eng
+nwy hold
+pic hold
+pie move mar
+rum support bul
+ser support gre move bul
+smy move arm
+spa/sc support pie move mar
+swe move ska
+tri support tyr
+tyr support tri
+ukr move gal
+wal move lon
 PHASE 1903 Fall Retreat
 POSITIONS
-Russia: S ank
-Turkey: A arm
-Germany: F bel
-England: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Russia: A bul
-Turkey: S bul
-Germany: A bur
-Russia: A con
-Turkey:  con
-Turkey: S con
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Russia: A gal
-Turkey: A gre
-Turkey: S gre
-Germany: S hol
-Germany: S kie
-Germany: A lon
-England: S lon
-England: S lvp
-Italy: A mar
-France:  mar
-France: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-France: A par
-France: S par
-Germany: A pic
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Russia: F ska
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: A ven
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Russia: supply ank
+Turkey: army arm
+Germany: fleet bel
+England: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: army bul
+Turkey: supply bul
+Germany: army bur
+Russia: army con
+Turkey: fleet/dislodged con
+Turkey: supply con
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Russia: army gal
+Turkey: army gre
+Turkey: supply gre
+Germany: supply hol
+Germany: supply kie
+Germany: army lon
+England: supply lon
+England: supply lvp
+Italy: army mar
+France: army/dislodged mar
+France: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+France: army par
+France: supply par
+Germany: army pic
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Russia: fleet ska
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: army ven
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Turkey: Fleet con move aeg
+con move aeg
 PHASE 1903 Fall Adjustment
 POSITIONS
-Turkey: F aeg
-Russia: S ank
-Turkey: A arm
-Germany: F bel
-Germany: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Russia: A bul
-Russia: S bul
-Germany: A bur
-Russia: A con
-Russia: S con
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Russia: A gal
-Turkey: A gre
-Turkey: S gre
-Germany: S hol
-Germany: S kie
-Germany: A lon
-Germany: S lon
-England: S lvp
-Italy: A mar
-Italy: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-France: A par
-France: S par
-Germany: A pic
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: A ser
-Turkey: S ser
-Russia: S sev
-Russia: F ska
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: A ven
-Italy: S ven
-Germany: S vie
-England: A wal
-Russia: S war
+Turkey: fleet aeg
+Russia: supply ank
+Turkey: army arm
+Germany: fleet bel
+Germany: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: army bul
+Russia: supply bul
+Germany: army bur
+Russia: army con
+Russia: supply con
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Russia: army gal
+Turkey: army gre
+Turkey: supply gre
+Germany: supply hol
+Germany: supply kie
+Germany: army lon
+Germany: supply lon
+England: supply lvp
+Italy: army mar
+Italy: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+France: army par
+France: supply par
+Germany: army pic
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: army ser
+Turkey: supply ser
+Russia: supply sev
+Russia: fleet ska
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: army ven
+Italy: supply ven
+Germany: supply vie
+England: army wal
+Russia: supply war
 ORDERS
- Germany: build Fleet kie
- Germany: build Army mun
- Italy: build Fleet nap
- Turkey: remove Army ser
- Russia: build Army sev
- Russia: build Fleet stp/sc
- England: remove Army wal
- Russia: build Army war
+build Fleet kie
+build Army mun
+build Fleet nap
+remove ser
+build Army sev
+build Fleet stp/sc
+remove wal
+build Army war
 PHASE 1904 Spring Movement
 POSITIONS
-Turkey: F aeg
-Russia: S ank
-Turkey: A arm
-Germany: F bel
-Germany: S bel
-Germany: S ber
-Russia: F bla
-France: F bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Russia: A bul
-Russia: S bul
-Germany: A bur
-Russia: A con
-Russia: S con
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Russia: A gal
-Turkey: A gre
-Turkey: S gre
-Germany: S hol
-Germany: F kie
-Germany: S kie
-Germany: A lon
-Germany: S lon
-England: S lvp
-Italy: A mar
-Italy: S mar
-Russia: S mos
-Germany: A mun
-Germany: S mun
-Italy: F nap
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-France: A par
-France: S par
-Germany: A pic
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Turkey: S ser
-Russia: A sev
-Russia: S sev
-Russia: F ska
-Turkey: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: F stp/sc
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A tus
-Germany: A tyr
-Italy: A ven
-Italy: S ven
-Germany: S vie
-Russia: A war
-Russia: S war
+Turkey: fleet aeg
+Russia: supply ank
+Turkey: army arm
+Germany: fleet bel
+Germany: supply bel
+Germany: supply ber
+Russia: fleet bla
+France: fleet bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: army bul
+Russia: supply bul
+Germany: army bur
+Russia: army con
+Russia: supply con
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Russia: army gal
+Turkey: army gre
+Turkey: supply gre
+Germany: supply hol
+Germany: fleet kie
+Germany: supply kie
+Germany: army lon
+Germany: supply lon
+England: supply lvp
+Italy: army mar
+Italy: supply mar
+Russia: supply mos
+Germany: army mun
+Germany: supply mun
+Italy: fleet nap
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+France: army par
+France: supply par
+Germany: army pic
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Turkey: supply ser
+Russia: army sev
+Russia: supply sev
+Russia: fleet ska
+Turkey: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: fleet stp/sc
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army tus
+Germany: army tyr
+Italy: army ven
+Italy: supply ven
+Germany: supply vie
+Russia: army war
+Russia: supply war
 ORDERS
- Turkey: Fleet aeg move ion
- Turkey: Army arm move sev
- Germany: Fleet bel move nth
- Russia: Fleet bla move ank
- Russia: Army bud move ser
- Russia: Army bul move gre
- Germany: Army bur move par
- Russia: Army con move smy
- England: Army edi hold
- England: Fleet eng hold
- Russia: Army gal support Army bud
- Germany: Fleet kie move den
- Germany: Army lon move yor
- Italy: Army mar move gas
- Germany: Army mun move boh
- Italy: Fleet nap move rom
- Germany: Fleet nth move nrg
- Russia: Army nwy hold
- Germany: Army pic support Army bur move par
- Russia: Army rum support Army bud move ser
- Russia: Army sev hold
- Italy: Fleet spa/sc move mid
- Russia: Fleet stp/sc move bot
- Germany: Army tri support Army tyr move vie
- Italy: Army tus move pie
- Germany: Army tyr move vie
+aeg move ion
+arm move sev
+bel move nth
+bla move ank
+bud move ser
+bul move gre
+bur move par
+con move smy
+edi hold
+eng hold
+gal support bud
+kie move den
+lon move yor
+mar move gas
+mun move boh
+nap move rom
+nth move nrg
+nwy hold
+pic support bur move par
+rum support bud move ser
+sev hold
+spa/sc move mid
+stp/sc move bot
+tri support tyr move vie
+tus move pie
+tyr move vie
 PHASE 1904 Fall Movement
 POSITIONS
-Russia: F ank
-Russia: S ank
-Turkey: A arm
-Germany: S bel
-Germany: S ber
-Germany: A boh
-Russia: F bot
-France: F bre
-France: S bre
-Russia: S bud
-Russia: A bul
-Russia: S bul
-Russia: S con
-Germany: F den
-Germany: S den
-England: A edi
-England: S edi
-England: F eng
-Russia: A gal
-Italy: A gas
-Turkey: A gre
-Turkey: S gre
-Germany: S hol
-Turkey: F ion
-Germany: S kie
-Germany: S lon
-England: S lvp
-Italy: F mao
-Italy: S mar
-Russia: S mos
-Germany: S mun
-Italy: F nap
-Italy: S nap
-Germany: F nth
-Germany: F nwg
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-France: S par
-Germany: A pic
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Russia: A ser
-Turkey: S ser
-Russia: A sev
-Russia: S sev
-Russia: F ska
-Russia: A smy
-Turkey: S smy
-Italy: S spa
-Russia: S stp
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Italy: S tun
-Italy: A ven
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: A war
-Russia: S war
-Germany: A yor
+Russia: fleet ank
+Russia: supply ank
+Turkey: army arm
+Germany: supply bel
+Germany: supply ber
+Germany: army boh
+Russia: fleet bot
+France: fleet bre
+France: supply bre
+Russia: supply bud
+Russia: army bul
+Russia: supply bul
+Russia: supply con
+Germany: fleet den
+Germany: supply den
+England: army edi
+England: supply edi
+England: fleet eng
+Russia: army gal
+Italy: army gas
+Turkey: army gre
+Turkey: supply gre
+Germany: supply hol
+Turkey: fleet ion
+Germany: supply kie
+Germany: supply lon
+England: supply lvp
+Italy: fleet mid
+Italy: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: fleet nap
+Italy: supply nap
+Germany: fleet nth
+Germany: fleet nrg
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+France: supply par
+Germany: army pic
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Russia: army ser
+Turkey: supply ser
+Russia: army sev
+Russia: supply sev
+Russia: fleet ska
+Russia: army smy
+Turkey: supply smy
+Italy: supply spa
+Russia: supply stp
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Italy: supply tun
+Italy: army ven
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: army war
+Russia: supply war
+Germany: army yor
 ORDERS
- Russia: Fleet ank hold
- Turkey: Army arm move smy
- Russia: Fleet bot move bal
- Russia: Army bul move gre
- England: Army edi move lvp
- England: Fleet eng move lon
- Russia: Army gal move bud
- Italy: Army gas move bre
- Turkey: Army gre move tun
- Turkey: Fleet ion convoy Army gre move tun
- Italy: Fleet mid support Army gas move bre
- Germany: Fleet nth support Fleet nrg move edi
- Germany: Fleet nrg move edi
- Russia: Army nwy hold
- Germany: Army par hold
- Germany: Army pic move bel
- Russia: Army rum support Army gal move bud
- Russia: Army ser support Army bul move gre
- Russia: Army sev hold
- Russia: Fleet ska support Army nwy
- Russia: Army smy hold
- Russia: Army war hold
- Germany: Army yor move lvp
+ank hold
+arm move smy
+bot move bal
+bul move gre
+edi move lvp
+eng move lon
+gal move bud
+gas move bre
+gre move tun
+ion convoy gre move tun
+mid support gas move bre
+nth support nrg move edi
+nrg move edi
+nwy hold
+par hold
+pic move bel
+rum support gal move bud
+ser support bul move gre
+sev hold
+ska support nwy
+smy hold
+war hold
+yor move lvp
 PHASE 1904 Fall Retreat
 POSITIONS
-Russia: F ank
-Russia: S ank
-Turkey: A arm
-Russia: F bal
-Germany: A bel
-Germany: S bel
-Germany: S ber
-Germany: A boh
-Italy: A bre
-France:  bre
-France: S bre
-Russia: A bud
-Russia: S bud
-Russia: S bul
-Russia: S con
-Germany: F den
-Germany: S den
-England:  edi
-Germany: F edi
-England: S edi
-Russia: A gre
-Turkey: S gre
-Germany: S hol
-Turkey: F ion
-Germany: S kie
-England: F lon
-Germany: S lon
-England: S lvp
-Italy: F mao
-Italy: S mar
-Russia: S mos
-Germany: S mun
-Italy: F nap
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-France: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Russia: A ser
-Turkey: S ser
-Russia: A sev
-Russia: S sev
-Russia: F ska
-Russia: A smy
-Turkey: S smy
-Italy: S spa
-Russia: S stp
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Turkey: A tun
-Italy: S tun
-Italy: A ven
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: A war
-Russia: S war
-Germany: A yor
+Russia: fleet ank
+Russia: supply ank
+Turkey: army arm
+Russia: fleet bal
+Germany: army bel
+Germany: supply bel
+Germany: supply ber
+Germany: army boh
+Italy: army bre
+France: fleet/dislodged bre
+France: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: supply bul
+Russia: supply con
+Germany: fleet den
+Germany: supply den
+England: army/dislodged edi
+Germany: fleet edi
+England: supply edi
+Russia: army gre
+Turkey: supply gre
+Germany: supply hol
+Turkey: fleet ion
+Germany: supply kie
+England: fleet lon
+Germany: supply lon
+England: supply lvp
+Italy: fleet mid
+Italy: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: fleet nap
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+France: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Russia: army ser
+Turkey: supply ser
+Russia: army sev
+Russia: supply sev
+Russia: fleet ska
+Russia: army smy
+Turkey: supply smy
+Italy: supply spa
+Russia: supply stp
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Turkey: army tun
+Italy: supply tun
+Italy: army ven
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: army war
+Russia: supply war
+Germany: army yor
 ORDERS
 PHASE 1904 Fall Adjustment
 POSITIONS
-Russia: F ank
-Russia: S ank
-Turkey: A arm
-Russia: F bal
-Germany: A bel
-Germany: S bel
-Germany: S ber
-Germany: A boh
-Italy: A bre
-Italy: S bre
-Russia: A bud
-Russia: S bud
-Russia: S bul
-Russia: S con
-Germany: F den
-Germany: S den
-Germany: F edi
-Germany: S edi
-Russia: A gre
-Russia: S gre
-Germany: S hol
-Turkey: F ion
-Germany: S kie
-England: F lon
-England: S lon
-England: S lvp
-Italy: F mao
-Italy: S mar
-Russia: S mos
-Germany: S mun
-Italy: F nap
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-Germany: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Russia: A ser
-Russia: S ser
-Russia: A sev
-Russia: S sev
-Russia: F ska
-Russia: A smy
-Russia: S smy
-Italy: S spa
-Russia: S stp
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Turkey: A tun
-Turkey: S tun
-Italy: A ven
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: A war
-Russia: S war
-Germany: A yor
+Russia: fleet ank
+Russia: supply ank
+Turkey: army arm
+Russia: fleet bal
+Germany: army bel
+Germany: supply bel
+Germany: supply ber
+Germany: army boh
+Italy: army bre
+Italy: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: supply bul
+Russia: supply con
+Germany: fleet den
+Germany: supply den
+Germany: fleet edi
+Germany: supply edi
+Russia: army gre
+Russia: supply gre
+Germany: supply hol
+Turkey: fleet ion
+Germany: supply kie
+England: fleet lon
+England: supply lon
+England: supply lvp
+Italy: fleet mid
+Italy: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: fleet nap
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+Germany: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Russia: army ser
+Russia: supply ser
+Russia: army sev
+Russia: supply sev
+Russia: fleet ska
+Russia: army smy
+Russia: supply smy
+Italy: supply spa
+Russia: supply stp
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Turkey: army tun
+Turkey: supply tun
+Italy: army ven
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: army war
+Russia: supply war
+Germany: army yor
 ORDERS
- Turkey: remove Army arm
- Germany: build Army kie
- England: build Fleet lvp
- Russia: build Army mos
- Russia: build Fleet stp/sc
- Turkey: remove Army tun
+remove arm
+build Army kie
+build Fleet lvp
+build Army mos
+build Fleet stp/sc
+remove tun
 PHASE 1905 Spring Movement
 POSITIONS
-Russia: F ank
-Russia: S ank
-Russia: F bal
-Germany: A bel
-Germany: S bel
-Germany: S ber
-Germany: A boh
-Italy: A bre
-Italy: S bre
-Russia: A bud
-Russia: S bud
-Russia: S bul
-Russia: S con
-Germany: F den
-Germany: S den
-Germany: F edi
-Germany: S edi
-Russia: A gre
-Russia: S gre
-Germany: S hol
-Turkey: F ion
-Germany: A kie
-Germany: S kie
-England: F lon
-England: S lon
-England: F lvp
-England: S lvp
-Italy: F mao
-Italy: S mar
-Russia: A mos
-Russia: S mos
-Germany: S mun
-Italy: F nap
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-Germany: S par
-Italy: A pie
-Italy: A rom
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Russia: A ser
-Russia: S ser
-Russia: A sev
-Russia: S sev
-Russia: F ska
-Russia: A smy
-Russia: S smy
-Italy: S spa
-Russia: S stp
-Russia: F stp/sc
-Russia: S swe
-Germany: A tri
-Germany: S tri
-Turkey: S tun
-Italy: A ven
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: A war
-Russia: S war
-Germany: A yor
+Russia: fleet ank
+Russia: supply ank
+Russia: fleet bal
+Germany: army bel
+Germany: supply bel
+Germany: supply ber
+Germany: army boh
+Italy: army bre
+Italy: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: supply bul
+Russia: supply con
+Germany: fleet den
+Germany: supply den
+Germany: fleet edi
+Germany: supply edi
+Russia: army gre
+Russia: supply gre
+Germany: supply hol
+Turkey: fleet ion
+Germany: army kie
+Germany: supply kie
+England: fleet lon
+England: supply lon
+England: fleet lvp
+England: supply lvp
+Italy: fleet mid
+Italy: supply mar
+Russia: army mos
+Russia: supply mos
+Germany: supply mun
+Italy: fleet nap
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+Germany: supply par
+Italy: army pie
+Italy: army rom
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Russia: army ser
+Russia: supply ser
+Russia: army sev
+Russia: supply sev
+Russia: fleet ska
+Russia: army smy
+Russia: supply smy
+Italy: supply spa
+Russia: supply stp
+Russia: fleet stp/sc
+Russia: supply swe
+Germany: army tri
+Germany: supply tri
+Turkey: supply tun
+Italy: army ven
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: army war
+Russia: supply war
+Germany: army yor
 ORDERS
- Russia: Fleet ank move bla
- Russia: Fleet bal move ber
- Italy: Army bre move pic
- Russia: Army bud support Army ser move tri
- Germany: Fleet den move nth
- Germany: Fleet edi hold
- Turkey: Fleet ion move tun
- England: Fleet lon move yor
- Italy: Fleet mid move por
- Russia: Army mos move lvn
- Italy: Fleet nap move tys
- Germany: Fleet nth move lon
- Italy: Army pie move mar
- Italy: Army rom move tus
- Russia: Army rum support Army bud
- Russia: Army ser move tri
- Russia: Army sev move ukr
- Russia: Fleet ska convoy Army nwy move den
- Russia: Army smy move con
- Russia: Fleet stp/sc move bot
- Italy: Army ven move tyr
- Russia: Army war move sil
- Germany: Army yor support Fleet nth move lon
+ank move bla
+bal move ber
+bre move pic
+bud support ser move tri
+den move nth
+edi hold
+ion move tun
+lon move yor
+mid move por
+mos move lvn
+nap move tys
+nth move lon
+pie move mar
+rom move tus
+rum support bud
+ser move tri
+sev move ukr
+ska convoy nwy move den
+smy move con
+stp/sc move bot
+ven move tyr
+war move sil
+yor support nth move lon
 PHASE 1905 Spring Retreat
 POSITIONS
-Russia: S ank
-Germany: A bel
-Germany: S bel
-Russia: F ber
-Germany: S ber
-Russia: F bla
-Germany: A boh
-Russia: F bot
-Italy: S bre
-Russia: A bud
-Russia: S bud
-Russia: S bul
-Russia: A con
-Russia: S con
-Germany: S den
-Germany: F edi
-Germany: S edi
-Russia: A gre
-Russia: S gre
-Germany: S hol
-Germany: A kie
-Germany: S kie
-Germany: F lon
-England:  lon
-England: S lon
-Russia: A lvn
-England: F lvp
-England: S lvp
-Italy: A mar
-Italy: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-Germany: S par
-Italy: A pic
-Italy: F por
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Russia: S ser
-Russia: S sev
-Russia: A sil
-Russia: F ska
-Russia: S smy
-Italy: S spa
-Russia: S stp
-Russia: S swe
-Russia: A tri
-Germany:  tri
-Germany: S tri
-Turkey: F tun
-Turkey: S tun
-Italy: A tus
-Italy: A tyr
-Italy: F tys
-Russia: A ukr
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: S war
-Germany: A yor
+Russia: supply ank
+Germany: army bel
+Germany: supply bel
+Russia: fleet ber
+Germany: supply ber
+Russia: fleet bla
+Germany: army boh
+Russia: fleet bot
+Italy: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: supply bul
+Russia: army con
+Russia: supply con
+Germany: supply den
+Germany: fleet edi
+Germany: supply edi
+Russia: army gre
+Russia: supply gre
+Germany: supply hol
+Germany: army kie
+Germany: supply kie
+Germany: fleet lon
+England: fleet/dislodged lon
+England: supply lon
+Russia: army lvn
+England: fleet lvp
+England: supply lvp
+Italy: army mar
+Italy: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+Germany: supply par
+Italy: army pic
+Italy: fleet por
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Russia: supply ser
+Russia: supply sev
+Russia: army sil
+Russia: fleet ska
+Russia: supply smy
+Italy: supply spa
+Russia: supply stp
+Russia: supply swe
+Russia: army tri
+Germany: army/dislodged tri
+Germany: supply tri
+Turkey: fleet tun
+Turkey: supply tun
+Italy: army tus
+Italy: army tyr
+Italy: fleet tys
+Russia: army ukr
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: supply war
+Germany: army yor
 ORDERS
- England: Fleet lon move eng
+lon move eng
 PHASE 1905 Fall Movement
 POSITIONS
-Russia: S ank
-Germany: A bel
-Germany: S bel
-Russia: F ber
-Germany: S ber
-Russia: F bla
-Germany: A boh
-Russia: F bot
-Italy: S bre
-Russia: A bud
-Russia: S bud
-Russia: S bul
-Russia: A con
-Russia: S con
-Germany: S den
-Germany: F edi
-Germany: S edi
-England: F eng
-Russia: A gre
-Russia: S gre
-Germany: S hol
-Germany: A kie
-Germany: S kie
-Germany: F lon
-England: S lon
-Russia: A lvn
-England: F lvp
-England: S lvp
-Italy: A mar
-Italy: S mar
-Russia: S mos
-Germany: S mun
-Italy: S nap
-Germany: F nth
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-Germany: S par
-Italy: A pic
-Italy: F por
-Italy: S rom
-Russia: A rum
-Russia: S rum
-Russia: S ser
-Russia: S sev
-Russia: A sil
-Russia: F ska
-Russia: S smy
-Italy: S spa
-Russia: S stp
-Russia: S swe
-Russia: A tri
-Germany: S tri
-Turkey: F tun
-Turkey: S tun
-Italy: A tus
-Italy: A tyr
-Italy: F tys
-Russia: A ukr
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: S war
-Germany: A yor
+Russia: supply ank
+Germany: army bel
+Germany: supply bel
+Russia: fleet ber
+Germany: supply ber
+Russia: fleet bla
+Germany: army boh
+Russia: fleet bot
+Italy: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: supply bul
+Russia: army con
+Russia: supply con
+Germany: supply den
+Germany: fleet edi
+Germany: supply edi
+England: fleet eng
+Russia: army gre
+Russia: supply gre
+Germany: supply hol
+Germany: army kie
+Germany: supply kie
+Germany: fleet lon
+England: supply lon
+Russia: army lvn
+England: fleet lvp
+England: supply lvp
+Italy: army mar
+Italy: supply mar
+Russia: supply mos
+Germany: supply mun
+Italy: supply nap
+Germany: fleet nth
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+Germany: supply par
+Italy: army pic
+Italy: fleet por
+Italy: supply rom
+Russia: army rum
+Russia: supply rum
+Russia: supply ser
+Russia: supply sev
+Russia: army sil
+Russia: fleet ska
+Russia: supply smy
+Italy: supply spa
+Russia: supply stp
+Russia: supply swe
+Russia: army tri
+Germany: supply tri
+Turkey: fleet tun
+Turkey: supply tun
+Italy: army tus
+Italy: army tyr
+Italy: fleet tys
+Russia: army ukr
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: supply war
+Germany: army yor
 ORDERS
- Germany: Army bel move hol
- Russia: Fleet ber move kie
- Russia: Fleet bla move con
- Germany: Army boh move vie
- Russia: Fleet bot move bal
- Russia: Army bud support Army tri
- Russia: Army con move bul
- Germany: Fleet edi move nrg
- England: Fleet eng move mid
- Russia: Army gre move ser
- Germany: Army kie move ruh
- Germany: Fleet lon move nth
- Russia: Army lvn move pru
- England: Fleet lvp move iri
- Italy: Army mar move bur
- Germany: Fleet nth move hel
- Germany: Army par move bur
- Italy: Fleet por move spa/sc
- Russia: Army rum move gal
- Russia: Army sil move mun
- Russia: Fleet ska move den
- Russia: Army tri support Army bud
- Turkey: Fleet tun move ion
- Italy: Army tus move ven
- Italy: Army tyr support Army vie move tri
- Russia: Army ukr support Army rum move gal
- Germany: Army vie move tri
+bel move hol
+ber move kie
+bla move con
+boh move vie
+bot move bal
+bud support tri
+con move bul
+edi move nrg
+eng move mid
+gre move ser
+kie move ruh
+lon move nth
+lvn move pru
+lvp move iri
+mar move bur
+nth move hel
+par move bur
+por move spa/sc
+rum move gal
+sil move mun
+ska move den
+tri support bud
+tun move ion
+tus move ven
+tyr support vie move tri
+ukr support rum move gal
+vie move tri
 PHASE 1905 Fall Adjustment
 POSITIONS
-Russia: S ank
-Russia: F bal
-Germany: S bel
-Germany: S ber
-Germany: A boh
-Italy: S bre
-Russia: A bud
-Russia: S bud
-Russia: A bul
-Russia: S bul
-Russia: F con
-Russia: S con
-Russia: F den
-Russia: S den
-Germany: S edi
-Russia: A gal
-Russia: S gre
-Germany: F hel
-Germany: A hol
-Germany: S hol
-Turkey: F ion
-England: F iri
-Russia: F kie
-Russia: S kie
-England: S lon
-England: S lvp
-England: F mao
-Italy: A mar
-Italy: S mar
-Russia: S mos
-Russia: A mun
-Russia: S mun
-Italy: S nap
-Germany: F nth
-Germany: F nwg
-Russia: A nwy
-Russia: S nwy
-Germany: A par
-Germany: S par
-Italy: A pic
-Russia: A pru
-Italy: S rom
-Germany: A ruh
-Russia: S rum
-Russia: A ser
-Russia: S ser
-Russia: S sev
-Russia: S smy
-Italy: S spa
-Italy: F spa/sc
-Russia: S stp
-Russia: S swe
-Russia: A tri
-Russia: S tri
-Turkey: S tun
-Italy: A tyr
-Italy: F tys
-Russia: A ukr
-Italy: A ven
-Italy: S ven
-Germany: A vie
-Germany: S vie
-Russia: S war
-Germany: A yor
+Russia: supply ank
+Russia: fleet bal
+Germany: supply bel
+Germany: supply ber
+Germany: army boh
+Italy: supply bre
+Russia: army bud
+Russia: supply bud
+Russia: army bul
+Russia: supply bul
+Russia: fleet con
+Russia: supply con
+Russia: fleet den
+Russia: supply den
+Germany: supply edi
+Russia: army gal
+Russia: supply gre
+Germany: fleet hel
+Germany: army hol
+Germany: supply hol
+Turkey: fleet ion
+England: fleet iri
+Russia: fleet kie
+Russia: supply kie
+England: supply lon
+England: supply lvp
+England: fleet mid
+Italy: army mar
+Italy: supply mar
+Russia: supply mos
+Russia: army mun
+Russia: supply mun
+Italy: supply nap
+Germany: fleet nth
+Germany: fleet nrg
+Russia: army nwy
+Russia: supply nwy
+Germany: army par
+Germany: supply par
+Italy: army pic
+Russia: army pru
+Italy: supply rom
+Germany: army ruh
+Russia: supply rum
+Russia: army ser
+Russia: supply ser
+Russia: supply sev
+Russia: supply smy
+Italy: supply spa
+Italy: fleet spa/sc
+Russia: supply stp
+Russia: supply swe
+Russia: army tri
+Russia: supply tri
+Turkey: supply tun
+Italy: army tyr
+Italy: fleet tys
+Russia: army ukr
+Italy: army ven
+Italy: supply ven
+Germany: army vie
+Germany: supply vie
+Russia: supply war
+Germany: army yor
 ORDERS
