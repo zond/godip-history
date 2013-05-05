@@ -139,7 +139,7 @@ func (self *move) adjudicateMovementPhase(r dip.Resolver) error {
 		dip.Logf("'%v' vs '%v': %v", self, order, attackStrength)
 		if order.Type() == cla.Move {
 			victimConvoyed := cla.MustConvoy(r, order.Targets()[0])
-			if !convoyed && !victimConvoyed && order.Targets()[1] == self.targets[0] {
+			if !convoyed && !victimConvoyed && order.Targets()[1].Super() == self.targets[0].Super() {
 				as := cla.MoveSupport(r, order.Targets()[0], order.Targets()[1], []dip.Nation{unit.Nation}) + 1
 				dip.Logf("'%v' vs '%v': %v", order, self, as)
 				if victim.Nation == unit.Nation || as >= attackStrength {
