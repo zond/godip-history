@@ -62,7 +62,7 @@ func Graph() *graph.Graph {
 		// smy
 		Prov("smy").Conn("aeg", c.Sea).Conn("con", c.Coast...).Conn("ank", c.Land).Conn("arm", c.Land).Conn("syr", c.Coast...).Conn("eas", c.Sea).Flag(c.Coast...).SC(c.Turkey).
 		// aeg
-		Prov("aeg").Conn("ion", c.Sea).Conn("gre", c.Sea).Conn("bul/sc", c.Sea).Conn("con", c.Sea).Conn("smy", c.Sea).Flag(c.Sea).
+		Prov("aeg").Conn("eas", c.Sea).Conn("ion", c.Sea).Conn("gre", c.Sea).Conn("bul/sc", c.Sea).Conn("con", c.Sea).Conn("smy", c.Sea).Flag(c.Sea).
 		// gre
 		Prov("gre").Conn("ion", c.Coast...).Conn("alb", c.Coast...).Conn("ser", c.Land).Conn("bul", c.Land).Conn("bul/sc", c.Sea).Conn("aeg", c.Sea).Flag(c.Coast...).SC(c.Neutral).
 		// nap
