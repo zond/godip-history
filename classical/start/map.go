@@ -100,7 +100,7 @@ func Graph() *graph.Graph {
 		// bal
 		Prov("bal").Conn("den", c.Sea).Conn("swe", c.Sea).Conn("bot", c.Sea).Conn("lvn", c.Sea).Conn("pru", c.Sea).Conn("ber", c.Sea).Conn("kie", c.Sea).Flag(c.Sea).
 		// pru
-		Prov("pru").Conn("ber", c.Coast...).Conn("bal", c.Sea).Conn("lvn", c.Land).Conn("war", c.Land).Conn("sil", c.Land).Flag(c.Coast...).
+		Prov("pru").Conn("ber", c.Coast...).Conn("bal", c.Sea).Conn("lvn", c.Coast...).Conn("war", c.Land).Conn("sil", c.Land).Flag(c.Coast...).
 		// sil
 		Prov("sil").Conn("mun", c.Land).Conn("ber", c.Land).Conn("pru", c.Land).Conn("war", c.Land).Conn("gal", c.Land).Conn("boh", c.Land).Flag(c.Land).
 		// gal

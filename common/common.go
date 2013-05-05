@@ -13,11 +13,15 @@ var LogIndent = []string{}
 var logBuffer = new(bytes.Buffer)
 
 func Indent(s string) {
-	LogIndent = append(LogIndent, s)
+	if Debug {
+		LogIndent = append(LogIndent, s)
+	}
 }
 
 func DeIndent() {
-	LogIndent = LogIndent[:len(LogIndent)-1]
+	if Debug {
+		LogIndent = LogIndent[:len(LogIndent)-1]
+	}
 }
 
 func Logf(s string, o ...interface{}) {
@@ -27,12 +31,16 @@ func Logf(s string, o ...interface{}) {
 }
 
 func ClearLog() {
-	logBuffer = new(bytes.Buffer)
+	if Debug {
+		logBuffer = new(bytes.Buffer)
+	}
 }
 
 func DumpLog() {
-	fmt.Print(string(logBuffer.Bytes()))
-	ClearLog()
+	if Debug {
+		fmt.Print(string(logBuffer.Bytes()))
+		ClearLog()
+	}
 }
 
 func MustParseInt(s string) (result int) {
