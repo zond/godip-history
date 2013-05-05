@@ -139,6 +139,7 @@ func (self *phase) PostProcess(s dip.State) {
 			_, _, balance := cla.AdjustmentStatus(s, nationality)
 			if balance < 0 {
 				su := self.sortedUnits(s, nationality)[:-balance]
+				dip.Logf("%v units by distance is %v", nationality, su)
 				for _, prov := range su {
 					dip.Logf("Removing %v due to forced disband", prov)
 					s.RemoveUnit(prov)
