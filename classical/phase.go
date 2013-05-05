@@ -152,6 +152,7 @@ func (self *phase) PostProcess(s dip.State) {
 			for _, edge := range s.Graph().Edges(prov) {
 				if _, _, ok := s.Unit(edge); !ok && !s.Bounce(prov, edge) {
 					if path := cla.Path(s, unit.Type, prov, edge); len(path) == 1 {
+						dip.Logf("%v can retreat to %v", prov, edge)
 						hasRetreat = true
 						break
 					}
