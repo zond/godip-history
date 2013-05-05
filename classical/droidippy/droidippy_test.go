@@ -221,8 +221,6 @@ func TestDroidippyGames(t *testing.T) {
 					t.Fatalf("%v failed!", name)
 				}
 			}
-		} else {
-			fmt.Printf("Skipped %v\n", name)
 		}
 	}
 }
