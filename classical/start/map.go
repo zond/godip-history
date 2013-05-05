@@ -122,7 +122,7 @@ func Graph() *graph.Graph {
 		// adr
 		Prov("adr").Conn("ven", c.Sea).Conn("tri", c.Sea).Conn("alb", c.Sea).Conn("ion", c.Sea).Conn("apu", c.Sea).Flag(c.Sea).
 		// apu
-		Prov("apu").Conn("rom", c.Coast...).Conn("ven", c.Coast...).Conn("adr", c.Sea).Conn("ion", c.Sea).Conn("nap", c.Coast...).Flag(c.Coast...).
+		Prov("apu").Conn("rom", c.Land).Conn("ven", c.Coast...).Conn("adr", c.Sea).Conn("ion", c.Sea).Conn("nap", c.Coast...).Flag(c.Coast...).
 		// rom
 		Prov("rom").Conn("tys", c.Sea).Conn("tus", c.Coast...).Conn("ven", c.Land).Conn("apu", c.Land).Conn("nap", c.Coast...).Flag(c.Coast...).SC(c.Italy).
 		// tus
