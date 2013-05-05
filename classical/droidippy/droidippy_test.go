@@ -209,7 +209,7 @@ func TestDroidippyGames(t *testing.T) {
 	}
 	sort.Sort(sort.StringSlice(gamefiles))
 	for _, name := range gamefiles {
-		if skip := os.Getenv("SKIP"); skip == "" || bytes.Compare([]byte(skip), []byte(name)) < 0 {
+		if skip := os.Getenv("SKIP"); skip == "" || bytes.Compare([]byte(skip), []byte(name)) < 1 {
 			if gameFileReg.MatchString(name) {
 				phases, orders, positions, fails, s := assertGame(t, name)
 				fmt.Printf("Checked %v phases, executed %v orders and asserted %v positions in %v, found %v failures.\n", phases, orders, positions, name, fails)
