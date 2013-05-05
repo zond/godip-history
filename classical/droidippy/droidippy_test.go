@@ -2,6 +2,7 @@ package droidippy
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"github.com/zond/godip/classical"
 	cla "github.com/zond/godip/classical/common"
@@ -10,6 +11,7 @@ import (
 	"github.com/zond/godip/state"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -205,17 +207,22 @@ func TestDroidippyGames(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	sort.Sort(sort.StringSlice(gamefiles))
 	for _, name := range gamefiles {
-		if gameFileReg.MatchString(name) {
-			phases, orders, positions, fails, s := assertGame(t, name)
-			fmt.Printf("Checked %v phases, executed %v orders and asserted %v positions in %v, found %v failures.\n", phases, orders, positions, name, fails)
-			if fails > 0 {
-				dip.DumpLog()
-				for prov, err := range s.Resolutions() {
-					t.Errorf("%v: %v", prov, err)
+		if skip := os.Getenv("SKIP"); skip == "" || bytes.Compare([]byte(skip), []byte(name)) < 0 {
+			if gameFileReg.MatchString(name) {
+				phases, orders, positions, fails, s := assertGame(t, name)
+				fmt.Printf("Checked %v phases, executed %v orders and asserted %v positions in %v, found %v failures.\n", phases, orders, positions, name, fails)
+				if fails > 0 {
+					dip.DumpLog()
+					for prov, err := range s.Resolutions() {
+						t.Errorf("%v: %v", prov, err)
+					}
+					t.Fatalf("%v failed!", name)
 				}
-				t.Fatalf("%v failed!", name)
 			}
+		} else {
+			fmt.Printf("Skipped %v\n", name)
 		}
 	}
 }
