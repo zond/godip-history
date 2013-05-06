@@ -7,6 +7,7 @@ import (
 	"github.com/zond/godip/classical/orders"
 	dip "github.com/zond/godip/common"
 	"sort"
+	"strings"
 )
 
 type phase struct {
@@ -69,6 +70,14 @@ type remoteUnitSlice struct {
 	units     map[dip.Province]dip.Unit
 }
 
+func (self remoteUnitSlice) String() string {
+	var l []string
+	for _, prov := range self.provinces {
+		l = append(l, fmt.Sprintf("%v:%v", prov, self.distances[prov]))
+	}
+	return strings.Join(l, ", ")
+}
+
 func (self remoteUnitSlice) Len() int {
 	return len(self.provinces)
 }
@@ -106,6 +115,7 @@ func (self *phase) sortedUnits(s dip.State, n dip.Nation) []dip.Province {
 		return false
 	})
 	sort.Sort(provs)
+	dip.Logf("Sorted units for %v is %v", n, provs)
 	return provs.provinces
 }
 
@@ -139,7 +149,6 @@ func (self *phase) PostProcess(s dip.State) {
 			_, _, balance := cla.AdjustmentStatus(s, nationality)
 			if balance < 0 {
 				su := self.sortedUnits(s, nationality)[:-balance]
-				dip.Logf("%v units by distance is %v", nationality, su)
 				for _, prov := range su {
 					dip.Logf("Removing %v due to forced disband", prov)
 					s.RemoveUnit(prov)
