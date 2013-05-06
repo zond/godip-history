@@ -200,7 +200,8 @@ func (self *move) validateRetreatPhase(v dip.Validator) error {
 	if unit, self.targets[0], ok = v.Dislodged(self.targets[0]); !ok {
 		return cla.ErrMissingUnit
 	}
-	if path := cla.Path(v, unit.Type, self.targets[0], self.targets[1]); path == nil || len(path) > 1 {
+	var err error
+	if self.targets[1], err = cla.AnyMovePossible(v, unit.Type, self.targets[0], self.targets[1], unit.Type == cla.Army, false, false); err != nil {
 		return cla.ErrIllegalMove
 	}
 	if _, _, ok := v.Unit(self.targets[1]); ok {
