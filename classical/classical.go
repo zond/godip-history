@@ -19,7 +19,6 @@ func Start() *state.State {
 }
 
 func BackupRule(state dip.State, deps []dip.Province) {
-	dip.Logf("Calling backup rule for %v", deps)
 	only_moves := true
 	convoys := false
 	for _, prov := range deps {
