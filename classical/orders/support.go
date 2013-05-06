@@ -50,7 +50,7 @@ func (self *support) Adjudicate(r dip.Resolver) error {
 			(len(self.targets) == 2 || o.Targets()[0].Super() != self.targets[2].Super()) && // not from something we support attacking
 			u.Nation != unit.Nation { // not from ourselves
 
-			_, err := cla.AnyMovePossible(r, o.Targets()[0], o.Targets()[1], u.Type == cla.Army, true, true) // and legal move counting convoy success
+			_, err := cla.AnyMovePossible(r, u.Type, o.Targets()[0], o.Targets()[1], u.Type == cla.Army, true, true) // and legal move counting convoy success
 			return err == nil
 		}
 		return false
@@ -84,24 +84,26 @@ func (self *support) Validate(v dip.Validator) error {
 		return cla.ErrInvalidTarget
 	}
 	var ok bool
-	if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
+	var unit, supported dip.Unit
+	if unit, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
 		return cla.ErrMissingUnit
 	}
-	if _, self.targets[1], ok = v.Unit(self.targets[1]); !ok {
+	if supported, self.targets[1], ok = v.Unit(self.targets[1]); !ok {
 		return cla.ErrMissingSupportUnit
 	}
 	if len(self.targets) == 2 {
-		if err := cla.AnySupportPossible(v, self.targets[0], self.targets[1]); err != nil {
+		if err := cla.AnySupportPossible(v, unit.Type, self.targets[0], self.targets[1]); err != nil {
 			return cla.ErrIllegalSupportPosition
 		}
 	} else {
 		if !v.Graph().Has(self.targets[2]) {
 			return cla.ErrInvalidTarget
 		}
-		if err := cla.AnySupportPossible(v, self.targets[0], self.targets[2]); err != nil {
+		if err := cla.AnySupportPossible(v, unit.Type, self.targets[0], self.targets[2]); err != nil {
 			return cla.ErrIllegalSupportDestination
 		}
-		if _, err := cla.AnyMovePossible(v, self.targets[1], self.targets[2], true, true, false); err != nil {
+
+		if _, err := cla.AnyMovePossible(v, supported.Type, self.targets[1], self.targets[2], true, true, false); err != nil {
 			return cla.ErrIllegalSupportMove
 		}
 	}

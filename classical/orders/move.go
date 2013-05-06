@@ -228,7 +228,7 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 		return cla.ErrMissingUnit
 	}
 	var err error
-	if self.targets[1], err = cla.AnyMovePossible(v, self.targets[0], self.targets[1], unit.Type == cla.Army, true, false); err != nil {
+	if self.targets[1], err = cla.AnyMovePossible(v, unit.Type, self.targets[0], self.targets[1], unit.Type == cla.Army, true, false); err != nil {
 		return err
 	}
 	return nil

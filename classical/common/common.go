@@ -198,27 +198,27 @@ func AnyConvoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNatio
 	return
 }
 
-func AnySupportPossible(v Validator, src, dst Province) (err error) {
-	if err = movePossible(v, src, dst, false, false); err == nil {
+func AnySupportPossible(v Validator, typ UnitType, src, dst Province) (err error) {
+	if err = movePossible(v, typ, src, dst, false, false); err == nil {
 		return
 	}
 	for _, coast := range v.Graph().Coasts(dst) {
-		if err = movePossible(v, src, coast, false, false); err == nil {
+		if err = movePossible(v, typ, src, coast, false, false); err == nil {
 			return
 		}
 	}
 	return
 }
 
-func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, resolveConvoys bool) (dstCoast Province, err error) {
+func AnyMovePossible(v Validator, typ UnitType, src, dst Province, lax, allowConvoy, resolveConvoys bool) (dstCoast Province, err error) {
 	dstCoast = dst
-	if err = movePossible(v, src, dst, allowConvoy, resolveConvoys); err == nil {
+	if err = movePossible(v, typ, src, dst, allowConvoy, resolveConvoys); err == nil {
 		return
 	}
 	if lax || dst.Super() == dst {
 		var options []Province
 		for _, coast := range v.Graph().Coasts(dst) {
-			if err2 := movePossible(v, src, coast, allowConvoy, resolveConvoys); err2 == nil {
+			if err2 := movePossible(v, typ, src, coast, allowConvoy, resolveConvoys); err2 == nil {
 				options = append(options, coast)
 			}
 		}
@@ -231,18 +231,14 @@ func AnyMovePossible(v Validator, src, dst Province, lax, allowConvoy, resolveCo
 	return
 }
 
-func movePossible(v Validator, src, dst Province, allowConvoy, resolveConvoys bool) error {
+func movePossible(v Validator, typ UnitType, src, dst Province, allowConvoy, resolveConvoys bool) error {
 	if !v.Graph().Has(src) {
 		return ErrInvalidSource
 	}
 	if !v.Graph().Has(dst) {
 		return ErrInvalidDestination
 	}
-	unit, _, ok := v.Unit(src)
-	if !ok {
-		return ErrMissingUnit
-	}
-	if unit.Type == Army {
+	if typ == Army {
 		if !v.Graph().Flags(dst)[Land] {
 			return ErrIllegalDestination
 		}
@@ -255,7 +251,7 @@ func movePossible(v Validator, src, dst Province, allowConvoy, resolveConvoys bo
 			}
 			return nil
 		}
-		if path := Path(v, unit.Type, src, dst); path == nil || len(path) > 1 {
+		if path := Path(v, typ, src, dst); path == nil || len(path) > 1 {
 			if allowConvoy {
 				if cp := AnyConvoyPath(v, src, dst, false, nil); cp == nil {
 					return ErrMissingConvoyPath
@@ -265,11 +261,11 @@ func movePossible(v Validator, src, dst Province, allowConvoy, resolveConvoys bo
 			return ErrIllegalMove
 		}
 		return nil
-	} else if unit.Type == Fleet {
+	} else if typ == Fleet {
 		if !v.Graph().Flags(dst)[Sea] {
 			return ErrIllegalDestination
 		}
-		if path := Path(v, unit.Type, src, dst); path == nil || len(path) > 1 {
+		if path := Path(v, typ, src, dst); path == nil || len(path) > 1 {
 			return ErrIllegalMove
 		}
 	}
