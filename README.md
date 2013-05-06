@@ -21,6 +21,13 @@ cd classical/droidippy
 go test
 ```
 
+The real game tests will likely die from timeout, to continue testing where it left off:
+
+```
+cd classical/droidippy
+env SKIP=game_xxxx.txt go test
+```
+
 ### Variant support
 
 Currently only Standard diplomacy is supported.
