@@ -58,9 +58,9 @@ These are the truths that should be valid for such a variant to be godip compati
 
 Heavily inspired by [The Math of Adjudication](http://www.diplom.org/Zine/S2009M/Kruijswijk/DipMath_Chp1.htm) by Lucas Kruijswijk.
 
-Resolve is https://github.com/zond/godip/blob/master/state/resolver.go.
+Res(x) is https://github.com/zond/godip/blob/master/state/resolver.go.
 
-Adjudicate is defined in each order type.
+Adj(x) is defined in each order type.
 
 Example runs:
 
