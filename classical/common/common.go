@@ -40,7 +40,9 @@ const (
 )
 
 var Coast = []Flag{Sea, Land}
+
 var Nations = []Nation{Austria, England, France, Germany, Italy, Turkey, Russia}
+var PhaseTypes = []PhaseType{Movement, Retreat, Adjustment}
 
 // Invalid is not understood
 // Illegal is understood but not allowed
