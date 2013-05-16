@@ -46,11 +46,11 @@ func Graph() *graph.Graph {
 		// nth
 		Prov("nth").Conn("eng", c.Sea).Conn("edi", c.Sea).Conn("nrg", c.Sea).Conn("nwy", c.Sea).Conn("ska", c.Sea).Conn("den", c.Sea).Conn("hel", c.Sea).Conn("hel", c.Sea).Conn("hol", c.Sea).Conn("bel", c.Sea).Conn("lon", c.Sea).Conn("yor", c.Sea).Flag(c.Sea).
 		// nwy
-		Prov("nwy").Conn("nth", c.Sea).Conn("nrg", c.Sea).Conn("bar", c.Sea).Conn("stp/nc", c.Coast...).Conn("stp", c.Land).Conn("fin", c.Land).Conn("swe", c.Coast...).Conn("ska", c.Sea).Flag(c.Coast...).SC(c.Neutral).
+		Prov("nwy").Conn("nth", c.Sea).Conn("nrg", c.Sea).Conn("bar", c.Sea).Conn("stp/nc", c.Sea).Conn("stp", c.Land).Conn("fin", c.Land).Conn("swe", c.Coast...).Conn("ska", c.Sea).Flag(c.Coast...).SC(c.Neutral).
 		// stp/sc
 		Prov("stp/sc").Conn("bot", c.Sea).Conn("fin", c.Sea).Conn("lvn", c.Sea).Flag(c.Sea).
 		// lvn
-		Prov("lvn").Conn("stp", c.Land).Conn("bal", c.Sea).Conn("bot", c.Sea).Conn("stp/sc", c.Coast...).Conn("mos", c.Land).Conn("war", c.Land).Conn("pru", c.Coast...).Flag(c.Coast...).
+		Prov("lvn").Conn("stp", c.Land).Conn("bal", c.Sea).Conn("bot", c.Sea).Conn("stp/sc", c.Sea).Conn("mos", c.Land).Conn("war", c.Land).Conn("pru", c.Coast...).Flag(c.Coast...).
 		// war
 		Prov("war").Conn("sil", c.Land).Conn("pru", c.Land).Conn("lvn", c.Land).Conn("mos", c.Land).Conn("ukr", c.Land).Conn("gal", c.Land).Flag(c.Land).SC(c.Russia).
 		// ukr
@@ -64,7 +64,7 @@ func Graph() *graph.Graph {
 		// aeg
 		Prov("aeg").Conn("eas", c.Sea).Conn("ion", c.Sea).Conn("gre", c.Sea).Conn("bul/sc", c.Sea).Conn("con", c.Sea).Conn("smy", c.Sea).Flag(c.Sea).
 		// gre
-		Prov("gre").Conn("ion", c.Coast...).Conn("alb", c.Coast...).Conn("ser", c.Land).Conn("bul", c.Land).Conn("bul/sc", c.Sea).Conn("aeg", c.Sea).Flag(c.Coast...).SC(c.Neutral).
+		Prov("gre").Conn("ion", c.Sea).Conn("alb", c.Coast...).Conn("ser", c.Land).Conn("bul", c.Land).Conn("bul/sc", c.Sea).Conn("aeg", c.Sea).Flag(c.Coast...).SC(c.Neutral).
 		// nap
 		Prov("nap").Conn("tys", c.Sea).Conn("rom", c.Coast...).Conn("apu", c.Coast...).Conn("ion", c.Sea).Flag(c.Coast...).SC(c.Italy).
 		// tys
