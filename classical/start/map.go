@@ -44,7 +44,7 @@ func Graph() *graph.Graph {
 		// edi
 		Prov("edi").Conn("cly", c.Coast...).Conn("nrg", c.Sea).Conn("nth", c.Sea).Conn("yor", c.Coast...).Conn("lvp", c.Land).Flag(c.Coast...).SC(c.England).
 		// nth
-		Prov("nth").Conn("eng", c.Sea).Conn("edi", c.Sea).Conn("nrg", c.Sea).Conn("nwy", c.Sea).Conn("ska", c.Sea).Conn("den", c.Sea).Conn("hel", c.Sea).Conn("hel", c.Sea).Conn("hol", c.Sea).Conn("bel", c.Sea).Conn("lon", c.Sea).Conn("yor", c.Sea).Flag(c.Sea).
+		Prov("nth").Conn("eng", c.Sea).Conn("edi", c.Sea).Conn("nrg", c.Sea).Conn("nwy", c.Sea).Conn("ska", c.Sea).Conn("den", c.Sea).Conn("hel", c.Sea).Conn("hol", c.Sea).Conn("bel", c.Sea).Conn("lon", c.Sea).Conn("yor", c.Sea).Flag(c.Sea).
 		// nwy
 		Prov("nwy").Conn("nth", c.Sea).Conn("nrg", c.Sea).Conn("bar", c.Sea).Conn("stp/nc", c.Sea).Conn("stp", c.Land).Conn("fin", c.Land).Conn("swe", c.Coast...).Conn("ska", c.Sea).Flag(c.Coast...).SC(c.Neutral).
 		// stp/sc
