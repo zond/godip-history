@@ -46,7 +46,7 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 					self.guesses[prov] = nil
 					secondErr := self.adjudicate(prov)
 					delete(self.guesses, prov)
-					if (err == nil && secondErr != nil) || (err != nil && secondErr == nil) {
+					if (err == nil) != (secondErr == nil) {
 						common.Logf("Calling backup rule with %v", self.deps)
 						self.State.backupRule(self, self.deps)
 						self.deps = nil
