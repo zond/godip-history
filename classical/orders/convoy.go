@@ -50,6 +50,53 @@ func (self *convoy) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
+func (self *convoy) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
+	var possibleNation *dip.Nation
+	possibleConvoys := map[dip.Province][]dip.Province{}
+	if v.Phase().Type() == cla.Movement {
+		if v.Graph().Has(src) {
+			var convoyer dip.Unit
+			var ok bool
+			if convoyer, src, ok = v.Unit(src); ok && convoyer.Type == cla.Fleet {
+				possibleNation = &convoyer.Nation
+				for mvSrc, unit := range v.Units() {
+					if unit.Type == cla.Army {
+						for _, mvDst := range v.Graph().Provinces() {
+							filter := cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false)
+							if part1 := v.Graph().Path(mvSrc, src, filter); part1 != nil {
+								if part2 := v.Graph().Path(src, mvDst, filter); part2 != nil {
+									possibleConvoys[mvSrc] = append(possibleConvoys[mvSrc], mvDst)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	next := []dip.Option{}
+	for mvSrc, mvDsts := range possibleConvoys {
+		step2 := []dip.Option{}
+		for _, mvDst := range mvDsts {
+			step2 = append(step2, dip.Option{
+				Value: mvDst,
+			})
+		}
+		next = append(next, dip.Option{
+			Value: mvSrc,
+			Next:  step2,
+		})
+	}
+	if len(next) > 0 {
+		nation = possibleNation
+		result = &dip.Option{
+			Value: src,
+			Next:  next,
+		}
+	}
+	return
+}
+
 func (self *convoy) Validate(v dip.Validator) error {
 	if v.Phase().Type() != cla.Movement {
 		return cla.ErrInvalidPhase
@@ -63,12 +110,18 @@ func (self *convoy) Validate(v dip.Validator) error {
 	if !v.Graph().Has(self.targets[2]) {
 		return cla.ErrInvalidTarget
 	}
+	var convoyer dip.Unit
 	var ok bool
-	if _, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
+	if convoyer, self.targets[0], ok = v.Unit(self.targets[0]); !ok {
 		return cla.ErrMissingUnit
+	} else if convoyer.Type != cla.Fleet {
+		return cla.ErrIllegalConvoyer
 	}
-	if _, self.targets[1], ok = v.Unit(self.targets[1]); !ok {
+	var convoyee dip.Unit
+	if convoyee, self.targets[1], ok = v.Unit(self.targets[1]); !ok {
 		return cla.ErrMissingConvoyee
+	} else if convoyee.Type != cla.Army {
+		return cla.ErrIllegalConvoyee
 	}
 	if cla.AnyConvoyPath(v, self.targets[1], self.targets[2], false, nil) == nil {
 		return cla.ErrIllegalConvoyMove

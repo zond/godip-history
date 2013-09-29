@@ -63,6 +63,8 @@ var ErrIllegalSupportMove = fmt.Errorf("ErrIllegalSupportMove")
 var ErrIllegalConvoyUnit = fmt.Errorf("ErrIllegalConvoyUnit")
 var ErrIllegalConvoyMove = fmt.Errorf("ErrIllegalConvoyMove")
 var ErrMissingConvoyee = fmt.Errorf("ErrMissingConvoyee")
+var ErrIllegalConvoyer = fmt.Errorf("ErrIllegalConvoyer")
+var ErrIllegalConvoyee = fmt.Errorf("ErrIllegalConvoyee")
 var ErrIllegalBuild = fmt.Errorf("ErrIllegalBuild")
 var ErrIllegalDisband = fmt.Errorf("ErrIllegalDisband")
 var ErrOccupiedSupplyCenter = fmt.Errorf("ErrOccupiedSupplyCenter")
@@ -99,6 +101,29 @@ func (self ErrBounce) Error() string {
 	return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
+func PossibleConvoyPathFilter(v Validator, src, dst Province, resolveConvoys bool) PathFilter {
+	return func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
+		if name.Contains(dst) {
+			return true
+		}
+		if nodeFlags[Land] {
+			return false
+		}
+		if u, _, ok := v.Unit(name); ok && u.Type == Fleet {
+			if !resolveConvoys {
+				return true
+			}
+			if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
+				if err := v.(Resolver).Resolve(prov); err != nil {
+					return false
+				}
+				return true
+			}
+		}
+		return false
+	}
+}
+
 func convoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *Nation) []Province {
 	if src == dst {
 		return nil
@@ -121,26 +146,7 @@ func convoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *
 		return false
 	})
 	for _, waypoint := range waypoints {
-		filter := func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
-			if name.Contains(dst) {
-				return true
-			}
-			if nodeFlags[Land] {
-				return false
-			}
-			if u, _, ok := v.Unit(name); ok && u.Type == Fleet {
-				if !resolveConvoys {
-					return true
-				}
-				if order, prov, ok := v.Order(name); ok && order.Type() == Convoy && order.Targets()[1].Contains(src) && order.Targets()[2].Contains(dst) {
-					if err := v.(Resolver).Resolve(prov); err != nil {
-						return false
-					}
-					return true
-				}
-			}
-			return false
-		}
+		filter := PossibleConvoyPathFilter(v, src, dst, resolveConvoys)
 		if part1 := v.Graph().Path(src, waypoint, filter); part1 != nil {
 			if part2 := v.Graph().Path(waypoint, dst, filter); part2 != nil {
 				return append(part1, part2...)
@@ -207,6 +213,17 @@ func AnySupportPossible(v Validator, typ UnitType, src, dst Province) (err error
 	for _, coast := range v.Graph().Coasts(dst) {
 		if err = movePossible(v, typ, src, coast, false, false); err == nil {
 			return
+		}
+	}
+	return
+}
+
+func PossibleMoves(v Validator, src Province, allowConvoy bool) (result []Province) {
+	if unit, realSrc, found := v.Unit(src); found {
+		for _, prov := range v.Graph().Provinces() {
+			if dst, err := AnyMovePossible(v, unit.Type, realSrc, prov, true, allowConvoy, false); err == nil {
+				result = append(result, dst)
+			}
 		}
 	}
 	return

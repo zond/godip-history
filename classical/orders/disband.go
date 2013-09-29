@@ -85,6 +85,33 @@ func (self *disband) validateBuildPhase(v dip.Validator) error {
 	return nil
 }
 
+func (self *disband) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
+	if v.Phase().Type() == cla.Adjustment {
+		if v.Graph().Has(src) {
+			var unit dip.Unit
+			var ok bool
+			if unit, src, ok = v.Unit(src); ok {
+				if _, _, balance := cla.AdjustmentStatus(v, unit.Nation); balance < 0 {
+					nation = &unit.Nation
+					result = &dip.Option{
+						Value: src,
+					}
+				}
+			}
+		}
+	} else if v.Phase().Type() == cla.Retreat {
+		if v.Graph().Has(src) {
+			if unit, src, ok := v.Dislodged(src); ok {
+				nation = &unit.Nation
+				result = &dip.Option{
+					Value: src,
+				}
+			}
+		}
+	}
+	return
+}
+
 func (self *disband) Validate(v dip.Validator) error {
 	if v.Phase().Type() == cla.Adjustment {
 		return self.validateBuildPhase(v)

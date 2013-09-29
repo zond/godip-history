@@ -235,6 +235,50 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 	return nil
 }
 
+func (self *move) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
+	var possibleNation *dip.Nation
+	next := []dip.Option{}
+	if v.Phase().Type() == cla.Retreat {
+		if v.Graph().Has(src) {
+			var unit dip.Unit
+			var ok bool
+			if unit, src, ok = v.Dislodged(src); ok {
+				possibleNation = &unit.Nation
+				for _, dst := range cla.PossibleMoves(v, src, false) {
+					if _, _, found := v.Unit(dst); !found {
+						if !v.Bounce(src, dst) {
+							next = append(next, dip.Option{
+								Value: dst,
+							})
+						}
+					}
+				}
+			}
+		}
+	} else if v.Phase().Type() == cla.Movement {
+		if v.Graph().Has(src) {
+			var unit dip.Unit
+			var ok bool
+			if unit, src, ok = v.Unit(src); ok {
+				possibleNation = &unit.Nation
+				for _, dst := range cla.PossibleMoves(v, src, true) {
+					next = append(next, dip.Option{
+						Value: dst,
+					})
+				}
+			}
+		}
+	}
+	if len(next) > 0 {
+		nation = possibleNation
+		result = &dip.Option{
+			Value: src,
+			Next:  next,
+		}
+	}
+	return
+}
+
 func (self *move) Execute(state dip.State) {
 	if state.Phase().Type() == cla.Retreat {
 		state.Retreat(self.targets[0], self.targets[1])

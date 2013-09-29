@@ -50,6 +50,40 @@ func (self *build) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
+func (self *build) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
+	var possibleNation *dip.Nation
+	next := []dip.Option{}
+	if v.Phase().Type() == cla.Adjustment {
+		if me, _, ok := v.SupplyCenter(src); ok {
+			if owner := v.Graph().SC(src.Super()); owner != nil && *owner == me {
+				if _, _, ok := v.Unit(src); !ok {
+					if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
+						possibleNation = &me
+						if v.Graph().Flags(src)[cla.Land] {
+							next = append(next, dip.Option{
+								Value: cla.Army,
+							})
+						}
+						if v.Graph().Flags(src)[cla.Sea] {
+							next = append(next, dip.Option{
+								Value: cla.Fleet,
+							})
+						}
+					}
+				}
+			}
+		}
+	}
+	if len(next) > 0 {
+		nation = possibleNation
+		result = &dip.Option{
+			Value: src,
+			Next:  next,
+		}
+	}
+	return
+}
+
 func (self *build) Validate(v dip.Validator) error {
 	// right phase type
 	if v.Phase().Type() != cla.Adjustment {

@@ -73,6 +73,53 @@ func (self *support) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
+func (self *support) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
+	var possibleNation *dip.Nation
+	next := []dip.Option{}
+	possibleSupports := map[dip.Province][]dip.Province{}
+	if v.Phase().Type() == cla.Movement {
+		if v.Graph().Has(src) {
+			var supporter dip.Unit
+			var ok bool
+			if supporter, src, ok = v.Unit(src); ok {
+				possibleNation = &supporter.Nation
+				for _, supportable := range cla.PossibleMoves(v, src, false) {
+					if _, supporteeSrc, ok := v.Unit(supportable); ok {
+						next = append(next, dip.Option{
+							Value: supporteeSrc,
+						})
+					}
+					for mvSrc, unit := range v.Units() {
+						if mvDst, err := cla.AnyMovePossible(v, unit.Type, mvSrc, supportable, true, true, false); err == nil {
+							possibleSupports[mvSrc] = append(possibleSupports[mvSrc], mvDst)
+						}
+					}
+				}
+			}
+		}
+	}
+	for mvSrc, mvDsts := range possibleSupports {
+		step2 := []dip.Option{}
+		for _, mvDst := range mvDsts {
+			step2 = append(step2, dip.Option{
+				Value: mvDst,
+			})
+		}
+		next = append(next, dip.Option{
+			Value: mvSrc,
+			Next:  step2,
+		})
+	}
+	if len(next) > 0 {
+		nation = possibleNation
+		result = &dip.Option{
+			Value: src,
+			Next:  next,
+		}
+	}
+	return
+}
+
 func (self *support) Validate(v dip.Validator) error {
 	if v.Phase().Type() != cla.Movement {
 		return cla.ErrInvalidPhase

@@ -167,10 +167,18 @@ func (self Orders) Len() int {
 	return len(self)
 }
 
+type OptionValue interface{}
+
+type Option struct {
+	Value OptionValue
+	Next  []Option
+}
+
 type Order interface {
 	Type() OrderType
 	Targets() []Province
 	Validate(Validator) error
+	Options(Validator, Province) (*Nation, *Option)
 	At() time.Time
 	Flags() map[Flag]bool
 }
