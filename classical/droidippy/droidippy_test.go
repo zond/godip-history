@@ -110,7 +110,7 @@ func verifyPosition(t *testing.T, s *state.State, match []string, scCollector ma
 	}
 }
 
-func setPhase(s *state.State, match []string) {
+func setPhase(s **state.State, match []string) {
 	year, err := strconv.Atoi(match[1])
 	if err != nil {
 		panic(err)
@@ -119,6 +119,9 @@ func setPhase(s *state.State, match []string) {
 	typ := match[3]
 	for (s.Phase().Year() <= year && (string(s.Phase().Season()) != season || string(s.Phase().Type()) != typ)) || s.Phase().Year() != year {
 		s.Next()
+		newS := classical.Blank(s.Phase())
+		newS.Load(s.Dump())
+		*s = newS
 	}
 	if s.Phase().Year() > year {
 		panic(fmt.Errorf("What the, we wanted %v but ended up with %v", match, s.Phase()))
@@ -141,7 +144,7 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 		case inNothing:
 			if match = phaseReg.FindStringSubmatch(line); match != nil {
 				phases += 1
-				setPhase(s, match)
+				setPhase(&s, match)
 			} else if line == positionsTag {
 				state = inPositions
 			} else {
@@ -185,7 +188,7 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 			} else if match = phaseReg.FindStringSubmatch(line); match != nil {
 				ords -= 1
 				phases += 1
-				setPhase(s, match)
+				setPhase(&s, match)
 				state = inNothing
 			} else {
 				panic(fmt.Errorf("Unknown line for state inOrders: %v", line))

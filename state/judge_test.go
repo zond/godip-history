@@ -32,7 +32,7 @@ func (self testOrder) Execute(common.State) {
 
 /*
      C
- A B 
+ A B
      D
 */
 func testGraph() common.Graph {

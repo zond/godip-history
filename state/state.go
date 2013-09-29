@@ -207,6 +207,18 @@ func (self *State) ClearDislodgers() {
 	self.dislodgers = make(map[common.Province]common.Province)
 }
 
+func (self *State) Load(
+	orders map[common.Province]common.Adjudicator,
+	units map[common.Province]common.Unit,
+	dislodgeds map[common.Province]common.Unit,
+	supplyCenters map[common.Province]common.Nation,
+	dislodgers map[common.Province]common.Province,
+	bounces map[common.Province]map[common.Province]bool) {
+
+	self.orders, self.units, self.dislodgeds, self.supplyCenters, self.dislodgers, self.bounces =
+		orders, units, dislodgeds, supplyCenters, dislodgers, bounces
+}
+
 // Singular setters
 
 func (self *State) SetDislodger(attacker, victim common.Province) {
@@ -284,6 +296,22 @@ func (self *State) Dislodgeds() map[common.Province]common.Unit {
 
 func (self *State) Orders() map[common.Province]common.Adjudicator {
 	return self.orders
+}
+
+func (self *State) Dump() (
+	orders map[common.Province]common.Adjudicator,
+	units map[common.Province]common.Unit,
+	dislodgeds map[common.Province]common.Unit,
+	supplyCenters map[common.Province]common.Nation,
+	dislodgers map[common.Province]common.Province,
+	bounces map[common.Province]map[common.Province]bool) {
+
+	return self.orders,
+		self.units,
+		self.dislodgeds,
+		self.supplyCenters,
+		self.dislodgers,
+		self.bounces
 }
 
 // Singular getters, will search all coasts of a province

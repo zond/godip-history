@@ -226,4 +226,19 @@ type State interface {
 
 	ClearDislodgers()
 	ClearBounces()
+
+	Dump() (
+		orders map[Province]Adjudicator,
+		units map[Province]Unit,
+		dislodgeds map[Province]Unit,
+		supplyCenters map[Province]Nation,
+		dislodgers map[Province]Province,
+		bounces map[Province]map[Province]bool)
+	Load(
+		orders map[Province]Adjudicator,
+		units map[Province]Unit,
+		dislodgeds map[Province]Unit,
+		supplyCenters map[Province]Nation,
+		dislodgers map[Province]Province,
+		bounces map[Province]map[Province]bool)
 }
