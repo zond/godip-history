@@ -50,15 +50,14 @@ func (self *convoy) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *convoy) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
-	var possibleNation *dip.Nation
+func (self *convoy) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option, found bool) {
 	possibleConvoys := map[dip.Province][]dip.Province{}
 	if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
 			var convoyer dip.Unit
 			var ok bool
 			if convoyer, src, ok = v.Unit(src); ok && convoyer.Type == cla.Fleet {
-				possibleNation = &convoyer.Nation
+				nation = &convoyer.Nation
 				for mvSrc, unit := range v.Units() {
 					if unit.Type == cla.Army {
 						for _, mvDst := range v.Graph().Provinces() {
@@ -88,7 +87,7 @@ func (self *convoy) Options(v dip.Validator, src dip.Province) (nation *dip.Nati
 		})
 	}
 	if len(next) > 0 {
-		nation = possibleNation
+		found = true
 		result = &dip.Option{
 			Value: src,
 			Next:  next,

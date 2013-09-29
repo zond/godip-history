@@ -50,15 +50,14 @@ func (self *build) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *build) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
-	var possibleNation *dip.Nation
+func (self *build) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option, found bool) {
 	next := []dip.Option{}
 	if v.Phase().Type() == cla.Adjustment {
 		if me, _, ok := v.SupplyCenter(src); ok {
 			if owner := v.Graph().SC(src.Super()); owner != nil && *owner == me {
 				if _, _, ok := v.Unit(src); !ok {
 					if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
-						possibleNation = &me
+						nation = &me
 						if v.Graph().Flags(src)[cla.Land] {
 							next = append(next, dip.Option{
 								Value: cla.Army,
@@ -75,7 +74,7 @@ func (self *build) Options(v dip.Validator, src dip.Province) (nation *dip.Natio
 		}
 	}
 	if len(next) > 0 {
-		nation = possibleNation
+		found = true
 		result = &dip.Option{
 			Value: src,
 			Next:  next,

@@ -178,7 +178,7 @@ type Order interface {
 	Type() OrderType
 	Targets() []Province
 	Validate(Validator) error
-	Options(Validator, Province) (*Nation, *Option)
+	Options(Validator, Province) (*Nation, *Option, bool)
 	At() time.Time
 	Flags() map[Flag]bool
 }
@@ -247,4 +247,6 @@ type State interface {
 		dislodgeds map[Province]Unit,
 		dislodgers map[Province]Province,
 		bounces map[Province]map[Province]bool)
+
+	Options(orders []Order, prov Province) (*Nation, []Option)
 }

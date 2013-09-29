@@ -75,6 +75,23 @@ func (self *State) Graph() common.Graph {
 	return self.graph
 }
 
+func (self *State) Options(orders []common.Order, prov common.Province) (nation *common.Nation, result []common.Option) {
+	for _, order := range orders {
+		if n, o, found := order.Options(self, prov); found {
+			if nation == nil {
+				nation = n
+			} else if *n != *nation {
+				panic(fmt.Errorf("Both %v and %v seem able to give orders to %v?", *n, *nation, prov))
+			}
+			result = append(result, common.Option{
+				Value: order.Type(),
+				Next:  []common.Option{*o},
+			})
+		}
+	}
+	return
+}
+
 func (self *State) Find(filter common.StateFilter) (provinces []common.Province, orders []common.Order, units []*common.Unit) {
 	visitedProvinces := make(map[common.Province]bool)
 	for prov, unit := range self.units {

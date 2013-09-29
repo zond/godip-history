@@ -73,8 +73,7 @@ func (self *support) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *support) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option) {
-	var possibleNation *dip.Nation
+func (self *support) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option, found bool) {
 	next := []dip.Option{}
 	possibleSupports := map[dip.Province][]dip.Province{}
 	if v.Phase().Type() == cla.Movement {
@@ -82,7 +81,7 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation *dip.Nat
 			var supporter dip.Unit
 			var ok bool
 			if supporter, src, ok = v.Unit(src); ok {
-				possibleNation = &supporter.Nation
+				nation = &supporter.Nation
 				for _, supportable := range cla.PossibleMoves(v, src, false) {
 					if _, supporteeSrc, ok := v.Unit(supportable); ok {
 						next = append(next, dip.Option{
@@ -111,7 +110,7 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation *dip.Nat
 		})
 	}
 	if len(next) > 0 {
-		nation = possibleNation
+		found = true
 		result = &dip.Option{
 			Value: src,
 			Next:  next,
