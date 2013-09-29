@@ -2,7 +2,6 @@ package common
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -42,14 +41,6 @@ func DumpLog() {
 		fmt.Print(string(logBuffer.Bytes()))
 		ClearLog()
 	}
-}
-
-func Encode(i interface{}) ([]byte, error) {
-	return json.Marshal(i)
-}
-
-func Decode(b []byte, i interface{}) error {
-	return json.Unmarshal(b, &i)
 }
 
 func MustParseInt(s string) (result int) {
@@ -190,9 +181,7 @@ type Adjudicator interface {
 	Execute(State)
 }
 
-type BackupRule interface {
-	Adjudicate(State, []Province)
-}
+type BackupRule func(State, []Province)
 
 type StateFilter func(n Province, o Order, u *Unit) bool
 

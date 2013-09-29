@@ -20,20 +20,6 @@ type support struct {
 	targets []dip.Province
 }
 
-func (self *support) GobEncode() (b []byte, err error) {
-	return dip.Encode(serializedOrder{
-		Targets: self.targets,
-	})
-}
-
-func (self *support) GobDecode(b []byte) (err error) {
-	ser := serializedOrder{}
-	if err = dip.Decode(b, &ser); err == nil {
-		self.targets = ser.Targets
-	}
-	return
-}
-
 func (self *support) Flags() map[dip.Flag]bool {
 	return nil
 }

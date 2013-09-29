@@ -56,9 +56,9 @@ func DATCPhase(season string, year int, typ string) dip.Phase {
 		panic(fmt.Errorf("Unknown season %#v", season))
 	}
 	return &phase{
-		PhaseSeason: phaseSeason,
-		PhaseType:   phaseType,
-		PhaseYear:   year,
+		season: phaseSeason,
+		typ:    phaseType,
+		year:   year,
 	}
 }
 

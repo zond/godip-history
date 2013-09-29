@@ -11,9 +11,9 @@ import (
 )
 
 type phase struct {
-	PhaseYear   int
-	PhaseSeason dip.Season
-	PhaseType   dip.PhaseType
+	year   int
+	season dip.Season
+	typ    dip.PhaseType
 }
 
 func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int) {
@@ -120,21 +120,21 @@ func (self *phase) sortedUnits(s dip.State, n dip.Nation) []dip.Province {
 }
 
 func (self *phase) DefaultOrder(p dip.Province) dip.Adjudicator {
-	if self.PhaseType == cla.Movement {
+	if self.typ == cla.Movement {
 		return orders.Hold(p)
 	}
 	return nil
 }
 
 func (self *phase) PostProcess(s dip.State) {
-	if self.PhaseType == cla.Retreat {
+	if self.typ == cla.Retreat {
 		for prov, _ := range s.Dislodgeds() {
 			s.RemoveDislodged(prov)
 			s.SetResolution(prov, cla.ErrForcedDisband)
 		}
 		s.ClearDislodgers()
 		s.ClearBounces()
-		if self.PhaseSeason == cla.Fall {
+		if self.season == cla.Fall {
 			s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 				if u != nil {
 					if s.Graph().SC(p) != nil {
@@ -144,7 +144,7 @@ func (self *phase) PostProcess(s dip.State) {
 				return false
 			})
 		}
-	} else if self.PhaseType == cla.Adjustment {
+	} else if self.typ == cla.Adjustment {
 		for _, nationality := range cla.Nations {
 			_, _, balance := cla.AdjustmentStatus(s, nationality)
 			if balance < 0 {
@@ -156,7 +156,7 @@ func (self *phase) PostProcess(s dip.State) {
 				}
 			}
 		}
-	} else if self.PhaseType == cla.Movement {
+	} else if self.typ == cla.Movement {
 		for prov, unit := range s.Dislodgeds() {
 			hasRetreat := false
 			for _, edge := range s.Graph().Edges(prov) {
@@ -177,77 +177,77 @@ func (self *phase) PostProcess(s dip.State) {
 }
 
 func (self *phase) Year() int {
-	return self.PhaseYear
+	return self.year
 }
 
 func (self *phase) Season() dip.Season {
-	return self.PhaseSeason
+	return self.season
 }
 
 func (self *phase) Type() dip.PhaseType {
-	return self.PhaseType
+	return self.typ
 }
 
 func (self *phase) Prev() dip.Phase {
-	if self.PhaseType == cla.Retreat {
+	if self.typ == cla.Retreat {
 		return &phase{
-			PhaseYear:   self.PhaseYear,
-			PhaseSeason: self.PhaseSeason,
-			PhaseType:   cla.Movement,
+			year:   self.year,
+			season: self.season,
+			typ:    cla.Movement,
 		}
-	} else if self.PhaseType == cla.Movement {
-		if self.PhaseSeason == cla.Spring {
-			if self.PhaseYear == 1901 {
+	} else if self.typ == cla.Movement {
+		if self.season == cla.Spring {
+			if self.year == 1901 {
 				return nil
 			}
 			return &phase{
-				PhaseYear:   self.PhaseYear - 1,
-				PhaseSeason: cla.Fall,
-				PhaseType:   cla.Adjustment,
+				year:   self.year - 1,
+				season: cla.Fall,
+				typ:    cla.Adjustment,
 			}
 		} else {
 			return &phase{
-				PhaseYear:   self.PhaseYear,
-				PhaseSeason: cla.Spring,
-				PhaseType:   cla.Retreat,
+				year:   self.year,
+				season: cla.Spring,
+				typ:    cla.Retreat,
 			}
 		}
 	} else {
 		return &phase{
-			PhaseYear:   self.PhaseYear,
-			PhaseSeason: cla.Fall,
-			PhaseType:   cla.Retreat,
+			year:   self.year,
+			season: cla.Fall,
+			typ:    cla.Retreat,
 		}
 	}
 	return nil
 }
 
 func (self *phase) Next() dip.Phase {
-	if self.PhaseType == cla.Movement {
+	if self.typ == cla.Movement {
 		return &phase{
-			PhaseYear:   self.PhaseYear,
-			PhaseSeason: self.PhaseSeason,
-			PhaseType:   cla.Retreat,
+			year:   self.year,
+			season: self.season,
+			typ:    cla.Retreat,
 		}
-	} else if self.PhaseType == cla.Retreat {
-		if self.PhaseSeason == cla.Spring {
+	} else if self.typ == cla.Retreat {
+		if self.season == cla.Spring {
 			return &phase{
-				PhaseYear:   self.PhaseYear,
-				PhaseSeason: cla.Fall,
-				PhaseType:   cla.Movement,
+				year:   self.year,
+				season: cla.Fall,
+				typ:    cla.Movement,
 			}
 		} else {
 			return &phase{
-				PhaseYear:   self.PhaseYear,
-				PhaseSeason: cla.Fall,
-				PhaseType:   cla.Adjustment,
+				year:   self.year,
+				season: cla.Fall,
+				typ:    cla.Adjustment,
 			}
 		}
 	} else {
 		return &phase{
-			PhaseYear:   self.PhaseYear + 1,
-			PhaseSeason: cla.Spring,
-			PhaseType:   cla.Movement,
+			year:   self.year + 1,
+			season: cla.Spring,
+			typ:    cla.Movement,
 		}
 	}
 	return nil

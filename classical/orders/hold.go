@@ -17,20 +17,6 @@ type hold struct {
 	targets []dip.Province
 }
 
-func (self *hold) GobEncode() (b []byte, err error) {
-	return dip.Encode(serializedOrder{
-		Targets: self.targets,
-	})
-}
-
-func (self *hold) GobDecode(b []byte) (err error) {
-	ser := serializedOrder{}
-	if err = dip.Decode(b, &ser); err == nil {
-		self.targets = ser.Targets
-	}
-	return
-}
-
 func (self *hold) String() string {
 	return fmt.Sprintf("%v %v", self.targets[0], cla.Hold)
 }
