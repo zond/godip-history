@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+func Phase(year int, season dip.Season, typ dip.PhaseType) *phase {
+	return &phase{year, season, typ}
+}
+
 type phase struct {
 	year   int
 	season dip.Season
