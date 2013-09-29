@@ -208,15 +208,14 @@ func (self *State) ClearDislodgers() {
 }
 
 func (self *State) Load(
-	orders map[common.Province]common.Adjudicator,
 	units map[common.Province]common.Unit,
-	dislodgeds map[common.Province]common.Unit,
 	supplyCenters map[common.Province]common.Nation,
+	dislodgeds map[common.Province]common.Unit,
 	dislodgers map[common.Province]common.Province,
 	bounces map[common.Province]map[common.Province]bool) {
 
-	self.orders, self.units, self.dislodgeds, self.supplyCenters, self.dislodgers, self.bounces =
-		orders, units, dislodgeds, supplyCenters, dislodgers, bounces
+	self.units, self.supplyCenters, self.dislodgeds, self.dislodgers, self.bounces =
+		units, supplyCenters, dislodgeds, dislodgers, bounces
 }
 
 // Singular setters
@@ -299,17 +298,15 @@ func (self *State) Orders() map[common.Province]common.Adjudicator {
 }
 
 func (self *State) Dump() (
-	orders map[common.Province]common.Adjudicator,
 	units map[common.Province]common.Unit,
-	dislodgeds map[common.Province]common.Unit,
 	supplyCenters map[common.Province]common.Nation,
+	dislodgeds map[common.Province]common.Unit,
 	dislodgers map[common.Province]common.Province,
 	bounces map[common.Province]map[common.Province]bool) {
 
-	return self.orders,
-		self.units,
-		self.dislodgeds,
+	return self.units,
 		self.supplyCenters,
+		self.dislodgeds,
 		self.dislodgers,
 		self.bounces
 }
