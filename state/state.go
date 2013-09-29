@@ -20,33 +20,33 @@ func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule) *
 }
 
 type movement struct {
-	src            common.Province
-	dst            common.Province
-	unit           common.Unit
-	preventRetreat bool
+	Src            common.Province
+	Dst            common.Province
+	Unit           common.Unit
+	PreventRetreat bool
 }
 
 func (self *movement) prepare(s *State) {
 	var ok bool
-	if self.unit, self.src, ok = s.Unit(self.src); !ok {
-		panic(fmt.Errorf("No unit at %v?", self.src))
+	if self.Unit, self.Src, ok = s.Unit(self.Src); !ok {
+		panic(fmt.Errorf("No unit at %v?", self.Src))
 	} else {
-		s.RemoveUnit(self.src)
+		s.RemoveUnit(self.Src)
 	}
-	common.Logf("Lifted %v from %v", self.unit, self.src)
+	common.Logf("Lifted %v from %v", self.Unit, self.Src)
 }
 
 func (self *movement) execute(s *State) {
-	if dislodged, prov, ok := s.Unit(self.dst); ok {
+	if dislodged, prov, ok := s.Unit(self.Dst); ok {
 		s.RemoveUnit(prov)
 		s.SetDislodged(prov, dislodged)
-		if self.preventRetreat {
-			s.SetDislodger(self.src, prov)
+		if self.PreventRetreat {
+			s.SetDislodger(self.Src, prov)
 		}
-		common.Logf("Dislodged %v from %v", dislodged, self.dst)
+		common.Logf("Dislodged %v from %v", dislodged, self.Dst)
 	}
-	s.SetUnit(self.dst, self.unit)
-	common.Logf("Dropped %v in %v", self.unit, self.dst)
+	s.SetUnit(self.Dst, self.Unit)
+	common.Logf("Dropped %v in %v", self.Unit, self.Dst)
 }
 
 type State struct {
@@ -61,6 +61,54 @@ type State struct {
 	dislodgers    map[common.Province]common.Province
 	movements     []*movement
 	bounces       map[common.Province]map[common.Province]bool
+}
+
+type serializedState struct {
+	Orders        map[common.Province]common.Adjudicator
+	Units         map[common.Province]common.Unit
+	Dislodgeds    map[common.Province]common.Unit
+	SupplyCenters map[common.Province]common.Nation
+	Graph         common.Graph
+	Phase         common.Phase
+	BackupRule    common.BackupRule
+	Resolutions   map[common.Province]error
+	Dislodgers    map[common.Province]common.Province
+	Movements     []*movement
+	Bounces       map[common.Province]map[common.Province]bool
+}
+
+func (self *State) GobEncode() (b []byte, err error) {
+	return common.Encode(serializedState{
+		Orders:        self.orders,
+		Units:         self.units,
+		Dislodgeds:    self.dislodgeds,
+		SupplyCenters: self.supplyCenters,
+		Graph:         self.graph,
+		Phase:         self.phase,
+		BackupRule:    self.backupRule,
+		Resolutions:   self.resolutions,
+		Dislodgers:    self.dislodgers,
+		Movements:     self.movements,
+		Bounces:       self.bounces,
+	})
+}
+
+func (self *State) GobDecode(b []byte) (err error) {
+	ser := serializedState{}
+	if err = common.Decode(b, &ser); err == nil {
+		self.orders = ser.Orders
+		self.units = ser.Units
+		self.dislodgeds = ser.Dislodgeds
+		self.supplyCenters = ser.SupplyCenters
+		self.graph = ser.Graph
+		self.phase = ser.Phase
+		self.backupRule = ser.BackupRule
+		self.resolutions = ser.Resolutions
+		self.dislodgers = ser.Dislodgers
+		self.movements = ser.Movements
+		self.bounces = ser.Bounces
+	}
+	return
 }
 
 func (self *State) resolver() *resolver {
@@ -383,9 +431,9 @@ func (self *State) Order(prov common.Province) (o common.Order, p common.Provinc
 
 func (self *State) Move(src, dst common.Province, preventRetreat bool) {
 	self.movements = append(self.movements, &movement{
-		src:            src,
-		dst:            dst,
-		preventRetreat: preventRetreat,
+		Src:            src,
+		Dst:            dst,
+		PreventRetreat: preventRetreat,
 	})
 }
 

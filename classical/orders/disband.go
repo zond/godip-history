@@ -19,6 +19,21 @@ type disband struct {
 	at      time.Time
 }
 
+func (self *disband) GobEncode() (b []byte, err error) {
+	return dip.Encode(serializedOrder{
+		Targets: self.targets,
+		At:      self.at,
+	})
+}
+
+func (self *disband) GobDecode(b []byte) (err error) {
+	ser := serializedOrder{}
+	if err = dip.Decode(b, &ser); err == nil {
+		self.targets, self.at = ser.Targets, ser.At
+	}
+	return
+}
+
 func (self *disband) String() string {
 	return fmt.Sprintf("%v %v", self.targets[0], cla.Disband)
 }

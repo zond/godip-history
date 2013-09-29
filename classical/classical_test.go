@@ -116,9 +116,9 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 	var s *state.State
 	if statePair.Before.Phase == nil {
 		s = Blank(&phase{
-			year:   1901,
-			season: cla.Spring,
-			typ:    cla.Movement,
+			PhaseYear:   1901,
+			PhaseSeason: cla.Spring,
+			PhaseType:   cla.Movement,
 		})
 	} else {
 		s = Blank(statePair.Before.Phase)

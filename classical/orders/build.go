@@ -21,6 +21,22 @@ type build struct {
 	at      time.Time
 }
 
+func (self *build) GobEncode() (b []byte, err error) {
+	return dip.Encode(serializedOrder{
+		Targets: self.targets,
+		Typ:     self.typ,
+		At:      self.at,
+	})
+}
+
+func (self *build) GobDecode(b []byte) (err error) {
+	ser := serializedOrder{}
+	if err = dip.Decode(b, &ser); err == nil {
+		self.targets, self.typ, self.at = ser.Targets, ser.Typ, ser.At
+	}
+	return
+}
+
 func (self *build) Type() dip.OrderType {
 	return cla.Build
 }

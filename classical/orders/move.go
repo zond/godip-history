@@ -19,6 +19,21 @@ type move struct {
 	flags   map[dip.Flag]bool
 }
 
+func (self *move) GobEncode() (b []byte, err error) {
+	return dip.Encode(serializedOrder{
+		Targets: self.targets,
+		Flags:   self.flags,
+	})
+}
+
+func (self *move) GobDecode(b []byte) (err error) {
+	ser := serializedOrder{}
+	if err = dip.Decode(b, &ser); err == nil {
+		self.targets, self.flags = ser.Targets, ser.Flags
+	}
+	return
+}
+
 func (self *move) String() string {
 	via := ""
 	if self.flags[cla.ViaConvoy] {

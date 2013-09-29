@@ -9,16 +9,18 @@ import (
 )
 
 func Blank(phase dip.Phase) *state.State {
-	return state.New(start.Graph(), phase, BackupRule)
+	return state.New(start.Graph(), phase, BackupRule{})
 }
 
 func Start() *state.State {
-	return state.New(start.Graph(), &phase{1901, cla.Spring, cla.Movement}, BackupRule).
+	return state.New(start.Graph(), &phase{1901, cla.Spring, cla.Movement}, BackupRule{}).
 		SetUnits(start.Units()).
 		SetSupplyCenters(start.SupplyCenters())
 }
 
-func BackupRule(state dip.State, deps []dip.Province) {
+type BackupRule struct{}
+
+func (self BackupRule) Adjudicate(state dip.State, deps []dip.Province) {
 	only_moves := true
 	convoys := false
 	for _, prov := range deps {

@@ -16,6 +16,24 @@ type Graph struct {
 	nodes map[common.Province]*node
 }
 
+type serializedGraph struct {
+	Nodes map[common.Province]*node
+}
+
+func (self *Graph) GobEncode() (b []byte, err error) {
+	return common.Encode(serializedGraph{
+		Nodes: self.nodes,
+	})
+}
+
+func (self *Graph) GobDecode(b []byte) (err error) {
+	ser := serializedGraph{}
+	if err = common.Decode(b, &ser); err == nil {
+		self.nodes = ser.Nodes
+	}
+	return
+}
+
 func (self *Graph) String() string {
 	buf := new(bytes.Buffer)
 	for _, n := range self.nodes {
@@ -27,7 +45,7 @@ func (self *Graph) String() string {
 func (self *Graph) Has(n common.Province) (result bool) {
 	p, c := n.Split()
 	if node, ok := self.nodes[p]; ok {
-		if _, ok := node.subs[c]; ok {
+		if _, ok := node.Subs[c]; ok {
 			result = true
 		}
 	}
@@ -37,7 +55,7 @@ func (self *Graph) Has(n common.Province) (result bool) {
 func (self *Graph) Flags(n common.Province) (result map[common.Flag]bool) {
 	p, c := n.Split()
 	if node, ok := self.nodes[p]; ok {
-		if sub, ok := node.subs[c]; ok {
+		if sub, ok := node.Subs[c]; ok {
 			result = sub.flags
 		}
 	}
@@ -46,14 +64,14 @@ func (self *Graph) Flags(n common.Province) (result map[common.Flag]bool) {
 
 func (self *Graph) SC(n common.Province) (result *common.Nation) {
 	if node, ok := self.nodes[n.Super()]; ok {
-		result = node.sc
+		result = node.Sc
 	}
 	return
 }
 
 func (self *Graph) SCs(n common.Nation) (result []common.Province) {
 	for name, node := range self.nodes {
-		if node.sc != nil && *node.sc == n {
+		if node.Sc != nil && *node.Sc == n {
 			result = append(result, name)
 		}
 	}
@@ -70,7 +88,7 @@ func (self *Graph) Edges(n common.Province) (result []common.Province) {
 func (self *Graph) edges(n common.Province) (result map[common.Province]*edge) {
 	p, c := n.Split()
 	if node, ok := self.nodes[p]; ok {
-		if sub, ok := node.subs[c]; ok {
+		if sub, ok := node.Subs[c]; ok {
 			result = sub.edges
 		}
 	}
@@ -88,7 +106,7 @@ func (self *Graph) pathHelper(dst common.Province, queue []pathStep, filter comm
 		seen[step.pos] = true
 		for name, edge := range self.edges(step.pos) {
 			if !seen[name] {
-				if filter == nil || filter(name, edge.flags, edge.sub.flags, edge.sub.node.sc) {
+				if filter == nil || filter(name, edge.flags, edge.sub.flags, edge.sub.node.Sc) {
 					thisPath := append(append([]common.Province{}, step.path...), name)
 					if name == dst {
 						return thisPath
@@ -119,7 +137,7 @@ func (self *Graph) Path(src, dst common.Province, filter common.PathFilter) []co
 
 func (self *Graph) Coasts(prov common.Province) (result []common.Province) {
 	if node, ok := self.nodes[prov.Super()]; ok {
-		for _, sub := range node.subs {
+		for _, sub := range node.Subs {
 			result = append(result, sub.getName())
 		}
 	}
@@ -130,9 +148,9 @@ func (self *Graph) Prov(n common.Province) *subNode {
 	p, c := n.Split()
 	if self.nodes[p] == nil {
 		self.nodes[p] = &node{
-			name:  p,
-			subs:  make(map[common.Province]*subNode),
-			graph: self,
+			Name:  p,
+			Subs:  make(map[common.Province]*subNode),
+			Graph: self,
 		}
 	}
 	return self.nodes[p].sub(c)
@@ -140,7 +158,7 @@ func (self *Graph) Prov(n common.Province) *subNode {
 
 func (self *Graph) Provinces() (result []common.Province) {
 	for _, node := range self.nodes {
-		for _, sub := range node.subs {
+		for _, sub := range node.Subs {
 			result = append(result, sub.getName())
 		}
 	}
@@ -148,23 +166,23 @@ func (self *Graph) Provinces() (result []common.Province) {
 }
 
 type node struct {
-	name  common.Province
-	subs  map[common.Province]*subNode
-	sc    *common.Nation
-	graph *Graph
+	Name  common.Province
+	Subs  map[common.Province]*subNode
+	Sc    *common.Nation
+	Graph *Graph
 }
 
 func (self *node) String() string {
 	buf := new(bytes.Buffer)
-	fmt.Fprintf(buf, "%v", self.name)
-	if self.sc != nil {
-		fmt.Fprintf(buf, " %v", *self.sc)
+	fmt.Fprintf(buf, "%v", self.Name)
+	if self.Sc != nil {
+		fmt.Fprintf(buf, " %v", *self.Sc)
 	}
-	if sub, ok := self.subs[""]; ok {
+	if sub, ok := self.Subs[""]; ok {
 		fmt.Fprintf(buf, " %v\n", sub)
 	}
-	for _, s := range self.subs {
-		if s.name != "" {
+	for _, s := range self.Subs {
+		if s.Name != "" {
 			fmt.Fprintf(buf, "  %v\n", s)
 		}
 	}
@@ -172,15 +190,15 @@ func (self *node) String() string {
 }
 
 func (self *node) sub(n common.Province) *subNode {
-	if self.subs[n] == nil {
-		self.subs[n] = &subNode{
-			name:  n,
+	if self.Subs[n] == nil {
+		self.Subs[n] = &subNode{
+			Name:  n,
 			edges: make(map[common.Province]*edge),
 			node:  self,
 			flags: make(map[common.Flag]bool),
 		}
 	}
-	return self.subs[n]
+	return self.Subs[n]
 }
 
 type edge struct {
@@ -189,7 +207,7 @@ type edge struct {
 }
 
 type subNode struct {
-	name  common.Province
+	Name  common.Province
 	edges map[common.Province]*edge
 	node  *node
 	flags map[common.Flag]bool
@@ -197,8 +215,8 @@ type subNode struct {
 
 func (self *subNode) String() string {
 	buf := new(bytes.Buffer)
-	if self.name != "" {
-		fmt.Fprintf(buf, "%v ", self.name)
+	if self.Name != "" {
+		fmt.Fprintf(buf, "%v ", self.Name)
 	}
 	flags := make([]common.Flag, 0, len(self.flags))
 	for flag, _ := range self.flags {
@@ -224,11 +242,11 @@ func (self *subNode) String() string {
 }
 
 func (self *subNode) getName() common.Province {
-	return self.node.name.Join(self.name)
+	return self.node.Name.Join(self.Name)
 }
 
 func (self *subNode) Conn(n common.Province, flags ...common.Flag) *subNode {
-	target := self.node.graph.Prov(n)
+	target := self.node.Graph.Prov(n)
 	flagMap := make(map[common.Flag]bool)
 	for _, flag := range flags {
 		flagMap[flag] = true
@@ -241,7 +259,7 @@ func (self *subNode) Conn(n common.Province, flags ...common.Flag) *subNode {
 }
 
 func (self *subNode) SC(n common.Nation) *subNode {
-	self.node.sc = &n
+	self.node.Sc = &n
 	return self
 }
 
@@ -253,9 +271,9 @@ func (self *subNode) Flag(flags ...common.Flag) *subNode {
 }
 
 func (self *subNode) Prov(n common.Province) *subNode {
-	return self.node.graph.Prov(n)
+	return self.node.Graph.Prov(n)
 }
 
 func (self *subNode) Done() *Graph {
-	return self.node.graph
+	return self.node.Graph
 }
