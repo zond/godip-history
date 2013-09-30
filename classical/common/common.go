@@ -222,7 +222,9 @@ func PossibleMoves(v Validator, src Province, allowConvoy bool) (result []Provin
 	if unit, realSrc, found := v.Unit(src); found {
 		for _, prov := range v.Graph().Provinces() {
 			if dst, err := AnyMovePossible(v, unit.Type, realSrc, prov, true, allowConvoy, false); err == nil {
-				result = append(result, dst)
+				if realSrc != dst {
+					result = append(result, dst)
+				}
 			}
 		}
 	}

@@ -2,7 +2,9 @@ package common
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -170,6 +172,18 @@ func (self Orders) Len() int {
 type OptionValue interface{}
 
 type Options map[OptionValue]Option
+
+func (self Options) MarshalJSON() ([]byte, error) {
+	repl := map[string]interface{}{}
+	for k, v := range self {
+		repl[fmt.Sprint(k)] = map[string]interface{}{
+			"Stop": v.Stop,
+			"Type": reflect.ValueOf(k).Type().Name(),
+			"Next": v.Next,
+		}
+	}
+	return json.Marshal(repl)
+}
 
 type Option struct {
 	Stop bool

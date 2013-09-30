@@ -89,8 +89,10 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 						}
 					}
 					for mvSrc, unit := range v.Units() {
-						if mvDst, err := cla.AnyMovePossible(v, unit.Type, mvSrc, supportable, true, true, false); err == nil {
-							possibleSupports[mvSrc] = append(possibleSupports[mvSrc], mvDst)
+						if mvSrc != src {
+							if mvDst, err := cla.AnyMovePossible(v, unit.Type, mvSrc, supportable, true, true, false); err == nil {
+								possibleSupports[mvSrc] = append(possibleSupports[mvSrc], mvDst)
+							}
 						}
 					}
 				}

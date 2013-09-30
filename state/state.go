@@ -78,7 +78,8 @@ func (self *State) Graph() common.Graph {
 func (self *State) Options(orders []common.Order, prov common.Province) (nation common.Nation, result common.Options, found bool) {
 	result = common.Options{}
 	for _, order := range orders {
-		if n, o, found := order.Options(self, prov); found {
+		if n, o, foundHere := order.Options(self, prov); foundHere {
+			found = true
 			if nation == "" {
 				nation = n
 			} else if n != nation {
