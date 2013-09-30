@@ -85,7 +85,7 @@ func (self *State) Options(orders []common.Order, prov common.Province) (nation 
 			} else if n != nation {
 				panic(fmt.Errorf("Both %v and %v seem able to give orders to %v?", n, nation, prov))
 			}
-			result[order.Type()] = common.Option{
+			result[order.DisplayType()] = common.Option{
 				Next: o,
 			}
 		}

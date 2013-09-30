@@ -33,6 +33,10 @@ func (self *convoy) Type() dip.OrderType {
 	return cla.Convoy
 }
 
+func (self *convoy) DisplayType() dip.OrderType {
+	return cla.Convoy
+}
+
 func (self *convoy) Targets() []dip.Province {
 	return self.targets
 }

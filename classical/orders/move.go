@@ -36,6 +36,13 @@ func (self *move) Type() dip.OrderType {
 	return cla.Move
 }
 
+func (self *move) DisplayType() dip.OrderType {
+	if self.flags[cla.ViaConvoy] {
+		return cla.MoveViaConvoy
+	}
+	return cla.Move
+}
+
 func (self *move) Targets() []dip.Province {
 	return self.targets
 }
@@ -238,16 +245,18 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
 	next := dip.Options{}
 	if v.Phase().Type() == cla.Retreat {
-		if v.Graph().Has(src) {
-			var unit dip.Unit
-			var ok bool
-			if unit, src, ok = v.Dislodged(src); ok {
-				nation = unit.Nation
-				for _, dst := range cla.PossibleMoves(v, src, false) {
-					if _, _, found := v.Unit(dst); !found {
-						if !v.Bounce(src, dst) {
-							next[dst] = dip.Option{
-								Stop: true,
+		if !self.flags[cla.ViaConvoy] {
+			if v.Graph().Has(src) {
+				var unit dip.Unit
+				var ok bool
+				if unit, src, ok = v.Dislodged(src); ok {
+					nation = unit.Nation
+					for _, dst := range cla.PossibleMoves(v, src, false) {
+						if _, _, found := v.Unit(dst); !found {
+							if !v.Bounce(src, dst) {
+								next[dst] = dip.Option{
+									Stop: true,
+								}
 							}
 						}
 					}
@@ -261,8 +270,16 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 			if unit, src, ok = v.Unit(src); ok {
 				nation = unit.Nation
 				for _, dst := range cla.PossibleMoves(v, src, true) {
-					next[dst] = dip.Option{
-						Stop: true,
+					if !self.flags[cla.ViaConvoy] {
+						next[dst] = dip.Option{
+							Stop: true,
+						}
+					} else {
+						if cp := cla.AnyConvoyPath(v, src, dst, false, nil); cp != nil {
+							next[dst] = dip.Option{
+								Stop: true,
+							}
+						}
 					}
 				}
 			}

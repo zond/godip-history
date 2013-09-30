@@ -29,6 +29,10 @@ func (self *hold) Type() dip.OrderType {
 	return cla.Hold
 }
 
+func (self *hold) DisplayType() dip.OrderType {
+	return cla.Hold
+}
+
 func (self *hold) Targets() []dip.Province {
 	return self.targets
 }

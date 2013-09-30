@@ -192,6 +192,7 @@ type Option struct {
 
 type Order interface {
 	Type() OrderType
+	DisplayType() OrderType
 	Targets() []Province
 	Validate(Validator) error
 	Options(Validator, Province) (Nation, Options, bool)

@@ -25,6 +25,10 @@ func (self *build) Type() dip.OrderType {
 	return cla.Build
 }
 
+func (self *build) DisplayType() dip.OrderType {
+	return cla.Build
+}
+
 func (self *build) Flags() map[dip.Flag]bool {
 	return nil
 }

@@ -36,6 +36,10 @@ func (self *support) Type() dip.OrderType {
 	return cla.Support
 }
 
+func (self *support) DisplayType() dip.OrderType {
+	return cla.Support
+}
+
 func (self *support) Targets() []dip.Province {
 	return self.targets
 }

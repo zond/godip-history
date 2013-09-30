@@ -29,12 +29,13 @@ const (
 	Retreat    PhaseType = "Retreat"
 	Adjustment PhaseType = "Adjustment"
 
-	Build   OrderType = "Build"
-	Move    OrderType = "Move"
-	Hold    OrderType = "Hold"
-	Convoy  OrderType = "Convoy"
-	Support OrderType = "Support"
-	Disband OrderType = "Disband"
+	Build         OrderType = "Build"
+	Move          OrderType = "Move"
+	MoveViaConvoy OrderType = "MoveViaConvoy"
+	Hold          OrderType = "Hold"
+	Convoy        OrderType = "Convoy"
+	Support       OrderType = "Support"
+	Disband       OrderType = "Disband"
 
 	ViaConvoy Flag = "C"
 )
