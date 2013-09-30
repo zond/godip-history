@@ -75,18 +75,18 @@ func (self *State) Graph() common.Graph {
 	return self.graph
 }
 
-func (self *State) Options(orders []common.Order, prov common.Province) (nation *common.Nation, result []common.Option) {
+func (self *State) Options(orders []common.Order, prov common.Province) (nation common.Nation, result common.Options, found bool) {
+	result = common.Options{}
 	for _, order := range orders {
 		if n, o, found := order.Options(self, prov); found {
-			if nation == nil {
+			if nation == "" {
 				nation = n
-			} else if *n != *nation {
-				panic(fmt.Errorf("Both %v and %v seem able to give orders to %v?", *n, *nation, prov))
+			} else if n != nation {
+				panic(fmt.Errorf("Both %v and %v seem able to give orders to %v?", n, nation, prov))
 			}
-			result = append(result, common.Option{
-				Value: order.Type(),
-				Next:  []common.Option{*o},
-			})
+			result[order.Type()] = common.Option{
+				Next: o,
+			}
 		}
 	}
 	return

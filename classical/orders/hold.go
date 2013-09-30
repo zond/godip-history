@@ -41,16 +41,18 @@ func (self *hold) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *hold) Options(v dip.Validator, src dip.Province) (nation *dip.Nation, result *dip.Option, found bool) {
+func (self *hold) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
 			var unit dip.Unit
 			var ok bool
 			if unit, src, ok = v.Unit(src); ok {
 				found = true
-				nation = &unit.Nation
-				result = &dip.Option{
-					Value: src,
+				nation = unit.Nation
+				result = dip.Options{
+					src: dip.Option{
+						Stop: true,
+					},
 				}
 			}
 		}

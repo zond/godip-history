@@ -169,16 +169,18 @@ func (self Orders) Len() int {
 
 type OptionValue interface{}
 
+type Options map[OptionValue]Option
+
 type Option struct {
-	Value OptionValue
-	Next  []Option
+	Stop bool
+	Next Options
 }
 
 type Order interface {
 	Type() OrderType
 	Targets() []Province
 	Validate(Validator) error
-	Options(Validator, Province) (*Nation, *Option, bool)
+	Options(Validator, Province) (Nation, Options, bool)
 	At() time.Time
 	Flags() map[Flag]bool
 }
@@ -248,5 +250,5 @@ type State interface {
 		dislodgers map[Province]Province,
 		bounces map[Province]map[Province]bool)
 
-	Options(orders []Order, prov Province) (*Nation, []Option)
+	Options(orders []Order, prov Province) (Nation, Options, bool)
 }
