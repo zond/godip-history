@@ -102,9 +102,9 @@ func (self ErrBounce) Error() string {
 	return fmt.Sprintf("ErrBounce:%v", self.Province)
 }
 
-func PossibleConvoyPathFilter(v Validator, src, dst Province, resolveConvoys bool) PathFilter {
+func PossibleConvoyPathFilter(v Validator, src, dst Province, resolveConvoys, dstOk bool) PathFilter {
 	return func(name Province, edgeFlags, nodeFlags map[Flag]bool, sc *Nation) bool {
-		if name.Contains(dst) {
+		if dstOk && name.Contains(dst) {
 			return true
 		}
 		if nodeFlags[Land] {
@@ -147,9 +147,8 @@ func convoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *
 		return false
 	})
 	for _, waypoint := range waypoints {
-		filter := PossibleConvoyPathFilter(v, src, dst, resolveConvoys)
-		if part1 := v.Graph().Path(src, waypoint, filter); part1 != nil {
-			if part2 := v.Graph().Path(waypoint, dst, filter); part2 != nil {
+		if part1 := v.Graph().Path(src, waypoint, PossibleConvoyPathFilter(v, src, dst, resolveConvoys, false)); part1 != nil {
+			if part2 := v.Graph().Path(waypoint, dst, PossibleConvoyPathFilter(v, src, dst, resolveConvoys, true)); part2 != nil {
 				return append(part1, part2...)
 			}
 		}

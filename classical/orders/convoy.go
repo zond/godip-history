@@ -65,9 +65,8 @@ func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Natio
 				for mvSrc, unit := range v.Units() {
 					if unit.Type == cla.Army {
 						for _, mvDst := range v.Graph().Provinces() {
-							filter := cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false)
-							if part1 := v.Graph().Path(mvSrc, src, filter); part1 != nil {
-								if part2 := v.Graph().Path(src, mvDst, filter); part2 != nil {
+							if part1 := v.Graph().Path(mvSrc, src, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, false)); part1 != nil {
+								if part2 := v.Graph().Path(src, mvDst, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, true)); part2 != nil {
 									possibleConvoys[mvSrc] = append(possibleConvoys[mvSrc], mvDst)
 								}
 							}

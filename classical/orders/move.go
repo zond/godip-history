@@ -268,16 +268,19 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 			var unit dip.Unit
 			var ok bool
 			if unit, src, ok = v.Unit(src); ok {
-				nation = unit.Nation
-				for _, dst := range cla.PossibleMoves(v, src, true) {
-					if !self.flags[cla.ViaConvoy] {
-						next[dst] = dip.Option{
-							Stop: true,
-						}
-					} else {
-						if cp := cla.AnyConvoyPath(v, src, dst, false, nil); cp != nil {
+				if !self.flags[cla.ViaConvoy] || unit.Type == cla.Army {
+					nation = unit.Nation
+					for _, dst := range cla.PossibleMoves(v, src, true) {
+						if !self.flags[cla.ViaConvoy] {
 							next[dst] = dip.Option{
 								Stop: true,
+							}
+						} else {
+							if cp := cla.AnyConvoyPath(v, src, dst, false, nil); len(cp) > 1 {
+								fmt.Println("convoy path", cp)
+								next[dst] = dip.Option{
+									Stop: true,
+								}
 							}
 						}
 					}
