@@ -94,28 +94,18 @@ func (self *disband) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 		if v.Graph().Has(src) {
 			var unit dip.Unit
 			var ok bool
-			if unit, src, ok = v.Unit(src); ok {
+			if unit, _, ok = v.Unit(src); ok {
 				if _, _, balance := cla.AdjustmentStatus(v, unit.Nation); balance < 0 {
 					found = true
 					nation = unit.Nation
-					result = dip.Options{
-						src: dip.Option{
-							Stop: true,
-						},
-					}
 				}
 			}
 		}
 	} else if v.Phase().Type() == cla.Retreat {
 		if v.Graph().Has(src) {
-			if unit, src, ok := v.Dislodged(src); ok {
+			if unit, _, ok := v.Dislodged(src); ok {
 				found = true
 				nation = unit.Nation
-				result = dip.Options{
-					src: dip.Option{
-						Stop: true,
-					},
-				}
 			}
 		}
 	}

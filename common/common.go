@@ -171,23 +171,17 @@ func (self Orders) Len() int {
 
 type OptionValue interface{}
 
-type Options map[OptionValue]Option
+type Options map[OptionValue]Options
 
 func (self Options) MarshalJSON() ([]byte, error) {
 	repl := map[string]interface{}{}
 	for k, v := range self {
 		repl[fmt.Sprint(k)] = map[string]interface{}{
-			"Stop": v.Stop,
 			"Type": reflect.ValueOf(k).Type().Name(),
-			"Next": v.Next,
+			"Next": v,
 		}
 	}
 	return json.Marshal(repl)
-}
-
-type Option struct {
-	Stop bool
-	Next Options
 }
 
 type Order interface {

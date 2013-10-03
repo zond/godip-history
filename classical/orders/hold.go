@@ -53,11 +53,6 @@ func (self *hold) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 			if unit, src, ok = v.Unit(src); ok {
 				found = true
 				nation = unit.Nation
-				result = dip.Options{
-					src: dip.Option{
-						Stop: true,
-					},
-				}
 			}
 		}
 	}

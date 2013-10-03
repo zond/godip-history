@@ -243,7 +243,6 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 }
 
 func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
-	next := dip.Options{}
 	if v.Phase().Type() == cla.Retreat {
 		if !self.flags[cla.ViaConvoy] {
 			if v.Graph().Has(src) {
@@ -254,9 +253,11 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 					for _, dst := range cla.PossibleMoves(v, src, false) {
 						if _, _, found := v.Unit(dst); !found {
 							if !v.Bounce(src, dst) {
-								next[dst] = dip.Option{
-									Stop: true,
+								found = true
+								if result == nil {
+									result = dip.Options{}
 								}
+								result[dst] = nil
 							}
 						}
 					}
@@ -272,28 +273,23 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 					nation = unit.Nation
 					for _, dst := range cla.PossibleMoves(v, src, true) {
 						if !self.flags[cla.ViaConvoy] {
-							next[dst] = dip.Option{
-								Stop: true,
+							found = true
+							if result == nil {
+								result = dip.Options{}
 							}
+							result[dst] = nil
 						} else {
 							if cp := cla.AnyConvoyPath(v, src, dst, false, nil); len(cp) > 1 {
-								fmt.Println("convoy path", cp)
-								next[dst] = dip.Option{
-									Stop: true,
+								found = true
+								if result == nil {
+									result = dip.Options{}
 								}
+								result[dst] = nil
 							}
 						}
 					}
 				}
 			}
-		}
-	}
-	if len(next) > 0 {
-		found = true
-		result = dip.Options{
-			src: dip.Option{
-				Next: next,
-			},
 		}
 	}
 	return
