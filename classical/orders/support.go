@@ -77,12 +77,12 @@ func (self *support) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
 			var supporter dip.Unit
 			var ok bool
-			if supporter, src, ok = v.Unit(src); ok {
+			if supporter, actualSrc, ok = v.Unit(src); ok {
 				nation = supporter.Nation
 				for _, supportable := range cla.PossibleMoves(v, src, false) {
 					if _, supporteeSrc, ok := v.Unit(supportable); ok {
@@ -90,12 +90,12 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 						if result == nil {
 							result = dip.Options{}
 						}
-						opt, f := result[supporteeSrc]
+						opt, f := result[supporteeSrc.Super()]
 						if !f {
 							opt = dip.Options{}
-							result[supporteeSrc] = opt
+							result[supporteeSrc.Super()] = opt
 						}
-						opt[supporteeSrc] = nil
+						opt[supporteeSrc.Super()] = nil
 					}
 					for mvSrc, unit := range v.Units() {
 						if mvSrc != src {
@@ -104,12 +104,12 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 								if result == nil {
 									result = dip.Options{}
 								}
-								opt, f := result[mvSrc]
+								opt, f := result[mvSrc.Super()]
 								if !f {
 									opt = dip.Options{}
-									result[mvSrc] = opt
+									result[mvSrc.Super()] = opt
 								}
-								opt[mvDst] = nil
+								opt[mvDst.Super()] = nil
 							}
 						}
 					}

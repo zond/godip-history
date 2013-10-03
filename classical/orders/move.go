@@ -242,13 +242,13 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 	return nil
 }
 
-func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Retreat {
 		if !self.flags[cla.ViaConvoy] {
 			if v.Graph().Has(src) {
 				var unit dip.Unit
 				var ok bool
-				if unit, src, ok = v.Dislodged(src); ok {
+				if unit, actualSrc, ok = v.Dislodged(src); ok {
 					nation = unit.Nation
 					for _, dst := range cla.PossibleMoves(v, src, false) {
 						if _, _, found := v.Unit(dst); !found {
@@ -268,7 +268,7 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 		if v.Graph().Has(src) {
 			var unit dip.Unit
 			var ok bool
-			if unit, src, ok = v.Unit(src); ok {
+			if unit, actualSrc, ok = v.Unit(src); ok {
 				if !self.flags[cla.ViaConvoy] || unit.Type == cla.Army {
 					nation = unit.Nation
 					for _, dst := range cla.PossibleMoves(v, src, true) {

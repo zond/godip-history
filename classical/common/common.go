@@ -219,13 +219,19 @@ func AnySupportPossible(v Validator, typ UnitType, src, dst Province) (err error
 }
 
 func PossibleMoves(v Validator, src Province, allowConvoy bool) (result []Province) {
+	dsts := map[Province]bool{}
 	if unit, realSrc, found := v.Unit(src); found {
 		for _, prov := range v.Graph().Provinces() {
-			if dst, err := AnyMovePossible(v, unit.Type, realSrc, prov, true, allowConvoy, false); err == nil {
-				if realSrc != dst {
-					result = append(result, dst)
-				}
+			if err := movePossible(v, unit.Type, realSrc, prov, allowConvoy, false); err == nil {
+				dsts[prov] = true
 			}
+		}
+	}
+	for dst, _ := range dsts {
+		if dst.Super() == dst {
+			result = append(result, dst)
+		} else if !dsts[dst.Super()] {
+			result = append(result, dst)
 		}
 	}
 	return

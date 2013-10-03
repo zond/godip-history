@@ -89,12 +89,12 @@ func (self *disband) validateBuildPhase(v dip.Validator) error {
 	return nil
 }
 
-func (self *disband) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *disband) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Adjustment {
 		if v.Graph().Has(src) {
 			var unit dip.Unit
 			var ok bool
-			if unit, _, ok = v.Unit(src); ok {
+			if unit, actualSrc, ok = v.Unit(src); ok {
 				if _, _, balance := cla.AdjustmentStatus(v, unit.Nation); balance < 0 {
 					found = true
 					nation = unit.Nation
@@ -103,7 +103,9 @@ func (self *disband) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 		}
 	} else if v.Phase().Type() == cla.Retreat {
 		if v.Graph().Has(src) {
-			if unit, _, ok := v.Dislodged(src); ok {
+			var unit dip.Unit
+			var ok bool
+			if unit, actualSrc, ok = v.Dislodged(src); ok {
 				found = true
 				nation = unit.Nation
 			}

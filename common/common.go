@@ -189,7 +189,7 @@ type Order interface {
 	DisplayType() OrderType
 	Targets() []Province
 	Validate(Validator) error
-	Options(Validator, Province) (Nation, Options, bool)
+	Options(Validator, Province) (Nation, Province, Options, bool)
 	At() time.Time
 	Flags() map[Flag]bool
 }

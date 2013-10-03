@@ -54,12 +54,13 @@ func (self *build) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *build) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *build) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Adjustment {
 		if me, _, ok := v.SupplyCenter(src); ok {
 			nation = me
 			if owner := v.Graph().SC(src.Super()); owner != nil && *owner == me {
-				if _, _, ok := v.Unit(src); !ok {
+				var ok bool
+				if _, actualSrc, ok = v.Unit(src); !ok {
 					if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
 						if v.Graph().Flags(src)[cla.Land] {
 							found = true

@@ -54,28 +54,30 @@ func (self *convoy) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
 			var convoyer dip.Unit
 			var ok bool
-			if convoyer, src, ok = v.Unit(src); ok && convoyer.Type == cla.Fleet {
+			if convoyer, actualSrc, ok = v.Unit(src); ok && convoyer.Type == cla.Fleet {
 				nation = convoyer.Nation
 				for mvSrc, unit := range v.Units() {
 					if unit.Type == cla.Army {
 						for _, mvDst := range v.Graph().Provinces() {
-							if part1 := v.Graph().Path(mvSrc, src, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, false)); part1 != nil {
-								if part2 := v.Graph().Path(src, mvDst, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, true)); part2 != nil {
-									found = true
-									if result == nil {
-										result = dip.Options{}
+							if mvDst.Sub() == "" {
+								if part1 := v.Graph().Path(mvSrc, src, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, false)); part1 != nil {
+									if part2 := v.Graph().Path(src, mvDst, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, true)); part2 != nil {
+										found = true
+										if result == nil {
+											result = dip.Options{}
+										}
+										opt, f := result[mvSrc]
+										if !f {
+											opt = dip.Options{}
+											result[mvSrc] = opt
+										}
+										opt[mvDst] = nil
 									}
-									opt, f := result[mvSrc]
-									if !f {
-										opt = dip.Options{}
-										result[mvSrc] = opt
-									}
-									opt[mvDst] = nil
 								}
 							}
 						}
