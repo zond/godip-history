@@ -231,7 +231,17 @@ func PossibleMoves(v Validator, src Province, allowConvoy bool) (result []Provin
 		if dst.Super() == dst {
 			result = append(result, dst)
 		} else if !dsts[dst.Super()] {
-			result = append(result, dst)
+			foundCoasts := 0
+			for _, coast := range v.Graph().Coasts(dst) {
+				if dsts[coast] {
+					foundCoasts += 1
+				}
+			}
+			if foundCoasts == 1 {
+				result = append(result, dst.Super())
+			} else {
+				result = append(result, dst)
+			}
 		}
 	}
 	return
