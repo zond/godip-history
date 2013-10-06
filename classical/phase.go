@@ -20,6 +20,42 @@ type phase struct {
 	typ    dip.PhaseType
 }
 
+func (self *phase) PossibleSources(s dip.State, nation dip.Nation) (result []dip.Province) {
+	m := map[dip.Province]bool{}
+	if self.typ == cla.Movement {
+		for prov, unit := range s.Units() {
+			if unit.Nation == nation {
+				m[prov.Super()] = true
+			}
+		}
+	} else if self.typ == cla.Retreat {
+		for prov, unit := range s.Dislodgeds() {
+			if unit.Nation == nation {
+				m[prov.Super()] = true
+			}
+		}
+	} else if self.typ == cla.Adjustment {
+		if _, _, balance := cla.AdjustmentStatus(s, nation); balance > 0 {
+			for prov, nat := range s.SupplyCenters() {
+				if nat == nation {
+					m[prov.Super()] = true
+				}
+			}
+		} else if balance < 0 {
+			for prov, unit := range s.Units() {
+				if unit.Nation == nation {
+					m[prov.Super()] = true
+				}
+			}
+		}
+	}
+	result = make([]dip.Province, 0, len(m))
+	for prov, _ := range m {
+		result = append(result, prov)
+	}
+	return
+}
+
 func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int) {
 	var unit dip.Unit
 	var ok bool
