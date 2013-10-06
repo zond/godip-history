@@ -230,10 +230,12 @@ func (self *State) Load(
 	supplyCenters map[common.Province]common.Nation,
 	dislodgeds map[common.Province]common.Unit,
 	dislodgers map[common.Province]common.Province,
-	bounces map[common.Province]map[common.Province]bool) {
+	bounces map[common.Province]map[common.Province]bool) *State {
 
 	self.units, self.supplyCenters, self.dislodgeds, self.dislodgers, self.bounces =
 		units, supplyCenters, dislodgeds, dislodgers, bounces
+
+	return self
 }
 
 // Singular setters

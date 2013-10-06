@@ -239,25 +239,8 @@ type State interface {
 
 	SetResolution(Province, error)
 	SetSC(Province, Nation)
-	SetOrder(Province, Adjudicator)
 	SetUnit(Province, Unit)
-	SetDislodger(attacker, victim Province)
 
 	ClearDislodgers()
 	ClearBounces()
-
-	Dump() (
-		units map[Province]Unit,
-		supplyCenters map[Province]Nation,
-		dislodgeds map[Province]Unit,
-		dislodgers map[Province]Province,
-		bounces map[Province]map[Province]bool)
-	Load(
-		units map[Province]Unit,
-		supplyCenters map[Province]Nation,
-		dislodgeds map[Province]Unit,
-		dislodgers map[Province]Province,
-		bounces map[Province]map[Province]bool)
-
-	Options(orders []Order, prov Province) (Nation, Options, bool)
 }
