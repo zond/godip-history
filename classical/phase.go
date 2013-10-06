@@ -20,7 +20,7 @@ type phase struct {
 	typ    dip.PhaseType
 }
 
-func (self *phase) PossibleSources(s dip.State, nation dip.Nation) (result []dip.Province) {
+func (self *phase) PossibleSources(s dip.Validator, nation dip.Nation) (result []dip.Province) {
 	m := map[dip.Province]bool{}
 	if self.typ == cla.Movement {
 		for prov, unit := range s.Units() {
