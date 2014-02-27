@@ -2,9 +2,10 @@ package orders
 
 import (
 	"fmt"
+	"time"
+
 	cla "github.com/zond/godip/classical/common"
 	dip "github.com/zond/godip/common"
-	"time"
 )
 
 func Build(source dip.Province, typ dip.UnitType, at time.Time) *build {
@@ -60,8 +61,9 @@ func (self *build) Options(v dip.Validator, src dip.Province) (nation dip.Nation
 			nation = me
 			if owner := v.Graph().SC(src.Super()); owner != nil && *owner == me {
 				var ok bool
-				if _, actualSrc, ok = v.Unit(src); !ok {
+				if _, _, ok = v.Unit(src); !ok {
 					if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
+						actualSrc = src
 						if v.Graph().Flags(src)[cla.Land] {
 							found = true
 							if result == nil {
