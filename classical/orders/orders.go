@@ -2,9 +2,10 @@ package orders
 
 import (
 	"fmt"
+	"time"
+
 	cla "github.com/zond/godip/classical/common"
 	dip "github.com/zond/godip/common"
-	"time"
 )
 
 func Types() []dip.Order {
@@ -23,7 +24,21 @@ func Types() []dip.Order {
 	}
 }
 
-func Parse(bits []string) (result dip.Order, err error) {
+func ParseAll(orders map[dip.Nation]map[dip.Province][]string) (result map[dip.Province]dip.Adjudicator, err error) {
+	result = map[dip.Province]dip.Adjudicator{}
+	for _, nationOrders := range orders {
+		for prov, bits := range nationOrders {
+			var parsed dip.Adjudicator
+			if parsed, err = Parse(append([]string{string(prov)}, bits...)); err != nil {
+				return
+			}
+			result[prov] = parsed
+		}
+	}
+	return
+}
+
+func Parse(bits []string) (result dip.Adjudicator, err error) {
 	if len(bits) > 1 {
 		switch dip.OrderType(bits[1]) {
 		case (&build{}).DisplayType():

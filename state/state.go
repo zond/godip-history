@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+
 	"github.com/zond/godip/common"
 )
 
@@ -230,10 +231,11 @@ func (self *State) Load(
 	supplyCenters map[common.Province]common.Nation,
 	dislodgeds map[common.Province]common.Unit,
 	dislodgers map[common.Province]common.Province,
-	bounces map[common.Province]map[common.Province]bool) *State {
+	bounces map[common.Province]map[common.Province]bool,
+	orders map[common.Province]common.Adjudicator) *State {
 
-	self.units, self.supplyCenters, self.dislodgeds, self.dislodgers, self.bounces =
-		units, supplyCenters, dislodgeds, dislodgers, bounces
+	self.units, self.supplyCenters, self.dislodgeds, self.dislodgers, self.bounces, self.orders =
+		units, supplyCenters, dislodgeds, dislodgers, bounces, orders
 
 	return self
 }
@@ -322,13 +324,15 @@ func (self *State) Dump() (
 	supplyCenters map[common.Province]common.Nation,
 	dislodgeds map[common.Province]common.Unit,
 	dislodgers map[common.Province]common.Province,
-	bounces map[common.Province]map[common.Province]bool) {
+	bounces map[common.Province]map[common.Province]bool,
+	orders map[common.Province]common.Adjudicator) {
 
 	return self.units,
 		self.supplyCenters,
 		self.dislodgeds,
 		self.dislodgers,
-		self.bounces
+		self.bounces,
+		self.orders
 }
 
 // Singular getters, will search all coasts of a province
