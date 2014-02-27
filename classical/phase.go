@@ -3,11 +3,12 @@ package classical
 import (
 	"bytes"
 	"fmt"
+	"sort"
+	"strings"
+
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
 	dip "github.com/zond/godip/common"
-	"sort"
-	"strings"
 )
 
 func Phase(year int, season dip.Season, typ dip.PhaseType) *phase {
@@ -38,7 +39,11 @@ func (self *phase) PossibleSources(s dip.Validator, nation dip.Nation) (result [
 		if _, _, balance := cla.AdjustmentStatus(s, nation); balance > 0 {
 			for prov, nat := range s.SupplyCenters() {
 				if nat == nation {
-					m[prov.Super()] = true
+					for _, homeSC := range s.Graph().SCs(nat) {
+						if prov == homeSC {
+							m[prov.Super()] = true
+						}
+					}
 				}
 			}
 		} else if balance < 0 {
