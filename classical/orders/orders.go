@@ -24,16 +24,26 @@ func Types() []dip.Order {
 	}
 }
 
+type MultiError []error
+
+func (self MultiError) Error() string {
+	return fmt.Sprint(self)
+}
+
 func ParseAll(orders map[dip.Nation]map[dip.Province][]string) (result map[dip.Province]dip.Adjudicator, err error) {
+	merr := MultiError{}
 	result = map[dip.Province]dip.Adjudicator{}
 	for _, nationOrders := range orders {
 		for prov, bits := range nationOrders {
-			var parsed dip.Adjudicator
-			if parsed, err = Parse(append([]string{string(prov)}, bits...)); err != nil {
-				return
+			if parsed, e := Parse(append([]string{string(prov)}, bits...)); e == nil {
+				result[prov] = parsed
+			} else {
+				merr = append(merr, e)
 			}
-			result[prov] = parsed
 		}
+	}
+	if len(merr) > 0 {
+		err = merr
 	}
 	return
 }
