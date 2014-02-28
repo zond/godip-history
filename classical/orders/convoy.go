@@ -2,9 +2,10 @@ package orders
 
 import (
 	"fmt"
+	"time"
+
 	cla "github.com/zond/godip/classical/common"
 	dip "github.com/zond/godip/common"
-	"time"
 )
 
 func Convoy(source, from, to dip.Province) *convoy {
@@ -54,12 +55,10 @@ func (self *convoy) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
+func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
-			var convoyer dip.Unit
-			var ok bool
-			if convoyer, actualSrc, ok = v.Unit(src); ok && convoyer.Type == cla.Fleet {
+			if convoyer, actualSrc, ok := v.Unit(src); ok && convoyer.Type == cla.Fleet {
 				nation = convoyer.Nation
 				for mvSrc, unit := range v.Units() {
 					if unit.Type == cla.Army {
@@ -71,7 +70,10 @@ func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Natio
 										if result == nil {
 											result = dip.Options{}
 										}
-										opt, f := result[mvSrc]
+										if result[actualSrc] == nil {
+											result[dip.SrcProvince(actualSrc)] = dip.Options{}
+										}
+										opt, f := result[actualSrc][mvSrc]
 										if !f {
 											opt = dip.Options{}
 											result[mvSrc] = opt

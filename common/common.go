@@ -170,6 +170,8 @@ func (self Orders) Len() int {
 	return len(self)
 }
 
+type SrcProvince Province
+
 type OptionValue interface{}
 
 type Options map[OptionValue]Options
@@ -190,7 +192,7 @@ type Order interface {
 	DisplayType() OrderType
 	Targets() []Province
 	Validate(Validator) error
-	Options(Validator, Province) (Nation, Province, Options, bool)
+	Options(Validator, Province) (Nation, Options, bool)
 	At() time.Time
 	Flags() map[Flag]bool
 }

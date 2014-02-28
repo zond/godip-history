@@ -2,9 +2,10 @@ package orders
 
 import (
 	"fmt"
+	"time"
+
 	cla "github.com/zond/godip/classical/common"
 	dip "github.com/zond/godip/common"
-	"time"
 )
 
 func Disband(source dip.Province, at time.Time) *disband {
@@ -89,25 +90,27 @@ func (self *disband) validateBuildPhase(v dip.Validator) error {
 	return nil
 }
 
-func (self *disband) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
+func (self *disband) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Adjustment {
 		if v.Graph().Has(src) {
-			var unit dip.Unit
-			var ok bool
-			if unit, actualSrc, ok = v.Unit(src); ok {
+			if unit, actualSrc, ok := v.Unit(src); ok {
 				if _, _, balance := cla.AdjustmentStatus(v, unit.Nation); balance < 0 {
 					found = true
 					nation = unit.Nation
+					result = dip.Options{
+						dip.SrcProvince(actualSrc): nil,
+					}
 				}
 			}
 		}
 	} else if v.Phase().Type() == cla.Retreat {
 		if v.Graph().Has(src) {
-			var unit dip.Unit
-			var ok bool
-			if unit, actualSrc, ok = v.Dislodged(src); ok {
+			if unit, actualSrc, ok := v.Dislodged(src); ok {
 				found = true
 				nation = unit.Nation
+				result = dip.Options{
+					dip.SrcProvince(actualSrc): nil,
+				}
 			}
 		}
 	}

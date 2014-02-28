@@ -40,9 +40,14 @@ func (self *phase) PossibleSources(s dip.Validator, nation dip.Nation) (result [
 		if _, _, balance := cla.AdjustmentStatus(s, nation); balance > 0 {
 			buildOrder := orders.Build("", "", time.Now())
 			for _, prov := range s.Graph().Provinces() {
-				nat, actualProv, _, found := buildOrder.Options(s, prov)
-				if nat == nation && found && actualProv == prov {
+				nat, _, found := buildOrder.Options(s, prov)
+				if nat == nation && found {
 					m[prov] = true
+				}
+			}
+			for prov, _ := range m {
+				if m[prov.Super()] && prov != prov.Super() {
+					delete(m, prov.Super())
 				}
 			}
 		} else if balance < 0 {

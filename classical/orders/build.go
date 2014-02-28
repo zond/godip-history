@@ -55,7 +55,7 @@ func (self *build) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *build) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
+func (self *build) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Adjustment {
 		if me, _, ok := v.SupplyCenter(src); ok {
 			nation = me
@@ -63,20 +63,47 @@ func (self *build) Options(v dip.Validator, src dip.Province) (nation dip.Nation
 				var ok bool
 				if _, _, ok = v.Unit(src); !ok {
 					if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
-						actualSrc = src
 						if v.Graph().Flags(src)[cla.Land] {
 							found = true
 							if result == nil {
 								result = dip.Options{}
 							}
-							result[cla.Army] = nil
+							if result[cla.Army] == nil {
+								result[cla.Army] = dip.Options{}
+							}
+							result[cla.Army][dip.SrcProvince(src)] = nil
 						}
 						if v.Graph().Flags(src)[cla.Sea] {
 							found = true
 							if result == nil {
 								result = dip.Options{}
 							}
-							result[cla.Fleet] = nil
+							if result[cla.Fleet] == nil {
+								result[cla.Fleet] = dip.Options{}
+							}
+							result[cla.Fleet][dip.SrcProvince(src)] = nil
+						}
+						if src != src.Super() {
+							if v.Graph().Flags(src.Super())[cla.Land] {
+								found = true
+								if result == nil {
+									result = dip.Options{}
+								}
+								if result[cla.Army] == nil {
+									result[cla.Army] = dip.Options{}
+								}
+								result[cla.Army][dip.SrcProvince(src.Super())] = nil
+							}
+							if v.Graph().Flags(src.Super())[cla.Sea] {
+								found = true
+								if result == nil {
+									result = dip.Options{}
+								}
+								if result[cla.Fleet] == nil {
+									result[cla.Fleet] = dip.Options{}
+								}
+								result[cla.Fleet][dip.SrcProvince(src.Super())] = nil
+							}
 						}
 					}
 				}

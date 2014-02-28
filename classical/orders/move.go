@@ -2,9 +2,10 @@ package orders
 
 import (
 	"fmt"
+	"time"
+
 	cla "github.com/zond/godip/classical/common"
 	dip "github.com/zond/godip/common"
-	"time"
 )
 
 func Move(source, dest dip.Province) *move {
@@ -242,13 +243,11 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 	return nil
 }
 
-func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, actualSrc dip.Province, result dip.Options, found bool) {
+func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
 	if v.Phase().Type() == cla.Retreat {
 		if !self.flags[cla.ViaConvoy] {
 			if v.Graph().Has(src) {
-				var unit dip.Unit
-				var ok bool
-				if unit, actualSrc, ok = v.Dislodged(src); ok {
+				if unit, actualSrc, ok := v.Dislodged(src); ok {
 					nation = unit.Nation
 					for _, dst := range cla.PossibleMoves(v, src, false) {
 						if _, _, found := v.Unit(dst); !found {
@@ -257,7 +256,10 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 								if result == nil {
 									result = dip.Options{}
 								}
-								result[dst] = nil
+								if result[dip.SrcProvince(actualSrc)] == nil {
+									result[dip.SrcProvince(actualSrc)] = dip.Options{}
+								}
+								result[dip.SrcProvince(actualSrc)][dst] = nil
 							}
 						}
 					}
@@ -266,9 +268,7 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 		}
 	} else if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
-			var unit dip.Unit
-			var ok bool
-			if unit, actualSrc, ok = v.Unit(src); ok {
+			if unit, actualSrc, ok := v.Unit(src); ok {
 				if !self.flags[cla.ViaConvoy] || unit.Type == cla.Army {
 					nation = unit.Nation
 					for _, dst := range cla.PossibleMoves(v, src, true) {
@@ -277,14 +277,20 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 							if result == nil {
 								result = dip.Options{}
 							}
-							result[dst] = nil
+							if result[dip.SrcProvince(actualSrc)] == nil {
+								result[dip.SrcProvince(actualSrc)] = dip.Options{}
+							}
+							result[dip.SrcProvince(actualSrc)][dst] = nil
 						} else {
 							if cp := cla.AnyConvoyPath(v, src, dst, false, nil); len(cp) > 1 {
 								found = true
 								if result == nil {
 									result = dip.Options{}
 								}
-								result[dst] = nil
+								if result[dip.SrcProvince(actualSrc)] == nil {
+									result[dip.SrcProvince(actualSrc)] = dip.Options{}
+								}
+								result[dip.SrcProvince(actualSrc)][dst] = nil
 							}
 						}
 					}
