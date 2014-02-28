@@ -323,14 +323,14 @@ func (self *State) Dump() (
 	dislodgeds map[common.Province]common.Unit,
 	dislodgers map[common.Province]common.Province,
 	bounces map[common.Province]map[common.Province]bool,
-	orders map[common.Province]common.Adjudicator) {
+	resolutions map[common.Province]error) {
 
 	return self.units,
 		self.supplyCenters,
 		self.dislodgeds,
 		self.dislodgers,
 		self.bounces,
-		self.orders
+		self.resolutions
 }
 
 // Singular getters, will search all coasts of a province
