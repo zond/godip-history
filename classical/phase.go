@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
@@ -37,13 +38,11 @@ func (self *phase) PossibleSources(s dip.Validator, nation dip.Nation) (result [
 		}
 	} else if self.typ == cla.Adjustment {
 		if _, _, balance := cla.AdjustmentStatus(s, nation); balance > 0 {
-			for prov, nat := range s.SupplyCenters() {
-				if nat == nation {
-					for _, homeSC := range s.Graph().SCs(nat) {
-						if prov == homeSC {
-							m[prov.Super()] = true
-						}
-					}
+			buildOrder := orders.Build("", "", time.Now())
+			for _, prov := range s.Graph().Provinces() {
+				nat, actualProv, _, found := buildOrder.Options(s, prov)
+				if nat == nation && found && actualProv == prov {
+					m[prov] = true
 				}
 			}
 		} else if balance < 0 {
