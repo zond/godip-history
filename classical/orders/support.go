@@ -95,7 +95,7 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 						opt, f := result[dip.SrcProvince(actualSrc)][supporteeSrc.Super()]
 						if !f {
 							opt = dip.Options{}
-							result[supporteeSrc.Super()] = opt
+							result[dip.SrcProvince(actualSrc)][supporteeSrc.Super()] = opt
 						}
 						opt[supporteeSrc.Super()] = nil
 					}
@@ -112,7 +112,7 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 								opt, f := result[dip.SrcProvince(actualSrc)][mvSrc.Super()]
 								if !f {
 									opt = dip.Options{}
-									result[mvSrc.Super()] = opt
+									result[dip.SrcProvince(actualSrc)][mvSrc.Super()] = opt
 								}
 								opt[mvDst.Super()] = nil
 							}
