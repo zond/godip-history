@@ -250,7 +250,7 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 				if unit, actualSrc, ok := v.Dislodged(src); ok {
 					nation = unit.Nation
 					for _, dst := range cla.PossibleMoves(v, src, false) {
-						if _, _, found := v.Unit(dst); !found {
+						if _, _, foundUnit := v.Unit(dst); !foundUnit {
 							if !v.Bounce(src, dst) {
 								found = true
 								if result == nil {
