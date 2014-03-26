@@ -249,7 +249,7 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 			if v.Graph().Has(src) {
 				if unit, actualSrc, ok := v.Dislodged(src); ok {
 					nation = unit.Nation
-					for _, dst := range cla.PossibleMoves(v, src, false) {
+					for _, dst := range cla.PossibleMoves(v, src, false, true) {
 						if _, _, foundUnit := v.Unit(dst); !foundUnit {
 							if !v.Bounce(src, dst) {
 								found = true
@@ -271,7 +271,7 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 			if unit, actualSrc, ok := v.Unit(src); ok {
 				if !self.flags[cla.ViaConvoy] || unit.Type == cla.Army {
 					nation = unit.Nation
-					for _, dst := range cla.PossibleMoves(v, src, true) {
+					for _, dst := range cla.PossibleMoves(v, src, true, false) {
 						if !self.flags[cla.ViaConvoy] {
 							found = true
 							if result == nil {

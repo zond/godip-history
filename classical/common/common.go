@@ -2,8 +2,8 @@ package common
 
 import (
 	"fmt"
-	. "github.com/zond/godip/common"
 	"sort"
+	. "github.com/zond/godip/common"
 )
 
 const (
@@ -218,9 +218,17 @@ func AnySupportPossible(v Validator, typ UnitType, src, dst Province) (err error
 	return
 }
 
-func PossibleMoves(v Validator, src Province, allowConvoy bool) (result []Province) {
+func PossibleMoves(v Validator, src Province, allowConvoy, dislodged bool) (result []Province) {
 	dsts := map[Province]bool{}
-	if unit, realSrc, found := v.Unit(src); found {
+	var unit Unit
+	var realSrc Province
+	var found bool
+	if dislodged {
+		unit, realSrc, found = v.Dislodged(src)
+	} else {
+		unit, realSrc, found = v.Unit(src)
+	}
+	if found {
 		for _, prov := range v.Graph().Provinces() {
 			if err := movePossible(v, unit.Type, realSrc, prov, allowConvoy, false); err == nil {
 				dsts[prov] = true

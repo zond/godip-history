@@ -83,7 +83,7 @@ func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nati
 		if v.Graph().Has(src) {
 			if supporter, actualSrc, ok := v.Unit(src); ok {
 				nation = supporter.Nation
-				for _, supportable := range cla.PossibleMoves(v, src, false) {
+				for _, supportable := range cla.PossibleMoves(v, src, false, false) {
 					if _, supporteeSrc, ok := v.Unit(supportable); ok {
 						found = true
 						if result == nil {
