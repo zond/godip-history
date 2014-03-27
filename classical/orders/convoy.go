@@ -64,21 +64,23 @@ func (self *convoy) Options(v dip.Validator, src dip.Province) (nation dip.Natio
 					if unit.Type == cla.Army {
 						for _, mvDst := range v.Graph().Provinces() {
 							if mvDst.Sub() == "" {
-								if part1 := v.Graph().Path(mvSrc, src, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, false)); part1 != nil {
-									if part2 := v.Graph().Path(src, mvDst, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, true)); part2 != nil {
-										found = true
-										if result == nil {
-											result = dip.Options{}
+								if _, err := cla.AnyMovePossible(v, cla.Army, mvSrc, mvDst, true, true, false); err == nil {
+									if part1 := v.Graph().Path(mvSrc, src, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, false)); part1 != nil {
+										if part2 := v.Graph().Path(src, mvDst, cla.PossibleConvoyPathFilter(v, mvSrc, mvDst, false, true)); part2 != nil {
+											found = true
+											if result == nil {
+												result = dip.Options{}
+											}
+											if result[dip.SrcProvince(actualSrc)] == nil {
+												result[dip.SrcProvince(actualSrc)] = dip.Options{}
+											}
+											opt, f := result[dip.SrcProvince(actualSrc)][mvSrc]
+											if !f {
+												opt = dip.Options{}
+												result[dip.SrcProvince(actualSrc)][mvSrc] = opt
+											}
+											opt[mvDst] = nil
 										}
-										if result[actualSrc] == nil {
-											result[dip.SrcProvince(actualSrc)] = dip.Options{}
-										}
-										opt, f := result[actualSrc][mvSrc]
-										if !f {
-											opt = dip.Options{}
-											result[mvSrc] = opt
-										}
-										opt[mvDst] = nil
 									}
 								}
 							}
