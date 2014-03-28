@@ -76,17 +76,19 @@ func (self *State) Graph() common.Graph {
 	return self.graph
 }
 
-func (self *State) Options(orders []common.Order, prov common.Province) (nation common.Nation, result common.Options, found bool) {
+func (self *State) Options(orders []common.Order, nation common.Nation) (result common.Options) {
 	result = common.Options{}
-	for _, order := range orders {
-		if n, o, foundHere := order.Options(self, prov); foundHere {
-			found = true
-			if nation == "" {
-				nation = n
-			} else if n != nation {
-				panic(fmt.Errorf("Both %v and %v seem able to give orders to %v?", n, nation, prov))
+	for _, prov := range self.graph.Provinces() {
+		for _, order := range orders {
+			opts := order.Options(self, nation, prov)
+			if len(opts) > 0 {
+				provOpts, found := result[prov]
+				if !found {
+					provOpts = common.Options{}
+					result[prov] = provOpts
+				}
+				provOpts[order.DisplayType()] = opts
 			}
-			result[order.DisplayType()] = o
 		}
 	}
 	return

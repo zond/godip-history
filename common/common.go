@@ -138,7 +138,7 @@ type Phase interface {
 	Prev() Phase
 	PostProcess(State)
 	DefaultOrder(Province) Adjudicator
-	PossibleSources(Validator, Nation) []Province
+	Options(Validator, Nation) Options
 }
 
 type PathFilter func(n Province, edgeFlags, provFlags map[Flag]bool, sc *Nation) bool
@@ -192,7 +192,7 @@ type Order interface {
 	DisplayType() OrderType
 	Targets() []Province
 	Validate(Validator) error
-	Options(Validator, Province) (Nation, Options, bool)
+	Options(Validator, Nation, Province) Options
 	At() time.Time
 	Flags() map[Flag]bool
 }
@@ -222,6 +222,8 @@ type Validator interface {
 	Graph() Graph
 	Phase() Phase
 	Find(StateFilter) (provinces []Province, orders []Order, units []*Unit)
+
+	Options([]Order, Nation) Options
 }
 
 type Resolver interface {

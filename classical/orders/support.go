@@ -78,43 +78,42 @@ func (self *support) Adjudicate(r dip.Resolver) error {
 	return nil
 }
 
-func (self *support) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *support) Options(v dip.Validator, nation dip.Nation, src dip.Province) (result dip.Options) {
 	if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
 			if supporter, actualSrc, ok := v.Unit(src); ok {
-				nation = supporter.Nation
-				for _, supportable := range cla.PossibleMoves(v, src, false, false) {
-					if _, supporteeSrc, ok := v.Unit(supportable); ok {
-						found = true
-						if result == nil {
-							result = dip.Options{}
+				if supporter.Nation == nation {
+					for _, supportable := range cla.PossibleMoves(v, src, false, false) {
+						if _, supporteeSrc, ok := v.Unit(supportable); ok {
+							if result == nil {
+								result = dip.Options{}
+							}
+							if result[dip.SrcProvince(actualSrc)] == nil {
+								result[dip.SrcProvince(actualSrc)] = dip.Options{}
+							}
+							opt, f := result[dip.SrcProvince(actualSrc)][supporteeSrc.Super()]
+							if !f {
+								opt = dip.Options{}
+								result[dip.SrcProvince(actualSrc)][supporteeSrc.Super()] = opt
+							}
+							opt[supporteeSrc.Super()] = nil
 						}
-						if result[dip.SrcProvince(actualSrc)] == nil {
-							result[dip.SrcProvince(actualSrc)] = dip.Options{}
-						}
-						opt, f := result[dip.SrcProvince(actualSrc)][supporteeSrc.Super()]
-						if !f {
-							opt = dip.Options{}
-							result[dip.SrcProvince(actualSrc)][supporteeSrc.Super()] = opt
-						}
-						opt[supporteeSrc.Super()] = nil
-					}
-					for mvSrc, unit := range v.Units() {
-						if mvSrc != actualSrc {
-							if mvDst, err := cla.AnyMovePossible(v, unit.Type, mvSrc, supportable, true, true, false); err == nil {
-								found = true
-								if result == nil {
-									result = dip.Options{}
+						for mvSrc, unit := range v.Units() {
+							if mvSrc != actualSrc {
+								if mvDst, err := cla.AnyMovePossible(v, unit.Type, mvSrc, supportable, true, true, false); err == nil {
+									if result == nil {
+										result = dip.Options{}
+									}
+									if result[dip.SrcProvince(actualSrc)] == nil {
+										result[dip.SrcProvince(actualSrc)] = dip.Options{}
+									}
+									opt, f := result[dip.SrcProvince(actualSrc)][mvSrc.Super()]
+									if !f {
+										opt = dip.Options{}
+										result[dip.SrcProvince(actualSrc)][mvSrc.Super()] = opt
+									}
+									opt[mvDst.Super()] = nil
 								}
-								if result[dip.SrcProvince(actualSrc)] == nil {
-									result[dip.SrcProvince(actualSrc)] = dip.Options{}
-								}
-								opt, f := result[dip.SrcProvince(actualSrc)][mvSrc.Super()]
-								if !f {
-									opt = dip.Options{}
-									result[dip.SrcProvince(actualSrc)][mvSrc.Super()] = opt
-								}
-								opt[mvDst.Super()] = nil
 							}
 						}
 					}

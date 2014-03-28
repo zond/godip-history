@@ -4,11 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/zond/godip/classical"
-	cla "github.com/zond/godip/classical/common"
-	"github.com/zond/godip/classical/orders"
-	dip "github.com/zond/godip/common"
-	"github.com/zond/godip/state"
 	"os"
 	"regexp"
 	"sort"
@@ -16,6 +11,12 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/zond/godip/classical"
+	cla "github.com/zond/godip/classical/common"
+	"github.com/zond/godip/classical/orders"
+	dip "github.com/zond/godip/common"
+	"github.com/zond/godip/state"
 )
 
 func init() {
@@ -120,7 +121,8 @@ func setPhase(s **state.State, match []string) {
 	for (s.Phase().Year() <= year && (string(s.Phase().Season()) != season || string(s.Phase().Type()) != typ)) || s.Phase().Year() != year {
 		s.Next()
 		newS := classical.Blank(s.Phase())
-		newS.Load(s.Dump())
+		a, b, c, d, e, _ := s.Dump()
+		newS.Load(a, b, c, d, e, map[dip.Province]dip.Adjudicator{})
 		*s = newS
 	}
 	if s.Phase().Year() > year {

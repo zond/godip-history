@@ -243,23 +243,23 @@ func (self *move) validateMovementPhase(v dip.Validator) error {
 	return nil
 }
 
-func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation, result dip.Options, found bool) {
+func (self *move) Options(v dip.Validator, nation dip.Nation, src dip.Province) (result dip.Options) {
 	if v.Phase().Type() == cla.Retreat {
 		if !self.flags[cla.ViaConvoy] {
 			if v.Graph().Has(src) {
 				if unit, actualSrc, ok := v.Dislodged(src); ok {
-					nation = unit.Nation
-					for _, dst := range cla.PossibleMoves(v, src, false, true) {
-						if _, _, foundUnit := v.Unit(dst); !foundUnit {
-							if !v.Bounce(src, dst) {
-								found = true
-								if result == nil {
-									result = dip.Options{}
+					if unit.Nation == nation {
+						for _, dst := range cla.PossibleMoves(v, src, false, true) {
+							if _, _, foundUnit := v.Unit(dst); !foundUnit {
+								if !v.Bounce(src, dst) {
+									if result == nil {
+										result = dip.Options{}
+									}
+									if result[dip.SrcProvince(actualSrc)] == nil {
+										result[dip.SrcProvince(actualSrc)] = dip.Options{}
+									}
+									result[dip.SrcProvince(actualSrc)][dst] = nil
 								}
-								if result[dip.SrcProvince(actualSrc)] == nil {
-									result[dip.SrcProvince(actualSrc)] = dip.Options{}
-								}
-								result[dip.SrcProvince(actualSrc)][dst] = nil
 							}
 						}
 					}
@@ -269,21 +269,10 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 	} else if v.Phase().Type() == cla.Movement {
 		if v.Graph().Has(src) {
 			if unit, actualSrc, ok := v.Unit(src); ok {
-				if !self.flags[cla.ViaConvoy] || unit.Type == cla.Army {
-					nation = unit.Nation
-					for _, dst := range cla.PossibleMoves(v, src, true, false) {
-						if !self.flags[cla.ViaConvoy] {
-							found = true
-							if result == nil {
-								result = dip.Options{}
-							}
-							if result[dip.SrcProvince(actualSrc)] == nil {
-								result[dip.SrcProvince(actualSrc)] = dip.Options{}
-							}
-							result[dip.SrcProvince(actualSrc)][dst] = nil
-						} else {
-							if cp := cla.AnyConvoyPath(v, src, dst, false, nil); len(cp) > 1 {
-								found = true
+				if unit.Nation == nation {
+					if !self.flags[cla.ViaConvoy] || unit.Type == cla.Army {
+						for _, dst := range cla.PossibleMoves(v, src, true, false) {
+							if !self.flags[cla.ViaConvoy] {
 								if result == nil {
 									result = dip.Options{}
 								}
@@ -291,6 +280,16 @@ func (self *move) Options(v dip.Validator, src dip.Province) (nation dip.Nation,
 									result[dip.SrcProvince(actualSrc)] = dip.Options{}
 								}
 								result[dip.SrcProvince(actualSrc)][dst] = nil
+							} else {
+								if cp := cla.AnyConvoyPath(v, src, dst, false, nil); len(cp) > 1 {
+									if result == nil {
+										result = dip.Options{}
+									}
+									if result[dip.SrcProvince(actualSrc)] == nil {
+										result[dip.SrcProvince(actualSrc)] = dip.Options{}
+									}
+									result[dip.SrcProvince(actualSrc)][dst] = nil
+								}
 							}
 						}
 					}

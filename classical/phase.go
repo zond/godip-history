@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	"time"
 
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
@@ -22,47 +21,8 @@ type phase struct {
 	typ    dip.PhaseType
 }
 
-func (self *phase) PossibleSources(s dip.Validator, nation dip.Nation) (result []dip.Province) {
-	m := map[dip.Province]bool{}
-	if self.typ == cla.Movement {
-		for prov, unit := range s.Units() {
-			if unit.Nation == nation {
-				m[prov.Super()] = true
-			}
-		}
-	} else if self.typ == cla.Retreat {
-		for prov, unit := range s.Dislodgeds() {
-			if unit.Nation == nation {
-				m[prov.Super()] = true
-			}
-		}
-	} else if self.typ == cla.Adjustment {
-		if _, _, balance := cla.AdjustmentStatus(s, nation); balance > 0 {
-			buildOrder := orders.Build("", "", time.Now())
-			for _, prov := range s.Graph().Provinces() {
-				nat, _, found := buildOrder.Options(s, prov)
-				if nat == nation && found {
-					m[prov] = true
-				}
-			}
-			for prov, _ := range m {
-				if m[prov.Super()] && prov != prov.Super() {
-					delete(m, prov.Super())
-				}
-			}
-		} else if balance < 0 {
-			for prov, unit := range s.Units() {
-				if unit.Nation == nation {
-					m[prov.Super()] = true
-				}
-			}
-		}
-	}
-	result = make([]dip.Province, 0, len(m))
-	for prov, _ := range m {
-		result = append(result, prov)
-	}
-	return
+func (self *phase) Options(s dip.Validator, nation dip.Nation) (result dip.Options) {
+	return s.Options(orders.Types(), nation)
 }
 
 func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int) {
