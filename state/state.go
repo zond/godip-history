@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/zond/godip/common"
 )
@@ -17,6 +18,7 @@ func New(graph common.Graph, phase common.Phase, backupRule common.BackupRule) *
 		supplyCenters: make(map[common.Province]common.Nation),
 		dislodgers:    make(map[common.Province]common.Province),
 		bounces:       make(map[common.Province]map[common.Province]bool),
+		profile:       make(map[string]time.Duration),
 	}
 }
 
@@ -62,6 +64,15 @@ type State struct {
 	dislodgers    map[common.Province]common.Province
 	movements     []*movement
 	bounces       map[common.Province]map[common.Province]bool
+	profile       map[string]time.Duration
+}
+
+func (self *State) Profile(a string, t time.Time) {
+	self.profile[a] += time.Now().Sub(t)
+}
+
+func (self *State) GetProfile() map[string]time.Duration {
+	return self.profile
 }
 
 func (self *State) resolver() *resolver {
@@ -80,7 +91,9 @@ func (self *State) Options(orders []common.Order, nation common.Nation) (result 
 	result = common.Options{}
 	for _, prov := range self.graph.Provinces() {
 		for _, order := range orders {
+			before := time.Now()
 			opts := order.Options(self, nation, prov)
+			self.Profile(string(order.DisplayType())+".Options", before)
 			if len(opts) > 0 {
 				provOpts, found := result[prov]
 				if !found {

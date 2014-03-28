@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"sort"
+	"time"
 	. "github.com/zond/godip/common"
 )
 
@@ -156,18 +157,12 @@ func convoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *
 	return nil
 }
 
-func Path(v Validator, typ UnitType, src, dst Province) []Province {
-	var filter PathFilter
+func HasEdge(v Validator, typ UnitType, src, dst Province) bool {
 	if typ == Army {
-		filter = func(p Province, ef, nf map[Flag]bool, sc *Nation) bool {
-			return ef[Land] && nf[Land]
-		}
+		return v.Graph().Flags(dst)[Land] && v.Graph().Edges(src)[dst][Land]
 	} else {
-		filter = func(p Province, ef, nf map[Flag]bool, sc *Nation) bool {
-			return ef[Sea] && nf[Sea]
-		}
+		return v.Graph().Flags(dst)[Sea] && v.Graph().Edges(src)[dst][Sea]
 	}
-	return v.Graph().Path(src, dst, filter)
 }
 
 func MustConvoy(r Resolver, src Province) bool {
@@ -185,9 +180,7 @@ func MustConvoy(r Resolver, src Province) bool {
 	if order.Type() != Move {
 		return false
 	}
-	path := Path(r, unit.Type, order.Targets()[0], order.Targets()[1])
-	return (path == nil ||
-		len(path) > 1 ||
+	return (!HasEdge(r, unit.Type, order.Targets()[0], order.Targets()[1]) ||
 		(order.Flags()[ViaConvoy] && AnyConvoyPath(r, order.Targets()[0], order.Targets()[1], true, nil) != nil) ||
 		AnyConvoyPath(r, order.Targets()[0], order.Targets()[1], false, &unit.Nation) != nil)
 }
@@ -229,9 +222,23 @@ func PossibleMoves(v Validator, src Province, allowConvoy, dislodged bool) (resu
 		unit, realSrc, found = v.Unit(src)
 	}
 	if found {
-		for _, prov := range v.Graph().Provinces() {
-			if err := movePossible(v, unit.Type, realSrc, prov, allowConvoy, false); err == nil {
-				dsts[prov] = true
+		if unit.Type == Army && !allowConvoy {
+			for dst, flags := range v.Graph().Edges(realSrc) {
+				if flags[Land] && v.Graph().Flags(dst)[Land] {
+					dsts[dst] = true
+				}
+			}
+		} else if unit.Type == Fleet {
+			for dst, flags := range v.Graph().Edges(realSrc) {
+				if flags[Sea] && v.Graph().Flags(dst)[Sea] {
+					dsts[dst] = true
+				}
+			}
+		} else {
+			for _, prov := range v.Graph().Provinces() {
+				if err := movePossible(v, unit.Type, realSrc, prov, allowConvoy, false); err == nil {
+					dsts[prov] = true
+				}
 			}
 		}
 	}
@@ -277,6 +284,7 @@ func AnyMovePossible(v Validator, typ UnitType, src, dst Province, lax, allowCon
 }
 
 func movePossible(v Validator, typ UnitType, src, dst Province, allowConvoy, resolveConvoys bool) error {
+	defer v.Profile("movePossible", time.Now())
 	if !v.Graph().Has(src) {
 		return ErrInvalidSource
 	}
@@ -284,33 +292,43 @@ func movePossible(v Validator, typ UnitType, src, dst Province, allowConvoy, res
 		return ErrInvalidDestination
 	}
 	if typ == Army {
+		defer v.Profile("movePossible (army)", time.Now())
 		if !v.Graph().Flags(dst)[Land] {
 			return ErrIllegalDestination
 		}
-		if allowConvoy && resolveConvoys {
+		if !allowConvoy {
+			flags, found := v.Graph().Edges(src)[dst]
+			if !found {
+				return ErrIllegalMove
+			}
+			if !flags[Land] {
+				return ErrIllegalDestination
+			}
+			return nil
+		}
+		if resolveConvoys {
 			if MustConvoy(v.(Resolver), src) {
 				if AnyConvoyPath(v, src, dst, true, nil) == nil {
 					return ErrMissingConvoyPath
 				}
 				return nil
 			}
-			return nil
 		}
-		if path := Path(v, typ, src, dst); path == nil || len(path) > 1 {
-			if allowConvoy {
-				if cp := AnyConvoyPath(v, src, dst, false, nil); cp == nil {
-					return ErrMissingConvoyPath
-				}
-				return nil
+		t := time.Now()
+		v.Profile("movePossible (army, path check)", t)
+		if !HasEdge(v, typ, src, dst) {
+			if cp := AnyConvoyPath(v, src, dst, false, nil); cp == nil {
+				return ErrMissingConvoyPath
 			}
-			return ErrIllegalMove
+			return nil
 		}
 		return nil
 	} else if typ == Fleet {
+		defer v.Profile("movePossible (fleet)", time.Now())
 		if !v.Graph().Flags(dst)[Sea] {
 			return ErrIllegalDestination
 		}
-		if path := Path(v, typ, src, dst); path == nil || len(path) > 1 {
+		if !HasEdge(v, typ, src, dst) {
 			return ErrIllegalMove
 		}
 	}

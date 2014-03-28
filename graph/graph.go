@@ -3,6 +3,7 @@ package graph
 import (
 	"bytes"
 	"fmt"
+
 	"github.com/zond/godip/common"
 )
 
@@ -60,9 +61,10 @@ func (self *Graph) SCs(n common.Nation) (result []common.Province) {
 	return
 }
 
-func (self *Graph) Edges(n common.Province) (result []common.Province) {
-	for p, _ := range self.edges(n) {
-		result = append(result, p)
+func (self *Graph) Edges(n common.Province) (result map[common.Province]map[common.Flag]bool) {
+	result = map[common.Province]map[common.Flag]bool{}
+	for p, edge := range self.edges(n) {
+		result[p] = edge.flags
 	}
 	return
 }
