@@ -186,6 +186,9 @@ func MustConvoy(r Resolver, src Province) bool {
 }
 
 func AnyConvoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *Nation) (result []Province) {
+	if !v.Graph().Flags(src)[Sea] || !v.Graph().Flags(dst)[Sea] {
+		return
+	}
 	if result = convoyPath(v, src, dst, resolveConvoys, viaNation); result != nil {
 		return
 	}
@@ -314,8 +317,6 @@ func movePossible(v Validator, typ UnitType, src, dst Province, allowConvoy, res
 				return nil
 			}
 		}
-		t := time.Now()
-		v.Profile("movePossible (army, path check)", t)
 		if !HasEdge(v, typ, src, dst) {
 			if cp := AnyConvoyPath(v, src, dst, false, nil); cp == nil {
 				return ErrMissingConvoyPath
