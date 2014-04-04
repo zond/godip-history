@@ -186,7 +186,7 @@ func MustConvoy(r Resolver, src Province) bool {
 }
 
 func AnyConvoyPath(v Validator, src, dst Province, resolveConvoys bool, viaNation *Nation) (result []Province) {
-	if !v.Graph().Flags(src)[Sea] || !v.Graph().Flags(dst)[Sea] {
+	if !v.Graph().AllFlags(src)[Sea] || !v.Graph().AllFlags(dst)[Sea] {
 		return
 	}
 	if result = convoyPath(v, src, dst, resolveConvoys, viaNation); result != nil {

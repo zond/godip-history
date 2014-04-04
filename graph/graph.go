@@ -35,6 +35,19 @@ func (self *Graph) Has(n common.Province) (result bool) {
 	return
 }
 
+func (self *Graph) AllFlags(n common.Province) (result map[common.Flag]bool) {
+	result = map[common.Flag]bool{}
+	p, _ := n.Split()
+	if node, ok := self.nodes[p]; ok {
+		for _, sub := range node.subs {
+			for flag, _ := range sub.flags {
+				result[flag] = true
+			}
+		}
+	}
+	return
+}
+
 func (self *Graph) Flags(n common.Province) (result map[common.Flag]bool) {
 	p, c := n.Split()
 	if node, ok := self.nodes[p]; ok {

@@ -148,6 +148,7 @@ type Flag string
 type Graph interface {
 	Has(Province) bool
 	Flags(Province) map[Flag]bool
+	AllFlags(Province) map[Flag]bool
 	SC(Province) *Nation
 	Path(src, dst Province, filter PathFilter) []Province
 	Coasts(Province) []Province
