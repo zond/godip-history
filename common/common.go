@@ -139,6 +139,7 @@ type Phase interface {
 	PostProcess(State)
 	DefaultOrder(Province) Adjudicator
 	Options(Validator, Nation) (result Options)
+	Winner(Validator) *Nation
 }
 
 type PathFilter func(n Province, edgeFlags, provFlags map[Flag]bool, sc *Nation) bool

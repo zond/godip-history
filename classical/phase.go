@@ -25,6 +25,26 @@ func (self *phase) Options(s dip.Validator, nation dip.Nation) (result dip.Optio
 	return s.Options(orders.Types(), nation)
 }
 
+func (self *phase) Winner(s dip.Validator) *dip.Nation {
+	sizes := map[dip.Nation]int{}
+	for _, nat := range s.SupplyCenters() {
+		sizes[nat]++
+	}
+	var biggest *dip.Nation
+	var bigSize int
+	for nat, size := range sizes {
+		if biggest == nil || size > bigSize {
+			natCpy := nat
+			biggest = &natCpy
+			bigSize = size
+		}
+	}
+	if bigSize > 17 {
+		return biggest
+	}
+	return nil
+}
+
 func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int) {
 	var unit dip.Unit
 	var ok bool
