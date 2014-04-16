@@ -63,7 +63,7 @@ func (self *convoy) Options(v dip.Validator, nation dip.Nation, src dip.Province
 					for origMvSrc, unit := range v.Units() {
 						mvSrcSup := origMvSrc.Super()
 						for _, mvSrc := range append([]dip.Province{mvSrcSup}, v.Graph().Coasts(mvSrcSup)...) {
-							if v.Graph().Flags(mvSrc)[cla.Sea] {
+							if v.Graph().Flags(mvSrc)[cla.Sea] && !v.Graph().Flags(mvSrc)[cla.Land] {
 								if unit.Type == cla.Army {
 									for _, mvDst := range v.Graph().Provinces() {
 										flags := v.Graph().Flags(mvDst)
