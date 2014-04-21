@@ -114,6 +114,14 @@ func (self *convoy) Validate(v dip.Validator) error {
 	if !v.Graph().Has(self.targets[2]) {
 		return cla.ErrInvalidTarget
 	}
+	for _, src := range v.Graph().Coasts(self.targets[0]) {
+		if !v.Graph().Flags(src)[cla.Sea] {
+			return cla.ErrIllegalConvoyPath
+		}
+		if v.Graph().Flags(src)[cla.Land] {
+			return cla.ErrIllegalConvoyPath
+		}
+	}
 	var convoyer dip.Unit
 	var ok bool
 	if convoyer, self.targets[0], ok = v.Unit(self.targets[0]); !ok {

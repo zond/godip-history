@@ -2,14 +2,15 @@ package classical
 
 import (
 	"fmt"
+	"os"
+	"reflect"
+	"testing"
+
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
 	dip "github.com/zond/godip/common"
 	"github.com/zond/godip/datc"
 	"github.com/zond/godip/state"
-	"os"
-	"reflect"
-	"testing"
 )
 
 func init() {
@@ -247,6 +248,7 @@ func assertDATC(t *testing.T, file string) {
 
 func TestDATC(t *testing.T) {
 	assertDATC(t, "datc/datc_v2.4_06.txt")
+	assertDATC(t, "datc/diplicity_errors.txt")
 	assertDATC(t, "datc/droidippy_errors.txt")
 	assertDATC(t, "datc/dipai.txt")
 	assertDATC(t, "datc/real.txt")

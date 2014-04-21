@@ -63,6 +63,7 @@ var ErrIllegalSupportDestinationNation = fmt.Errorf("ErrIllegalSupportDestinatio
 var ErrMissingSupportUnit = fmt.Errorf("ErrMissingSupportUnit")
 var ErrIllegalSupportMove = fmt.Errorf("ErrIllegalSupportMove")
 var ErrIllegalConvoyUnit = fmt.Errorf("ErrIllegalConvoyUnit")
+var ErrIllegalConvoyPath = fmt.Errorf("ErrIllegalConvoyPath")
 var ErrIllegalConvoyMove = fmt.Errorf("ErrIllegalConvoyMove")
 var ErrMissingConvoyee = fmt.Errorf("ErrMissingConvoyee")
 var ErrIllegalConvoyer = fmt.Errorf("ErrIllegalConvoyer")
