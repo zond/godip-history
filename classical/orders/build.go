@@ -8,6 +8,11 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
+func init() {
+	OrderTypes = append(OrderTypes, cla.Build)
+	generators = append(generators, func() dip.Order { return &build{} })
+}
+
 func Build(source dip.Province, typ dip.UnitType, at time.Time) *build {
 	return &build{
 		targets: []dip.Province{source},

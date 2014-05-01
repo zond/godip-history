@@ -2,8 +2,20 @@ package start
 
 import (
 	c "github.com/zond/godip/classical/common"
+	dip "github.com/zond/godip/common"
 	"github.com/zond/godip/graph"
 )
+
+func SCs() (result map[dip.Province]dip.Nation) {
+	result = map[dip.Province]dip.Nation{}
+	g := Graph()
+	for _, prov := range g.Provinces() {
+		if nat := g.SC(prov); nat != nil {
+			result[prov] = *nat
+		}
+	}
+	return
+}
 
 func Graph() *graph.Graph {
 	return graph.New().

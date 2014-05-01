@@ -8,6 +8,11 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
+func init() {
+	OrderTypes = append(OrderTypes, cla.Convoy)
+	generators = append(generators, func() dip.Order { return &convoy{} })
+}
+
 func Convoy(source, from, to dip.Province) *convoy {
 	return &convoy{
 		targets: []dip.Province{source, from, to},

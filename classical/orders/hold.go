@@ -8,6 +8,10 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
+func init() {
+	OrderTypes = append(OrderTypes, cla.Hold)
+	generators = append(generators, func() dip.Order { return &hold{} })
+}
 func Hold(source dip.Province) *hold {
 	return &hold{
 		targets: []dip.Province{source},

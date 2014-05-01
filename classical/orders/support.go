@@ -8,6 +8,11 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
+func init() {
+	OrderTypes = append(OrderTypes, cla.Support)
+	generators = append(generators, func() dip.Order { return &support{} })
+}
+
 func Support(targets ...dip.Province) *support {
 	if len(targets) < 2 || len(targets) > 3 {
 		panic(fmt.Errorf("Support orders must either be support Hold with two targets, or support Move with three targets."))

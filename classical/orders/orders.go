@@ -8,20 +8,16 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
-func Types() []dip.Order {
-	return []dip.Order{
-		&build{},
-		&convoy{},
-		&disband{},
-		&hold{},
-		&move{},
-		&move{
-			flags: map[dip.Flag]bool{
-				cla.ViaConvoy: true,
-			},
-		},
-		&support{},
+var OrderTypes []dip.OrderType
+
+var generators []func() dip.Order
+
+func Orders() (result []dip.Order) {
+	result = make([]dip.Order, len(generators))
+	for index, gen := range generators {
+		result[index] = gen()
 	}
+	return
 }
 
 type MultiError []error
