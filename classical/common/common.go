@@ -2,9 +2,9 @@ package common
 
 import (
 	"fmt"
+	. "github.com/zond/godip/common"
 	"sort"
 	"time"
-	. "github.com/zond/godip/common"
 )
 
 const (
@@ -81,6 +81,14 @@ var ErrOccupiedDestination = fmt.Errorf("ErrOccupiedDestination")
 var ErrIllegalRetreat = fmt.Errorf("ErrIllegalRetreat")
 var ErrForcedDisband = fmt.Errorf("ErrForcedDisband")
 var ErrHostileSupplyCenter = fmt.Errorf("ErrHostileSupplyCenter")
+
+type ErrDoubleBuild struct {
+	Provinces []Province
+}
+
+func (self ErrDoubleBuild) Error() string {
+	return fmt.Sprintf("ErrDoubleBuild:%v", self.Provinces)
+}
 
 type ErrConvoyDislodged struct {
 	Province Province

@@ -136,6 +136,14 @@ func (self *build) Validate(v dip.Validator) error {
 	if _, _, ok := v.Unit(self.targets[0]); ok {
 		return cla.ErrOccupiedSupplyCenter
 	}
+	// is there another build order here
+	for _, prov := range v.Graph().Coasts(self.targets[0]) {
+		if other, foundProv, ok := v.Order(prov); ok && foundProv == prov && other != self {
+			return cla.ErrDoubleBuild{
+				Provinces: []dip.Province{prov, foundProv},
+			}
+		}
+	}
 	// can i build
 	if _, _, balance := cla.AdjustmentStatus(v, me); balance < 1 {
 		return cla.ErrMissingSurplus
