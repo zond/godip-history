@@ -62,48 +62,56 @@ func (self *build) Adjudicate(r dip.Resolver) error {
 
 func (self *build) Options(v dip.Validator, nation dip.Nation, src dip.Province) (result dip.Options) {
 	if v.Phase().Type() == cla.Adjustment {
-		if me, _, ok := v.SupplyCenter(src); ok {
-			if nation == me {
-				if owner := v.Graph().SC(src.Super()); owner != nil && *owner == me {
-					var ok bool
-					if _, _, ok = v.Unit(src); !ok {
-						if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
-							if v.Graph().Flags(src)[cla.Land] {
-								if result == nil {
-									result = dip.Options{}
-								}
-								if result[cla.Army] == nil {
-									result[cla.Army] = dip.Options{}
-								}
-								result[cla.Army][dip.SrcProvince(src)] = nil
-							}
-							if v.Graph().Flags(src)[cla.Sea] {
-								if result == nil {
-									result = dip.Options{}
-								}
-								if result[cla.Fleet] == nil {
-									result[cla.Fleet] = dip.Options{}
-								}
-								result[cla.Fleet][dip.SrcProvince(src)] = nil
-							}
-							if src != src.Super() {
-								if v.Graph().Flags(src.Super())[cla.Land] {
+		otherOrders := 0
+		for _, prov := range v.Graph().Coasts(src) {
+			if _, foundProv, ok := v.Order(prov); ok && foundProv == src {
+				otherOrders += 1
+			}
+		}
+		if otherOrders == 0 {
+			if me, _, ok := v.SupplyCenter(src); ok {
+				if nation == me {
+					if owner := v.Graph().SC(src.Super()); owner != nil && *owner == me {
+						var ok bool
+						if _, _, ok = v.Unit(src); !ok {
+							if _, _, balance := cla.AdjustmentStatus(v, me); balance > 0 {
+								if v.Graph().Flags(src)[cla.Land] {
 									if result == nil {
 										result = dip.Options{}
 									}
 									if result[cla.Army] == nil {
 										result[cla.Army] = dip.Options{}
 									}
-									result[cla.Army][dip.SrcProvince(src.Super())] = nil
+									result[cla.Army][dip.SrcProvince(src)] = nil
 								}
-								if v.Graph().Flags(src.Super())[cla.Sea] {
+								if v.Graph().Flags(src)[cla.Sea] {
 									if result == nil {
 										result = dip.Options{}
 									}
 									if result[cla.Fleet] == nil {
 										result[cla.Fleet] = dip.Options{}
 									}
-									result[cla.Fleet][dip.SrcProvince(src.Super())] = nil
+									result[cla.Fleet][dip.SrcProvince(src)] = nil
+								}
+								if src != src.Super() {
+									if v.Graph().Flags(src.Super())[cla.Land] {
+										if result == nil {
+											result = dip.Options{}
+										}
+										if result[cla.Army] == nil {
+											result[cla.Army] = dip.Options{}
+										}
+										result[cla.Army][dip.SrcProvince(src.Super())] = nil
+									}
+									if v.Graph().Flags(src.Super())[cla.Sea] {
+										if result == nil {
+											result = dip.Options{}
+										}
+										if result[cla.Fleet] == nil {
+											result[cla.Fleet] = dip.Options{}
+										}
+										result[cla.Fleet][dip.SrcProvince(src.Super())] = nil
+									}
 								}
 							}
 						}
