@@ -14,6 +14,30 @@
 # set variant for all cases
 VARIANT_ALL Standard
 
+CASE Describe Spring 1903 [Movement]
+PRESTATE_SETPHASE Spring 1903, Movement
+PRESTATE
+  England: A nwy
+	England: F nrg
+	
+	Germany: F den
+	
+	Russia: F swe
+	Russia: A stp
+ORDERS
+  England: A nwy S den - swe
+	England: F nrg - bar
+	Germany: F den - swe
+POSTSTATE
+  England: A nwy
+	England: F bar
+	Germany: F swe
+	Russia: A stp
+POSTSTATE_DISLODGED
+	Russia: F swe
+END
+
+
 # Spring 1910, movement
 # This consists of 34 orders
 #
