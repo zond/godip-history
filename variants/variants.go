@@ -15,6 +15,7 @@ const (
 
 type Variant struct {
 	Start       func() (*state.State, error)
+	BlankStart  func() (*state.State, error)
 	Blank       func(dip.Phase) *state.State
 	Phase       func(int, dip.Season, dip.PhaseType) dip.Phase
 	Nations     func() []dip.Nation
@@ -29,9 +30,13 @@ type Variant struct {
 
 var Variants = map[string]Variant{
 	Classical: Variant{
-		Name:        Classical,
-		Start:       classical.Start,
-		Blank:       classical.Blank,
+		Name:  Classical,
+		Start: classical.Start,
+		Blank: classical.Blank,
+		BlankStart: func() (result *state.State, err error) {
+			result = classical.Blank(classical.Phase(1900, cla.Fall, cla.Adjustment))
+			return
+		},
 		Phase:       classical.Phase,
 		Orders:      orders.Orders,
 		ParseOrders: orders.ParseAll,
