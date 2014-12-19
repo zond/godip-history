@@ -107,14 +107,14 @@ func verifyPosition(t *testing.T, s *state.State, match []string, scCollector ma
 			*fails += 1
 		}
 	} else {
-		panic(fmt.Errorf("Unknown position description %v", match))
+		t.Fatalf("Unknown position description %v", match)
 	}
 }
 
-func setPhase(s **state.State, match []string) {
+func setPhase(t *testing.T, s **state.State, match []string) {
 	year, err := strconv.Atoi(match[1])
 	if err != nil {
-		panic(err)
+		t.Fatalf("%v", err)
 	}
 	season := match[2]
 	typ := match[3]
@@ -126,16 +126,18 @@ func setPhase(s **state.State, match []string) {
 		*s = newS
 	}
 	if s.Phase().Year() > year {
-		panic(fmt.Errorf("What the, we wanted %v but ended up with %v", match, s.Phase()))
+		t.Fatalf("What the, we wanted %v but ended up with %v", match, s.Phase())
 	}
 }
 
 func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, s *state.State) {
 	file, err := os.Open(fmt.Sprintf("games/%v", name))
 	if err != nil {
-		panic(err)
+		t.Fatalf("%v", err)
 	}
-	s = classical.Start()
+	if s, err = classical.Start(); err != nil {
+		t.Fatalf("%v", err)
+	}
 	lines := bufio.NewReader(file)
 	var match []string
 	state := inNothing
@@ -146,11 +148,11 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 		case inNothing:
 			if match = phaseReg.FindStringSubmatch(line); match != nil {
 				phases += 1
-				setPhase(&s, match)
+				setPhase(t, &s, match)
 			} else if line == positionsTag {
 				state = inPositions
 			} else {
-				panic(fmt.Errorf("Unknown line for state inNothing: %v", line))
+				t.Fatalf("Unknown line for state inNothing: %v", line)
 			}
 		case inPositions:
 			if match = posReg.FindStringSubmatch(line); match != nil {
@@ -165,7 +167,7 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 				scCollector, unitCollector, dislodgedCollector = make(map[dip.Province]dip.Nation), make(map[dip.Province]dip.Unit), make(map[dip.Province]dip.Unit)
 				state = inOrders
 			} else {
-				panic(fmt.Errorf("Unknown line for state inPositions: %v", line))
+				t.Fatalf("Unknown line for state inPositions: %v", line)
 			}
 		case inOrders:
 			ords += 1
@@ -174,9 +176,9 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 			} else if match = moveViaConvoyReg.FindStringSubmatch(line); match != nil {
 				s.SetOrder(dip.Province(match[1]), orders.Move(dip.Province(match[1]), dip.Province(match[2])).ViaConvoy())
 			} else if match = supportMoveReg.FindStringSubmatch(line); match != nil {
-				s.SetOrder(dip.Province(match[1]), orders.Support(dip.Province(match[1]), dip.Province(match[2]), dip.Province(match[3])))
+				s.SetOrder(dip.Province(match[1]), orders.SupportMove(dip.Province(match[1]), dip.Province(match[2]), dip.Province(match[3])))
 			} else if match = supportHoldReg.FindStringSubmatch(line); match != nil {
-				s.SetOrder(dip.Province(match[1]), orders.Support(dip.Province(match[1]), dip.Province(match[2])))
+				s.SetOrder(dip.Province(match[1]), orders.SupportHold(dip.Province(match[1]), dip.Province(match[2])))
 			} else if match = holdReg.FindStringSubmatch(line); match != nil {
 				s.SetOrder(dip.Province(match[1]), orders.Hold(dip.Province(match[1])))
 			} else if match = convoyReg.FindStringSubmatch(line); match != nil {
@@ -190,13 +192,13 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 			} else if match = phaseReg.FindStringSubmatch(line); match != nil {
 				ords -= 1
 				phases += 1
-				setPhase(&s, match)
+				setPhase(t, &s, match)
 				state = inNothing
 			} else {
-				panic(fmt.Errorf("Unknown line for state inOrders: %v", line))
+				t.Fatalf("Unknown line for state inOrders: %v", line)
 			}
 		default:
-			panic(fmt.Errorf("Unknown state %v", state))
+			t.Fatalf("Unknown state %v", state)
 		}
 	}
 	return
@@ -205,12 +207,12 @@ func assertGame(t *testing.T, name string) (phases, ords, positions, fails int, 
 func TestDroidippyGames(t *testing.T) {
 	gamedir, err := os.Open("games")
 	if err != nil {
-		panic(err)
+		t.Fatalf("%v", err)
 	}
 	defer gamedir.Close()
 	gamefiles, err := gamedir.Readdirnames(0)
 	if err != nil {
-		panic(err)
+		t.Fatalf("%v", err)
 	}
 	sort.Sort(sort.StringSlice(gamefiles))
 	for _, name := range gamefiles {

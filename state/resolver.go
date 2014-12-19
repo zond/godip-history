@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+
 	"github.com/zond/godip/common"
 )
 
@@ -48,7 +49,9 @@ func (self *resolver) Resolve(prov common.Province) (err error) {
 					delete(self.guesses, prov)
 					if (err == nil) != (secondErr == nil) {
 						common.Logf("Calling backup rule with %v", self.deps)
-						self.State.backupRule(self, self.deps)
+						if err = self.State.backupRule(self, self.deps); err != nil {
+							return
+						}
 						self.deps = nil
 						err = self.Resolve(prov)
 					} else {

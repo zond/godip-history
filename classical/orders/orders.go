@@ -74,9 +74,9 @@ func Parse(bits []string) (result dip.Adjudicator, err error) {
 		case (&support{}).DisplayType():
 			if len(bits) == 4 {
 				if bits[2] == bits[3] {
-					result = Support(dip.Province(bits[0]), dip.Province(bits[2]))
+					result = SupportHold(dip.Province(bits[0]), dip.Province(bits[2]))
 				} else {
-					result = Support(dip.Province(bits[0]), dip.Province(bits[2]), dip.Province(bits[3]))
+					result = SupportMove(dip.Province(bits[0]), dip.Province(bits[2]), dip.Province(bits[3]))
 				}
 			}
 		}

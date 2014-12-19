@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -43,14 +42,6 @@ func DumpLog() {
 		fmt.Print(string(logBuffer.Bytes()))
 		ClearLog()
 	}
-}
-
-func MustParseInt(s string) (result int) {
-	var err error
-	if result, err = strconv.Atoi(s); err != nil {
-		panic(err)
-	}
-	return
 }
 
 func Max(is ...int) (result int) {
@@ -136,7 +127,7 @@ type Phase interface {
 	Type() PhaseType
 	Next() Phase
 	Prev() Phase
-	PostProcess(State)
+	PostProcess(State) error
 	DefaultOrder(Province) Adjudicator
 	Options(Validator, Nation) (result Options)
 	Winner(Validator) *Nation
@@ -176,6 +167,9 @@ type SrcProvince Province
 
 type OptionValue interface{}
 
+/*
+Options defines a tree of valid orders for a given situation
+*/
 type Options map[OptionValue]Options
 
 func (self Options) MarshalJSON() ([]byte, error) {
@@ -205,7 +199,7 @@ type Adjudicator interface {
 	Execute(State)
 }
 
-type BackupRule func(State, []Province)
+type BackupRule func(State, []Province) error
 
 type StateFilter func(n Province, o Order, u *Unit) bool
 
@@ -242,14 +236,14 @@ type State interface {
 	Resolver
 
 	Move(src, dst Province, preventRetreat bool)
-	Retreat(src, dst Province)
+	Retreat(src, dst Province) error
 
 	RemoveDislodged(Province)
 	RemoveUnit(Province)
 
 	SetResolution(Province, error)
 	SetSC(Province, Nation)
-	SetUnit(Province, Unit)
+	SetUnit(Province, Unit) error
 
 	ClearDislodgers()
 	ClearBounces()

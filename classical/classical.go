@@ -2,6 +2,7 @@ package classical
 
 import (
 	"fmt"
+
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/start"
 	dip "github.com/zond/godip/common"
@@ -12,13 +13,16 @@ func Blank(phase dip.Phase) *state.State {
 	return state.New(start.Graph(), phase, BackupRule)
 }
 
-func Start() *state.State {
-	return state.New(start.Graph(), &phase{1901, cla.Spring, cla.Movement}, BackupRule).
-		SetUnits(start.Units()).
-		SetSupplyCenters(start.SupplyCenters())
+func Start() (result *state.State, err error) {
+	result = state.New(start.Graph(), &phase{1901, cla.Spring, cla.Movement}, BackupRule)
+	if err = result.SetUnits(start.Units()); err != nil {
+		return
+	}
+	result.SetSupplyCenters(start.SupplyCenters())
+	return
 }
 
-func BackupRule(state dip.State, deps []dip.Province) {
+func BackupRule(state dip.State, deps []dip.Province) (err error) {
 	only_moves := true
 	convoys := false
 	for _, prov := range deps {
@@ -47,5 +51,6 @@ func BackupRule(state dip.State, deps []dip.Province) {
 		return
 	}
 
-	panic(fmt.Errorf("Unknown circular dependency between %v", deps))
+	err = fmt.Errorf("Unknown circular dependency between %v", deps)
+	return
 }

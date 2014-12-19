@@ -136,7 +136,7 @@ func (self *build) Validate(v dip.Validator) error {
 	}
 	// is there a home sc here
 	if owner := v.Graph().SC(self.targets[0].Super()); owner == nil {
-		panic(fmt.Errorf("Should be SOME owner of %v", self.targets[0]))
+		return fmt.Errorf("Should be SOME owner of %v", self.targets[0])
 	} else if *owner != me {
 		return cla.ErrHostileSupplyCenter
 	}

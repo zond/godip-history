@@ -13,12 +13,15 @@ func init() {
 	generators = append(generators, func() dip.Order { return &support{} })
 }
 
-func Support(targets ...dip.Province) *support {
-	if len(targets) < 2 || len(targets) > 3 {
-		panic(fmt.Errorf("Support orders must either be support Hold with two targets, or support Move with three targets."))
-	}
+func SupportHold(prov, target dip.Province) *support {
 	return &support{
-		targets: targets,
+		targets: []dip.Province{prov, target},
+	}
+}
+
+func SupportMove(prov, from, to dip.Province) *support {
+	return &support{
+		targets: []dip.Province{prov, from, to},
 	}
 }
 

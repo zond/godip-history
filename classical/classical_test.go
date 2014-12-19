@@ -1,7 +1,6 @@
 package classical
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -53,33 +52,41 @@ func assertMove(t *testing.T, j *state.State, src, dst dip.Province, success boo
 	}
 }
 
+func startState(t *testing.T) *state.State {
+	judge, err := Start()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	return judge
+}
+
 func TestSupportValidation(t *testing.T) {
-	judge := Start()
+	judge := startState(t)
 	// Happy paths
-	assertOrderValidity(t, judge, orders.Support("bre", "par", "gas"), nil)
-	assertOrderValidity(t, judge, orders.Support("par", "bre"), nil)
-	assertOrderValidity(t, judge, orders.Support("par", "bre", "gas"), nil)
+	assertOrderValidity(t, judge, orders.SupportMove("bre", "par", "gas"), nil)
+	assertOrderValidity(t, judge, orders.SupportHold("par", "bre"), nil)
+	assertOrderValidity(t, judge, orders.SupportMove("par", "bre", "gas"), nil)
 	judge.SetUnit("spa/sc", dip.Unit{cla.Fleet, cla.France})
 	judge.SetUnit("por", dip.Unit{cla.Fleet, cla.France})
 	judge.SetUnit("gol", dip.Unit{cla.Fleet, cla.France})
-	assertOrderValidity(t, judge, orders.Support("spa/sc", "por", "mid"), nil)
-	assertOrderValidity(t, judge, orders.Support("gol", "mar", "spa"), nil)
+	assertOrderValidity(t, judge, orders.SupportMove("spa/sc", "por", "mid"), nil)
+	assertOrderValidity(t, judge, orders.SupportMove("gol", "mar", "spa"), nil)
 	// Missing unit
-	assertOrderValidity(t, judge, orders.Support("ruh", "kie", "hol"), cla.ErrMissingUnit)
+	assertOrderValidity(t, judge, orders.SupportMove("ruh", "kie", "hol"), cla.ErrMissingUnit)
 	// Missing supportee
-	assertOrderValidity(t, judge, orders.Support("ber", "sil"), cla.ErrMissingSupportUnit)
+	assertOrderValidity(t, judge, orders.SupportHold("ber", "sil"), cla.ErrMissingSupportUnit)
 	// Illegal support
-	assertOrderValidity(t, judge, orders.Support("bre", "par"), cla.ErrIllegalSupportPosition)
-	assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "por"), cla.ErrIllegalSupportDestination)
+	assertOrderValidity(t, judge, orders.SupportHold("bre", "par"), cla.ErrIllegalSupportPosition)
+	assertOrderValidity(t, judge, orders.SupportMove("mar", "spa/nc", "por"), cla.ErrIllegalSupportDestination)
 	judge.RemoveUnit("spa/sc")
 	judge.SetUnit("spa/nc", dip.Unit{cla.Fleet, cla.France})
-	assertOrderValidity(t, judge, orders.Support("spa/nc", "mar", "gol"), cla.ErrIllegalSupportDestination)
+	assertOrderValidity(t, judge, orders.SupportMove("spa/nc", "mar", "gol"), cla.ErrIllegalSupportDestination)
 	// Illegal moves
-	assertOrderValidity(t, judge, orders.Support("mar", "spa/nc", "bur"), cla.ErrIllegalSupportMove)
+	assertOrderValidity(t, judge, orders.SupportMove("mar", "spa/nc", "bur"), cla.ErrIllegalSupportMove)
 }
 
 func TestMoveValidation(t *testing.T) {
-	judge := Start()
+	judge := startState(t)
 	// Happy path fleet
 	assertOrderValidity(t, judge, orders.Move("bre", "mid"), nil)
 	// Happy path army
@@ -107,10 +114,10 @@ func TestMoveValidation(t *testing.T) {
 }
 
 func TestMoveAdjudication(t *testing.T) {
-	assertMove(t, Start(), "bre", "mid", true)
-	assertMove(t, Start(), "stp/sc", "bot", true)
-	assertMove(t, Start(), "vie", "bud", false)
-	assertMove(t, Start(), "mid", "nat", false)
+	assertMove(t, startState(t), "bre", "mid", true)
+	assertMove(t, startState(t), "stp/sc", "bot", true)
+	assertMove(t, startState(t), "vie", "bud", false)
+	assertMove(t, startState(t), "mid", "nat", false)
 }
 
 func testDATC(t *testing.T, statePair *datc.StatePair) {
@@ -147,7 +154,7 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 				}
 			}
 		} else {
-			panic(fmt.Errorf("Unsupported phase type %v", s.Phase().Type()))
+			t.Fatalf("Unsupported phase type %v", s.Phase().Type())
 		}
 	}
 	for _, order := range statePair.Before.FailedOrders {
@@ -229,7 +236,7 @@ func testDATC(t *testing.T, statePair *datc.StatePair) {
 func assertDATC(t *testing.T, file string) {
 	in, err := os.Open(file)
 	if err != nil {
-		panic(err)
+		t.Fatalf("%v", err)
 	}
 	parser := datc.Parser{
 		Variant:        "Standard",
@@ -239,11 +246,13 @@ func assertDATC(t *testing.T, file string) {
 		UnitTypeParser: DATCUnitType,
 		ProvinceParser: DATCProvince,
 	}
-	parser.Parse(in, func(statePair *datc.StatePair) {
+	if err := parser.Parse(in, func(statePair *datc.StatePair) {
 		dip.ClearLog()
 		dip.Logf("Running %v", statePair.Case)
 		testDATC(t, statePair)
-	})
+	}); err != nil {
+		t.Fatalf("%v", err)
+	}
 }
 
 func TestDATC(t *testing.T) {

@@ -29,27 +29,34 @@ type movement struct {
 	preventRetreat bool
 }
 
-func (self *movement) prepare(s *State) {
+func (self *movement) prepare(s *State) (err error) {
 	var ok bool
 	if self.unit, self.src, ok = s.Unit(self.src); !ok {
-		panic(fmt.Errorf("No unit at %v?", self.src))
+		err = fmt.Errorf("No unit at %v?", self.src)
+		return
 	} else {
 		s.RemoveUnit(self.src)
 	}
 	common.Logf("Lifted %v from %v", self.unit, self.src)
+	return
 }
 
-func (self *movement) execute(s *State) {
+func (self *movement) execute(s *State) (err error) {
 	if dislodged, prov, ok := s.Unit(self.dst); ok {
 		s.RemoveUnit(prov)
-		s.SetDislodged(prov, dislodged)
+		if err = s.SetDislodged(prov, dislodged); err != nil {
+			return
+		}
 		if self.preventRetreat {
 			s.SetDislodger(self.src, prov)
 		}
 		common.Logf("Dislodged %v from %v", dislodged, self.dst)
 	}
-	s.SetUnit(self.dst, self.unit)
+	if err = s.SetUnit(self.dst, self.unit); err != nil {
+		return
+	}
 	common.Logf("Dropped %v in %v", self.unit, self.dst)
+	return
 }
 
 type State struct {
@@ -182,7 +189,9 @@ func (self *State) Next() (err error) {
 	   Execute movements.
 	*/
 	for _, movement := range self.movements {
-		movement.prepare(self)
+		if err = movement.prepare(self); err != nil {
+			return
+		}
 	}
 	for _, movement := range self.movements {
 		movement.execute(self)
@@ -191,7 +200,9 @@ func (self *State) Next() (err error) {
 	/*
 	   Change phase.
 	*/
-	self.phase.PostProcess(self.resolver())
+	if err = self.phase.PostProcess(self.resolver()); err != nil {
+		return
+	}
 	self.phase = self.phase.Next()
 	return
 }
@@ -210,20 +221,24 @@ func (self *State) SetOrders(orders map[common.Province]common.Adjudicator) *Sta
 	return self
 }
 
-func (self *State) SetUnits(units map[common.Province]common.Unit) *State {
+func (self *State) SetUnits(units map[common.Province]common.Unit) (err error) {
 	self.units = make(map[common.Province]common.Unit)
 	for prov, unit := range units {
-		self.SetUnit(prov, unit)
+		if err = self.SetUnit(prov, unit); err != nil {
+			return
+		}
 	}
-	return self
+	return
 }
 
-func (self *State) SetDislodgeds(dislodgeds map[common.Province]common.Unit) *State {
+func (self *State) SetDislodgeds(dislodgeds map[common.Province]common.Unit) (err error) {
 	self.dislodgeds = make(map[common.Province]common.Unit)
 	for prov, unit := range dislodgeds {
-		self.SetDislodged(prov, unit)
+		if err = self.SetDislodged(prov, unit); err != nil {
+			return
+		}
 	}
-	return self
+	return
 }
 
 func (self *State) SetSupplyCenters(supplyCenters map[common.Province]common.Nation) *State {
@@ -277,25 +292,31 @@ func (self *State) SetSC(p common.Province, n common.Nation) {
 	self.supplyCenters[p] = n
 }
 
-func (self *State) SetDislodged(prov common.Province, unit common.Unit) {
+func (self *State) SetDislodged(prov common.Province, unit common.Unit) (err error) {
 	if found, _, ok := self.Dislodged(prov); ok {
-		panic(fmt.Errorf("%v is already at %v", found, prov))
+		err = fmt.Errorf("%v is already at %v", found, prov)
+		return
 	}
 	self.dislodgeds[prov] = unit
+	return
 }
 
-func (self *State) SetUnit(prov common.Province, unit common.Unit) {
+func (self *State) SetUnit(prov common.Province, unit common.Unit) (err error) {
 	if found, _, ok := self.Unit(prov); ok {
-		panic(fmt.Errorf("%v is already at %v", found, prov))
+		err = fmt.Errorf("%v is already at %v", found, prov)
+		return
 	}
 	self.units[prov] = unit
+	return
 }
 
-func (self *State) SetOrder(prov common.Province, order common.Adjudicator) {
+func (self *State) SetOrder(prov common.Province, order common.Adjudicator) (err error) {
 	if found, _, ok := self.Order(prov); ok {
-		panic(fmt.Errorf("%v is already at %v", found, prov))
+		err = fmt.Errorf("%v is already at %v", found, prov)
+		return
 	}
 	self.orders[prov] = order
+	return
 }
 
 func (self *State) RemoveUnit(prov common.Province) {
@@ -451,12 +472,16 @@ func (self *State) Move(src, dst common.Province, preventRetreat bool) {
 	})
 }
 
-func (self *State) Retreat(src, dst common.Province) {
+func (self *State) Retreat(src, dst common.Province) (err error) {
 	if unit, prov, ok := self.Dislodged(src); !ok {
-		panic(fmt.Errorf("No dislodged at %v?", src))
+		err = fmt.Errorf("No dislodged at %v?", src)
+		return
 	} else {
 		self.RemoveDislodged(prov)
-		self.SetUnit(dst, unit)
+		if err = self.SetUnit(dst, unit); err != nil {
+			return
+		}
 		common.Logf("Moving dislodged %v from %v to %v", unit, src, dst)
 	}
+	return
 }

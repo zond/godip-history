@@ -3,10 +3,12 @@ package datc
 import (
 	"bufio"
 	"fmt"
-	"github.com/zond/godip/common"
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
+
+	"github.com/zond/godip/common"
 )
 
 var clearCommentReg = regexp.MustCompile("(?m)^\\s*([^#\n\t]+?)\\s*(#.*)?$")
@@ -97,15 +99,15 @@ func (self *StatePair) copyBeforeToAfter() {
 
 type StatePairHandler func(states *StatePair)
 
-type OrderParser func(text string) (province common.Province, order common.Adjudicator)
+type OrderParser func(text string) (common.Province, common.Adjudicator, error)
 
-type PhaseParser func(season string, year int, typ string) common.Phase
+type PhaseParser func(season string, year int, typ string) (common.Phase, error)
 
-type NationParser func(nation string) common.Nation
+type NationParser func(nation string) (common.Nation, error)
 
-type UnitTypeParser func(typ string) common.UnitType
+type UnitTypeParser func(typ string) (common.UnitType, error)
 
-type ProvinceParser func(prov string) common.Province
+type ProvinceParser func(prov string) (common.Province, error)
 
 type Parser struct {
 	Variant        string
@@ -128,51 +130,79 @@ const (
 	inPrestateResults
 )
 
-func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
+func (self Parser) Parse(r io.Reader, handler StatePairHandler) (err error) {
 	lr := bufio.NewReader(r)
 	var match []string
 	state := waiting
 	statePair := newStatePair()
-	for line, err := lr.ReadString('\n'); err == nil; line, err = lr.ReadString('\n') {
+	var line string
+	for line, err = lr.ReadString('\n'); err == nil; line, err = lr.ReadString('\n') {
 		if match = clearCommentReg.FindStringSubmatch(line); match != nil {
 			line = strings.TrimSpace(match[1])
 			switch state {
 			case waiting:
 				if match = variantReg.FindStringSubmatch(line); match != nil {
 					if match[1] != self.Variant {
-						panic(fmt.Errorf("%+v only supports DATC files for %v variant", self, self.Variant))
+						err = fmt.Errorf("%+v only supports DATC files for %v variant", self, self.Variant)
 					}
 				} else if match = caseReg.FindStringSubmatch(line); match != nil {
 					state = inCase
 					statePair.Case = match[1]
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state waiting: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state waiting: %#v", line)
 				}
 			case inPrestateSupplycenterOwners:
 				if match = stateReg.FindStringSubmatch(line); match != nil {
-					statePair.Before.SCs[self.ProvinceParser(match[3])] = self.NationParser(match[1])
+					var owner common.Nation
+					if owner, err = self.NationParser(match[1]); err != nil {
+						return
+					}
+					var prov common.Province
+					if prov, err = self.ProvinceParser(match[3]); err != nil {
+						return
+					}
+					statePair.Before.SCs[prov] = owner
 				} else if line == prestate {
 					state = inPrestate
 				} else if line == orders {
 					state = inOrders
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inPrestateSupplycenterOwners: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inPrestateSupplycenterOwners: %#v", line)
 				}
 			case inCase:
 				if match = prestateSetPhaseReg.FindStringSubmatch(line); match != nil {
-					statePair.Before.Phase = self.PhaseParser(match[1], common.MustParseInt(match[2]), match[3])
+					year := 0
+					if year, err = strconv.Atoi(match[2]); err != nil {
+						return
+					}
+					if statePair.Before.Phase, err = self.PhaseParser(match[1], year, match[3]); err != nil {
+						return
+					}
 				} else if line == prestate {
 					state = inPrestate
 				} else if line == prestateSupplycenterOwners {
 					state = inPrestateSupplycenterOwners
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inCase: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inCase: %#v", line)
+					return
 				}
 			case inPrestate:
 				if match = stateReg.FindStringSubmatch(line); match != nil {
-					statePair.Before.Units[self.ProvinceParser(match[3])] = common.Unit{
-						self.UnitTypeParser(match[2]),
-						self.NationParser(match[1]),
+					var prov common.Province
+					if prov, err = self.ProvinceParser(match[3]); err != nil {
+						return
+					}
+					var unit common.UnitType
+					if unit, err = self.UnitTypeParser(match[2]); err != nil {
+						return
+					}
+					var nation common.Nation
+					if nation, err = self.NationParser(match[1]); err != nil {
+						return
+					}
+					statePair.Before.Units[prov] = common.Unit{
+						unit,
+						nation,
 					}
 				} else if line == prestateResults {
 					state = inPrestateResults
@@ -183,13 +213,26 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 				} else if line == prestateDislodged {
 					state = inPrestateDislodged
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inPrestate: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inPrestate: %#v", line)
+					return
 				}
 			case inPoststate:
 				if match = stateReg.FindStringSubmatch(line); match != nil {
-					statePair.After.Units[self.ProvinceParser(match[3])] = common.Unit{
-						self.UnitTypeParser(match[2]),
-						self.NationParser(match[1]),
+					var prov common.Province
+					if prov, err = self.ProvinceParser(match[3]); err != nil {
+						return
+					}
+					var unit common.UnitType
+					if unit, err = self.UnitTypeParser(match[2]); err != nil {
+						return
+					}
+					var nation common.Nation
+					if nation, err = self.NationParser(match[1]); err != nil {
+						return
+					}
+					statePair.After.Units[prov] = common.Unit{
+						unit,
+						nation,
 					}
 				} else if line == end {
 					handler(statePair)
@@ -198,59 +241,104 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 				} else if line == poststateDislodged {
 					state = inPoststateDislodged
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inPoststate: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inPoststate: %#v", line)
+					return
 				}
 			case inPrestateDislodged:
 				if match = stateReg.FindStringSubmatch(line); match != nil {
-					statePair.Before.Dislodgeds[self.ProvinceParser(match[3])] = common.Unit{
-						self.UnitTypeParser(match[2]),
-						self.NationParser(match[1]),
+					var prov common.Province
+					if prov, err = self.ProvinceParser(match[3]); err != nil {
+						return
+					}
+					var unit common.UnitType
+					if unit, err = self.UnitTypeParser(match[2]); err != nil {
+						return
+					}
+					var nation common.Nation
+					if nation, err = self.NationParser(match[1]); err != nil {
+						return
+					}
+					statePair.Before.Dislodgeds[prov] = common.Unit{
+						unit,
+						nation,
 					}
 				} else if line == orders {
 					state = inOrders
 				} else if line == prestateResults {
 					state = inPrestateResults
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inPrestateDislodged: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inPrestateDislodged: %#v", line)
+					return
 				}
 			case inPrestateResults:
 				if match = preOrderReg.FindStringSubmatch(line); match != nil {
-					prov, order := self.OrderParser(match[3])
+					var prov common.Province
+					var order common.Adjudicator
+					if prov, order, err = self.OrderParser(match[3]); err != nil {
+						return
+					}
+					var nation common.Nation
+					if nation, err = self.NationParser(match[2]); err != nil {
+						return
+					}
 					nOrder := NationalizedOrder{
 						Order:  order,
-						Nation: self.NationParser(match[2]),
+						Nation: nation,
 					}
 					if match[1] == success {
 						statePair.Before.SuccessfulOrders[prov] = nOrder
 					} else if match[1] == failure {
 						statePair.Before.FailedOrders[prov] = nOrder
 					} else {
-						panic(fmt.Errorf("Unrecognized state for pre order: %#v", match[1]))
+						err = fmt.Errorf("Unrecognized state for pre order: %#v", match[1])
+						return
 					}
 				} else if line == orders {
 					state = inOrders
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inPrestateResult: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inPrestateResult: %#v", line)
+					return
 				}
 			case inPoststateDislodged:
 				if match = stateReg.FindStringSubmatch(line); match != nil {
-					statePair.After.Dislodgeds[self.ProvinceParser(match[3])] = common.Unit{
-						self.UnitTypeParser(match[2]),
-						self.NationParser(match[1]),
+					var prov common.Province
+					if prov, err = self.ProvinceParser(match[3]); err != nil {
+						return
+					}
+					var unit common.UnitType
+					if unit, err = self.UnitTypeParser(match[2]); err != nil {
+						return
+					}
+					var nation common.Nation
+					if nation, err = self.NationParser(match[1]); err != nil {
+						return
+					}
+					statePair.After.Dislodgeds[prov] = common.Unit{
+						unit,
+						nation,
 					}
 				} else if line == end {
 					handler(statePair)
 					statePair = newStatePair()
 					state = waiting
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inPoststateDislodged: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inPoststateDislodged: %#v", line)
+					return
 				}
 			case inOrders:
 				if match = ordersReg.FindStringSubmatch(line); match != nil {
-					prov, order := self.OrderParser(match[2])
+					var prov common.Province
+					var order common.Adjudicator
+					if prov, order, err = self.OrderParser(match[2]); err != nil {
+						return
+					}
+					var nation common.Nation
+					if nation, err = self.NationParser(match[1]); err != nil {
+						return
+					}
 					statePair.Before.Orders[prov] = NationalizedOrder{
 						Order:  order,
-						Nation: self.NationParser(match[1]),
+						Nation: nation,
 					}
 				} else if line == poststateSame {
 					statePair.copyBeforeToAfter()
@@ -261,11 +349,17 @@ func (self Parser) Parse(r io.Reader, handler StatePairHandler) {
 					statePair = newStatePair()
 					state = waiting
 				} else {
-					panic(fmt.Errorf("Unrecognized line for state inOrders: %#v", line))
+					err = fmt.Errorf("Unrecognized line for state inOrders: %#v", line)
+					return
 				}
 			default:
-				panic(fmt.Errorf("Unknown state %v", state))
+				err = fmt.Errorf("Unknown state %v", state)
+				return
 			}
 		}
 	}
+	if err == io.EOF {
+		err = nil
+	}
+	return
 }

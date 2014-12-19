@@ -11,7 +11,7 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
-func Phase(year int, season dip.Season, typ dip.PhaseType) *phase {
+func Phase(year int, season dip.Season, typ dip.PhaseType) dip.Phase {
 	return &phase{year, season, typ}
 }
 
@@ -45,12 +45,13 @@ func (self *phase) Winner(s dip.Validator) *dip.Nation {
 	return nil
 }
 
-func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int) {
+func (self *phase) shortestDistance(s dip.State, src dip.Province, dst []dip.Province) (result int, err error) {
 	var unit dip.Unit
 	var ok bool
 	unit, src, ok = s.Unit(src)
 	if !ok {
-		panic(fmt.Errorf("No unit at %v", src))
+		err = fmt.Errorf("No unit at %v", src)
+		return
 	}
 	var filter dip.PathFilter
 	found := false
@@ -130,22 +131,28 @@ func (self remoteUnitSlice) Less(i, j int) bool {
 	return self.distances[self.provinces[i]] > self.distances[self.provinces[j]]
 }
 
-func (self *phase) sortedUnits(s dip.State, n dip.Nation) []dip.Province {
+func (self *phase) sortedUnits(s dip.State, n dip.Nation) (result []dip.Province, err error) {
 	provs := remoteUnitSlice{
 		distances: make(map[dip.Province]int),
 		units:     make(map[dip.Province]dip.Unit),
 	}
 	provs.provinces, _, _ = s.Find(func(p dip.Province, o dip.Order, u *dip.Unit) bool {
 		if u != nil && u.Nation == n {
-			provs.distances[p] = self.shortestDistance(s, p, s.Graph().SCs(n))
+			if provs.distances[p], err = self.shortestDistance(s, p, s.Graph().SCs(n)); err != nil {
+				return false
+			}
 			provs.units[p] = *u
 			return true
 		}
 		return false
 	})
+	if err != nil {
+		return
+	}
 	sort.Sort(provs)
 	dip.Logf("Sorted units for %v is %v", n, provs)
-	return provs.provinces
+	result = provs.provinces
+	return
 }
 
 func (self *phase) DefaultOrder(p dip.Province) dip.Adjudicator {
@@ -155,7 +162,7 @@ func (self *phase) DefaultOrder(p dip.Province) dip.Adjudicator {
 	return nil
 }
 
-func (self *phase) PostProcess(s dip.State) {
+func (self *phase) PostProcess(s dip.State) (err error) {
 	if self.typ == cla.Retreat {
 		for prov, _ := range s.Dislodgeds() {
 			s.RemoveDislodged(prov)
@@ -177,7 +184,11 @@ func (self *phase) PostProcess(s dip.State) {
 		for _, nationality := range cla.Nations {
 			_, _, balance := cla.AdjustmentStatus(s, nationality)
 			if balance < 0 {
-				su := self.sortedUnits(s, nationality)[:-balance]
+				var su []dip.Province
+				if su, err = self.sortedUnits(s, nationality); err != nil {
+					return
+				}
+				su = su[:-balance]
 				for _, prov := range su {
 					dip.Logf("Removing %v due to forced disband", prov)
 					s.RemoveUnit(prov)
@@ -203,6 +214,7 @@ func (self *phase) PostProcess(s dip.State) {
 			}
 		}
 	}
+	return
 }
 
 func (self *phase) Year() int {
