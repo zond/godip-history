@@ -24,10 +24,12 @@ type Variant struct {
 	Orders      func() []dip.Order
 	ParseOrders func(map[dip.Nation]map[dip.Province][]string) (map[dip.Province]dip.Adjudicator, error)
 	ParseOrder  func([]string) (dip.Adjudicator, error)
+	Name        string
 }
 
 var Variants = map[string]Variant{
 	Classical: Variant{
+		Name:        Classical,
 		Start:       classical.Start,
 		Blank:       classical.Blank,
 		Phase:       classical.Phase,
@@ -40,6 +42,7 @@ var Variants = map[string]Variant{
 		UnitTypes:   func() []dip.UnitType { return cla.UnitTypes },
 	},
 	FleetRome: Variant{
+		Name: FleetRome,
 		Start: func() (result *state.State, err error) {
 			if result, err = classical.Start(); err != nil {
 				return
