@@ -111,19 +111,20 @@ func verifyPosition(t *testing.T, s *state.State, match []string, scCollector ma
 	}
 }
 
-func setPhase(t *testing.T, s **state.State, match []string) {
+func setPhase(t *testing.T, sp **state.State, match []string) {
 	year, err := strconv.Atoi(match[1])
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 	season := match[2]
 	typ := match[3]
+	s := *sp
 	for (s.Phase().Year() <= year && (string(s.Phase().Season()) != season || string(s.Phase().Type()) != typ)) || s.Phase().Year() != year {
 		s.Next()
 		newS := classical.Blank(s.Phase())
 		a, b, c, d, e, _ := s.Dump()
 		newS.Load(a, b, c, d, e, map[dip.Province]dip.Adjudicator{})
-		*s = newS
+		*sp = newS
 	}
 	if s.Phase().Year() > year {
 		t.Fatalf("What the, we wanted %v but ended up with %v", match, s.Phase())

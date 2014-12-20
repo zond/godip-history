@@ -4,6 +4,7 @@ import (
 	"github.com/zond/godip/classical"
 	cla "github.com/zond/godip/classical/common"
 	"github.com/zond/godip/classical/orders"
+	"github.com/zond/godip/classical/start"
 	dip "github.com/zond/godip/common"
 	"github.com/zond/godip/state"
 )
@@ -14,23 +15,27 @@ const (
 )
 
 type Variant struct {
+	Name        string
 	Start       func() (*state.State, error)
 	BlankStart  func() (*state.State, error)
 	Blank       func(dip.Phase) *state.State
+	Graph       func() dip.Graph
 	Phase       func(int, dip.Season, dip.PhaseType) dip.Phase
 	Nations     func() []dip.Nation
 	PhaseTypes  func() []dip.PhaseType
 	Seasons     func() []dip.Season
 	UnitTypes   func() []dip.UnitType
-	Orders      func() []dip.Order
+	OrderTypes  func() []dip.OrderType
 	ParseOrders func(map[dip.Nation]map[dip.Province][]string) (map[dip.Province]dip.Adjudicator, error)
 	ParseOrder  func([]string) (dip.Adjudicator, error)
-	Name        string
 }
 
 var Variants = map[string]Variant{
 	Classical: Variant{
-		Name:  Classical,
+		Name: Classical,
+		Graph: func() dip.Graph {
+			return start.Graph()
+		},
 		Start: classical.Start,
 		Blank: classical.Blank,
 		BlankStart: func() (result *state.State, err error) {
@@ -38,7 +43,7 @@ var Variants = map[string]Variant{
 			return
 		},
 		Phase:       classical.Phase,
-		Orders:      orders.Orders,
+		OrderTypes:  orders.OrderTypes,
 		ParseOrders: orders.ParseAll,
 		ParseOrder:  orders.Parse,
 		Nations:     func() []dip.Nation { return cla.Nations },
@@ -48,6 +53,9 @@ var Variants = map[string]Variant{
 	},
 	FleetRome: Variant{
 		Name: FleetRome,
+		Graph: func() dip.Graph {
+			return start.Graph()
+		},
 		Start: func() (result *state.State, err error) {
 			if result, err = classical.Start(); err != nil {
 				return
@@ -63,7 +71,7 @@ var Variants = map[string]Variant{
 		},
 		Blank:       classical.Blank,
 		Phase:       classical.Phase,
-		Orders:      orders.Orders,
+		OrderTypes:  orders.OrderTypes,
 		ParseOrders: orders.ParseAll,
 		ParseOrder:  orders.Parse,
 		Nations:     func() []dip.Nation { return cla.Nations },
