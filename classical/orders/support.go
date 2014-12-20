@@ -9,7 +9,6 @@ import (
 )
 
 func init() {
-	OrderTypes = append(OrderTypes, cla.Support)
 	generators = append(generators, func() dip.Order { return &support{} })
 }
 

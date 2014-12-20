@@ -9,7 +9,6 @@ import (
 )
 
 func init() {
-	OrderTypes = append(OrderTypes, cla.Build)
 	generators = append(generators, func() dip.Order { return &build{} })
 }
 

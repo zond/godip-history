@@ -8,9 +8,17 @@ import (
 	dip "github.com/zond/godip/common"
 )
 
-var OrderTypes []dip.OrderType
+var orderTypes []dip.OrderType
 
 var generators []func() dip.Order
+
+func OrderTypes() (result []dip.OrderType) {
+	result = make([]dip.OrderType, len(generators))
+	for index, gen := range generators {
+		result[index] = gen().Type()
+	}
+	return
+}
 
 func Orders() (result []dip.Order) {
 	result = make([]dip.Order, len(generators))

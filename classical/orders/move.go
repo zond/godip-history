@@ -9,9 +9,7 @@ import (
 )
 
 func init() {
-	OrderTypes = append(OrderTypes, cla.Move)
 	generators = append(generators, func() dip.Order { return &move{} })
-	OrderTypes = append(OrderTypes, cla.MoveViaConvoy)
 	generators = append(generators, func() dip.Order {
 		return &move{
 			flags: map[dip.Flag]bool{
