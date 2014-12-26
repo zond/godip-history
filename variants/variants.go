@@ -10,52 +10,56 @@ import (
 )
 
 const (
-	Classical = "classical"
-	FleetRome = "fleetrome"
+	Classical = "Classical"
+	FleetRome = "Fleet Rome"
 )
 
 type Variant struct {
 	Name        string
-	Start       func() (*state.State, error)
-	BlankStart  func() (*state.State, error)
-	Blank       func(dip.Phase) *state.State
-	Graph       func() dip.Graph
-	Phase       func(int, dip.Season, dip.PhaseType) dip.Phase
-	Nations     func() []dip.Nation
-	PhaseTypes  func() []dip.PhaseType
-	Seasons     func() []dip.Season
-	UnitTypes   func() []dip.UnitType
-	OrderTypes  func() []dip.OrderType
-	ParseOrders func(map[dip.Nation]map[dip.Province][]string) (map[dip.Province]dip.Adjudicator, error)
-	ParseOrder  func([]string) (dip.Adjudicator, error)
+	Start       func() (*state.State, error)                                                             `json:"-"`
+	BlankStart  func() (*state.State, error)                                                             `json:"-"`
+	Blank       func(dip.Phase) *state.State                                                             `json:"-"`
+	Phase       func(int, dip.Season, dip.PhaseType) dip.Phase                                           `json:"-"`
+	ParseOrders func(map[dip.Nation]map[dip.Province][]string) (map[dip.Province]dip.Adjudicator, error) `json:"-"`
+	ParseOrder  func([]string) (dip.Adjudicator, error)                                                  `json:"-"`
+	Graph       dip.Graph
+	Nations     []dip.Nation
+	PhaseTypes  []dip.PhaseType
+	Seasons     []dip.Season
+	UnitTypes   []dip.UnitType
+	OrderTypes  []dip.OrderType
 }
 
-var Variants = map[string]Variant{
-	Classical: Variant{
-		Name: Classical,
-		Graph: func() dip.Graph {
-			return start.Graph()
-		},
+func init() {
+	for _, variant := range OrderedVariants {
+		Variants[variant.Name] = variant
+	}
+}
+
+var Variants = map[string]Variant{}
+
+var OrderedVariants = []Variant{
+	Variant{
+		Name:  Classical,
 		Start: classical.Start,
 		Blank: classical.Blank,
 		BlankStart: func() (result *state.State, err error) {
 			result = classical.Blank(classical.Phase(1900, cla.Fall, cla.Adjustment))
 			return
 		},
-		Phase:       classical.Phase,
-		OrderTypes:  orders.OrderTypes,
 		ParseOrders: orders.ParseAll,
 		ParseOrder:  orders.Parse,
-		Nations:     func() []dip.Nation { return cla.Nations },
-		PhaseTypes:  func() []dip.PhaseType { return cla.PhaseTypes },
-		Seasons:     func() []dip.Season { return cla.Seasons },
-		UnitTypes:   func() []dip.UnitType { return cla.UnitTypes },
+		Graph:       start.Graph(),
+		Phase:       classical.Phase,
+		OrderTypes:  orders.OrderTypes(),
+		Nations:     cla.Nations,
+		PhaseTypes:  cla.PhaseTypes,
+		Seasons:     cla.Seasons,
+		UnitTypes:   cla.UnitTypes,
 	},
-	FleetRome: Variant{
-		Name: FleetRome,
-		Graph: func() dip.Graph {
-			return start.Graph()
-		},
+	Variant{
+		Name:  FleetRome,
+		Graph: start.Graph(),
 		Start: func() (result *state.State, err error) {
 			if result, err = classical.Start(); err != nil {
 				return
@@ -71,12 +75,12 @@ var Variants = map[string]Variant{
 		},
 		Blank:       classical.Blank,
 		Phase:       classical.Phase,
-		OrderTypes:  orders.OrderTypes,
 		ParseOrders: orders.ParseAll,
 		ParseOrder:  orders.Parse,
-		Nations:     func() []dip.Nation { return cla.Nations },
-		PhaseTypes:  func() []dip.PhaseType { return cla.PhaseTypes },
-		Seasons:     func() []dip.Season { return cla.Seasons },
-		UnitTypes:   func() []dip.UnitType { return cla.UnitTypes },
+		OrderTypes:  orders.OrderTypes(),
+		Nations:     cla.Nations,
+		PhaseTypes:  cla.PhaseTypes,
+		Seasons:     cla.Seasons,
+		UnitTypes:   cla.UnitTypes,
 	},
 }
